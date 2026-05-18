@@ -36,12 +36,12 @@ content:
         type: select
         options:
           - label: "5 Stars (Excellent)"
-            value: "⭐⭐⭐⭐⭐"
+            value: "5"
           - label: "4 Stars (Very Good)"
-            value: "⭐⭐⭐⭐"
+            value: "4"
           - label: "3 Stars (Average)"
-            value: "⭐⭐⭐"
-        default: "⭐⭐⭐⭐⭐"
+            value: "3"
+        default: "5"
       - name: content
         label: "Review Quote Content"
         type: text
