@@ -24,3 +24,38 @@ content:
       - name: booking_button_text
         label: "Booking Button Text"
         type: string
+
+  - name: reviews
+    label: "Guest Reviews Marquee"
+    type: list
+    path: src/content/reviews.json
+    format: json
+    fields:
+      - name: stars
+        label: "Star Rating Selection"
+        type: select
+        options:
+          - label: "5 Stars (Excellent)"
+            value: "⭐⭐⭐⭐⭐"
+          - label: "4 Stars (Very Good)"
+            value: "⭐⭐⭐⭐"
+          - label: "3 Stars (Average)"
+            value: "⭐⭐⭐"
+        default: "⭐⭐⭐⭐⭐"
+      - name: content
+        label: "Review Quote Content"
+        type: text
+      - name: author_name
+        label: "Guest Name (Optional)"
+        type: string
+      - name: platform
+        label: "Review Source Platform"
+        type: select
+        options:
+          - label: "Google"
+            value: "Google Review"
+          - label: "Booking.com"
+            value: "Booking.com"
+          - label: "Traveloka"
+            value: "Traveloka"
+        default: "Google Review"
