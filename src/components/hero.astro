@@ -1,17 +1,17 @@
 ---
 // 1. Fetch your dynamic homepage database text and image configurations
-import homepageData from "../content/homepage.json";
+import homepageData from "@/content/homepage.json";
 
-// 2. Safely extract our user variables
+// 2. Safely extract our user variables from the CMS data file
 const { welcome_title, tagline, booking_button_text, background_image } = homepageData;
 
-// 3. Fallback high-resolution layout placeholder in case your staff hasn't uploaded a GIF/image yet
+// 3. Fallback high-resolution layout placeholder in case your staff hasn't uploaded an image/GIF yet
 const finalBgImage = background_image || "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80";
 ---
 
-<main class="relative bg-gray-950 text-white min-h-[75vh] flex items-center justify-center overflow-hidden rounded-xl my-4 mx-2 md:mx-6 shadow-2xl">
+<main class="relative bg-gray-950 text-white min-h-[80vh] w-full flex items-center justify-center overflow-hidden shadow-2xl">
   
-  <div class="absolute inset-0 z-0">
+  <div class="absolute inset-0 z-0 w-full h-full">
     <img 
       src={finalBgImage} 
       alt="Mutiara Hotel Showcase Background" 
@@ -19,7 +19,7 @@ const finalBgImage = background_image || "https://images.unsplash.com/photo-1566
     />
   </div>
 
-  <div class="relative z-10 max-w-4xl mx-auto text-center px-6 py-20 flex flex-col items-center justify-center">
+  <div class="relative z-10 max-w-4xl mx-auto text-center px-6 py-24 flex flex-col items-center justify-center">
     
     <h1 class="text-5xl md:text-7xl font-serif font-bold tracking-wide mb-8 uppercase drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
       {welcome_title || "MUTIARA HOTEL"}
