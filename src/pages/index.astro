@@ -29,11 +29,13 @@ import reviewsData from "@/content/reviews.json";
           reviewsData.map((review) => (
             <div class="review-card">
               <div class="stars">
-                {review.stars === "5" && "⭐⭐⭐⭐⭐"}
-                {review.stars === "4" && "⭐⭐⭐⭐"}
-                {review.stars === "3" && "⭐⭐⭐"}
-                {/* Fallback support for older text entries if any exist */}
-                {!["5", "4", "3"].includes(review.stars) && review.stars}
+                {/* UPGRADED STAR TRANSLATOR TO SUPPORT DROPDOWN STRINGS */}
+                {review.stars?.includes("5") && "⭐⭐⭐⭐⭐"}
+                {review.stars?.includes("4") && "⭐⭐⭐⭐"}
+                {review.stars?.includes("3") && "⭐⭐⭐"}
+                
+                {/* Fallback support for older raw text numerical entries if any exist */}
+                {!review.stars?.includes("Stars") && !["5", "4", "3"].includes(review.stars) && review.stars}
               </div>
               <p class="content">"{review.content}"</p>
               <p class="author">
@@ -43,15 +45,18 @@ import reviewsData from "@/content/reviews.json";
             </div>
           ))
         }
+        
         {/* Duplicate rendering loop block ensures an endless, smooth infinite marquee loop layout */}
         {
           reviewsData.map((review) => (
             <div class="review-card" aria-hidden="true">
               <div class="stars">
-                {review.stars === "5" && "⭐⭐⭐⭐⭐"}
-                {review.stars === "4" && "⭐⭐⭐⭐"}
-                {review.stars === "3" && "⭐⭐⭐"}
-                {!["5", "4", "3"].includes(review.stars) && review.stars}
+                {/* UPGRADED STAR TRANSLATOR TO SUPPORT DROPDOWN STRINGS */}
+                {review.stars?.includes("5") && "⭐⭐⭐⭐⭐"}
+                {review.stars?.includes("4") && "⭐⭐⭐⭐"}
+                {review.stars?.includes("3") && "⭐⭐⭐"}
+                
+                {!review.stars?.includes("Stars") && !["5", "4", "3"].includes(review.stars) && review.stars}
               </div>
               <p class="content">"{review.content}"</p>
               <p class="author">
