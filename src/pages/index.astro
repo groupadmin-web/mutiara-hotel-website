@@ -8,6 +8,11 @@ import Layout from "@/layouts/Layout.astro";
 
 // Import your dynamic guest reviews database list
 import reviewsData from "@/content/reviews.json";
+
+// CHRONOLOGICAL SORTING ENGINE (Newest Date First)
+const sortedReviews = (reviewsData || []).sort((a, b) => {
+  return new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime();
+});
 ---
 
 <Layout title="Mutiara Hotel & Convention">
@@ -26,9 +31,9 @@ import reviewsData from "@/content/reviews.json";
     
     <div class="marquee-container">
       <div class="marquee-track">
-        {/* FIRST TRACK PASS: Loops exactly what is defined in the CMS */}
+        {/* FIRST TRACK PASS */}
         {
-          reviewsData.map((review) => (
+          sortedReviews.map((review) => (
             <div class="review-card">
               <div>
                 <div class="stars">
@@ -41,7 +46,15 @@ import reviewsData from "@/content/reviews.json";
               </div>
               
               <div class="author-row">
-                <span class="author-name">{review.author_name || "Verified Guest"}</span>
+                <div class="flex flex-col">
+                  <span class="author-name">{review.author_name || "Verified Guest"}</span>
+                  {/* Displays review date seamlessly next to/below the name if it exists */}
+                  {review.date && (
+                    <span class="text-[11px] text-gray-400 mt-0.5 font-sans">
+                      {new Date(review.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </span>
+                  )}
+                </div>
                 <div class="platform-logo-wrapper">
                   {review.platform === "Google Review" && (
                     <div class="flex items-center gap-1 text-xs text-gray-500 font-semibold">
@@ -64,13 +77,13 @@ import reviewsData from "@/content/reviews.json";
           )
         )}
 
-        {/* SECOND AUTOMATED PASS: Smooths out the loop animation seamlessly */}
+        {/* SECOND AUTOMATED PASS FOR LOOP SMOOTHNESS */}
         {
-          reviewsData.map((review) => (
+          sortedReviews.map((review) => (
             <div class="review-card" aria-hidden="true">
               <div>
                 <div class="stars">
-                  {review.stars?.includes("5") && "⭐⭐⭐⭐w"}
+                  {review.stars?.includes("5") && "⭐⭐⭐⭐⭐"}
                   {review.stars?.includes("4") && "⭐⭐⭐⭐"}
                   {review.stars?.includes("3") && "⭐⭐⭐"}
                   {!review.stars?.includes("Stars") && !["5", "4", "3"].includes(review.stars) && review.stars}
@@ -79,7 +92,14 @@ import reviewsData from "@/content/reviews.json";
               </div>
               
               <div class="author-row">
-                <span class="author-name">{review.author_name || "Verified Guest"}</span>
+                <div class="flex flex-col">
+                  <span class="author-name">{review.author_name || "Verified Guest"}</span>
+                  {review.date && (
+                    <span class="text-[11px] text-gray-400 mt-0.5 font-sans">
+                      {new Date(review.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </span>
+                  )}
+                </div>
                 <div class="platform-logo-wrapper">
                   {review.platform === "Google Review" && (
                     <div class="flex items-center gap-1 text-xs text-gray-500 font-semibold">
@@ -119,7 +139,6 @@ import reviewsData from "@/content/reviews.json";
   .marquee-track {
     display: flex;
     width: max-content;
-    /* Loops the track infinitely */
     animation: scrollMarquee 25s linear infinite;
   }
   .marquee-track:hover {
