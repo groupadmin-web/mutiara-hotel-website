@@ -35,6 +35,9 @@ content:
             - "4 Stars"
             - "3 Stars"
         default: "5 Stars"
+      - name: date
+        label: "Review Date"
+        type: date
       - name: content
         label: "Review Quote Content"
         type: text
