@@ -20,11 +20,14 @@ content:
         type: image
 
   - name: reviews
-    label: "2. Guest Reviews Marquee"
+    label: "2. Guest Reviews"
     type: file
     path: src/content/reviews.json
     format: json
     list: true
+    # HIGHLIGHT: This forces the dashboard layout engine to compress entries on load
+    display:
+      collapsed: true
     fields:
       - name: stars
         label: "Star Rating Selection"
