@@ -29,7 +29,7 @@ content:
       - name: stars
         label: "Star Rating Selection"
         type: select
-        options:
+        values:
           - "5 Stars"
           - "4 Stars"
           - "3 Stars"
@@ -43,7 +43,7 @@ content:
       - name: platform
         label: "Review Source Platform"
         type: select
-        options:
+        values:
           - "Google Review"
           - "Booking.com"
           - "Traveloka"
