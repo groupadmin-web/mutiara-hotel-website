@@ -3,7 +3,7 @@
 import Layout from "../layouts/Layout.astro";
 import attractionsData from "../content/attractions.json";
 
-// 1. HARDCODED MASTER DATASET - The ultimate baseline shield against CMS wipeouts
+// 1. HARDCODED MASTER DATASET - The default safety net
 const defaultAttractions = [
   {
     title: "Museum of the Asian-African Conference",
@@ -16,7 +16,7 @@ const defaultAttractions = [
   {
     title: "Taman Balai Kota Bandung",
     distance: "0.7 Miles (12 Min Walk)",
-    image: "https://lh3.googleusercontent.com/sitesv/AA5AbUCjc69L6lSbSWt0kJxJqxP-pvrz_cYj_whLlQvxBnkomEF0UI4_Bo_uYhHCfWY1Jtu8by6ECsTDF6oyCa8ZnllmVshamPOKNDGRmPedm6Ii5EZ0Vc7gy3gLSyV7u_alOSNFS01MnkTDhrMfdhZKvkSxxVidG1r5rXrjTCAyFkBexJnx43fmMdUtZhwwC4P4pQALzL36c1e-zQhWvP1U1j4LAdTmT6iBjXFIYEI=w1280?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1582234375176-338a9771a737?auto=format&fit=crop&w=800&q=80",
     tagline: "Bandung City Hall & Historic Park",
     category: "City Center",
     description: "Located around 1.5 km from the hotel on Jalan Wastukencana, the administrative center of Bandung is rich in history and remarkable architecture. The building was originally a coffee warehouse in 1819 before being converted into a Dutch colonial government office in 1927."
@@ -71,18 +71,22 @@ const defaultAttractions = [
   }
 ];
 
-// 2. MIXIN MERGE ENGINE - Re-populates fields with master fallbacks if CMS outputs are blank strings
+// 2. THE RESTORED HYBRID MERGE ENGINE
 const cmsData = Array.isArray(attractionsData) && attractionsData.length > 0 ? attractionsData : [];
 
 const attractions = defaultAttractions.map((defaultItem, idx) => {
-  const cmsItem = cmsData[idx] || {};
+  // Find item by title string in case the array index shuffles in the JSON file
+  const cmsItem = cmsData.find(item => item && (item.title === defaultItem.title)) || cmsData[idx] || {};
+  
   return {
     title: cmsItem.title || defaultItem.title,
     distance: cmsItem.distance || defaultItem.distance,
-    image: cmsItem.image || defaultItem.image,
     tagline: cmsItem.tagline || defaultItem.tagline,
     category: cmsItem.category || defaultItem.category,
-    description: cmsItem.description || defaultItem.description
+    description: cmsItem.description || defaultItem.description,
+    
+    // CRITICAL BUG FIX: If CMS image is present and NOT an empty string, use it. Otherwise, fall back.
+    image: (cmsItem.image && cmsItem.image.trim() !== "") ? cmsItem.image : defaultItem.image
   };
 });
 ---
@@ -131,7 +135,6 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
                 <span data-field="title" data-index={index} data-en={item.title}>{item.title}</span>
               </h2>
               <div class="w-8 h-0.5 bg-gray-200 mb-4"></div>
-              
               <p data-field="description" data-index={index} data-en={item.description} class="text-gray-500 text-sm font-sans font-light leading-relaxed">
                 {item.description}
               </p>
@@ -187,14 +190,14 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
   };
 
   const mapsTable = {
-    "Museum of the Asian-African Conference": "https://maps.google.com/?q=Museum+of+the+Asian-African+Conference",
+    "Museum of the Asian-African Conference": "https://maps.google.com/?q=Museum+of+the+Asian-African+Conference+Bandung",
     "Taman Balai Kota Bandung": "https://maps.google.com/?q=Taman+Balai+Kota+Bandung",
-    "Braga City Walk": "https://maps.google.com/?q=Braga+City+Walk",
-    "23 Paskal Shopping Centre": "https://maps.google.com/?q=23+Paskal+Shopping+Centre",
-    "Gedung Sate": "https://maps.google.com/?q=Gedung+Sate",
-    "Kawah Putih (White Crater)": "https://maps.google.com/?q=Kawah+Putih",
-    "Mount Tangruban Perahu": "https://maps.google.com/?q=Mount+Tangkuban+Perahu",
-    "Saung Angklung Udjo": "https://maps.google.com/?q=Saung+Angklung+Udjo"
+    "Braga City Walk": "https://maps.google.com/?q=Braga+City+Walk+Bandung",
+    "23 Paskal Shopping Centre": "https://maps.google.com/?q=23+Paskal+Shopping+Centre+Bandung",
+    "Gedung Sate": "https://maps.google.com/?q=Gedung+Sate+Bandung",
+    "Kawah Putih (White Crater)": "https://maps.google.com/?q=Kawah+Putih+Ciwidey",
+    "Mount Tangruban Perahu": "https://maps.google.com/?q=Tangkuban+Perahu+Lembang",
+    "Saung Angklung Udjo": "https://maps.google.com/?q=Saung+Angklung+Udjo+Bandung"
   };
 
   function getLanguagePreference() {
