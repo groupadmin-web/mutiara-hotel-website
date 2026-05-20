@@ -107,11 +107,20 @@ const menuitems = [
     const links = document.querySelectorAll('[data-nav-link]');
     const currentPath = window.location.pathname;
 
-    // 1. SMART URL PATH CHECKER: If the address bar contains 'rooms', light it up and exit!
-    if (currentPath.includes('/rooms')) {
+    // 1. SMART URL PATH CHECKER: Lights up top-level subpages correctly!
+    if (currentPath.includes('/rooms') || currentPath.includes('/attractions')) {
       links.forEach((link) => {
         const href = link.getAttribute('href');
-        if (href === '/rooms' || href.includes('rooms')) {
+        let shouldHighlight = false;
+
+        if (currentPath.includes('/rooms') && (href === '/rooms' || href.includes('rooms'))) {
+          shouldHighlight = true;
+        }
+        if (currentPath.includes('/attractions') && (href === '/attractions' || href.includes('attractions'))) {
+          shouldHighlight = true;
+        }
+
+        if (shouldHighlight) {
           link.classList.add('text-amber-600', 'after:scale-x-100');
           link.classList.remove('text-slate-700');
         } else {
