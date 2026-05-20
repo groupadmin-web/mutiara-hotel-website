@@ -1,3 +1,10 @@
+paths:
+  uploads: public/images
+  dam_uploads: public/images
+collections_config:
+  homepage:
+    output: true
+    
 # 1. Base Global Media Settings
 media:
   input: public/images
@@ -34,13 +41,12 @@ content:
         label: "Sub-Header High-Impact Hook"
         type: text
 
-      # THIS EXPLICITLY RENDERS CLEAN SELECTION/UPLOAD ARRAY CARDS
+# THIS WILL FINALLY TURN INTO SEPARATE BUTTONS EVERY TIME
       - name: carousel_images
-        label: "Hero Slideshow Photos"
-        type: list
-        spec:
-          type: image
-          label: "Slide Photo"
+        label: "Slideshow Photos"
+        type: array
+        options:
+          entry_input_type: image
 
       - name: show_partners
         label: "Display Partners & Awards Row on Website?"
