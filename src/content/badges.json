@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Booking.com",
+    "subtitle": "8.4 / 10 Guest Review Score",
+    "badge_image": "https://upload.wikimedia.org/wikipedia/commons/b/be/Booking.com_Logo_Grey.svg"
+  },
+  {
+    "name": "Traveloka",
+    "subtitle": "8.7 / 10 Cleanliness Award",
+    "badge_image": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Traveloka_Logo.svg"
+  },
+  {
+    "name": "Agoda Certified",
+    "subtitle": "Top Preferred Partner Status",
+    "badge_image": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Agoda_logo.svg"
+  },
+  {
+    "name": "CHSE Certified",
+    "subtitle": "Kemenparekraf Clean & Safe",
+    "badge_image": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Wonderful_Indonesia_Logo.svg"
+  }
+]
