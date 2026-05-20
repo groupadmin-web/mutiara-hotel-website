@@ -2,36 +2,27 @@
 // src/components/hero.astro
 import homepageData from "../content/homepage.json";
 
-// Extract content text fields safely
-const { welcome_title, tagline, booking_button_text } = homepageData;
+// Extract content text fields and the single hero image path safely
+const { welcome_title, tagline, booking_button_text, hero_image } = homepageData;
 
-// Unpack the image targets cleanly from the object array schema
-const slides = homepageData.slideshow && homepageData.slideshow.length > 0
-  ? homepageData.slideshow.map(item => item.slide_image)
-  : [
-      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80",
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=80"
-    ];
+// Fallback background image if none is selected
+const backgroundImage = hero_image || "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80";
 ---
 
 <main class="relative bg-gray-950 text-white min-h-[80vh] w-full flex items-center justify-center overflow-hidden shadow-2xl">
   
   <div class="absolute inset-0 z-0 w-full h-full">
-    {slides.map((slideImage, index) => (
-      <img 
-        data-hero-carousel-slide 
-        src={slideImage} 
-        alt={`Mutiara Hotel Showcase Background Slide ${index + 1}`} 
-        class="absolute inset-0 w-full h-full object-cover filter brightness-75 transition-opacity duration-1000 ease-in-out"
-        style={`opacity: ${index === 0 ? '0.4' : '0'}; z-index: ${index === 0 ? '1' : '0'};`}
-      />
-    ))}
+    <img 
+      src={backgroundImage} 
+      alt="Mutiara Hotel Showcase Background" 
+      class="absolute inset-0 w-full h-full object-cover filter brightness-50 opacity-40"
+    />
   </div>
 
   <div class="relative z-10 max-w-4xl mx-auto text-center px-6 py-24 flex flex-col items-center justify-center">
     
     <h1 class="text-5xl md:text-7xl font-serif font-bold tracking-wide mb-8 uppercase drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
-      {welcome_title || "MUTIARA HOTEL"}
+      {welcome_title || "MUTIARA HOTEL & CONVENTION"}
     </h1>
     
     <div class="space-y-4 max-w-2xl mb-10 text-gray-100 font-light drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
@@ -57,29 +48,3 @@ const slides = homepageData.slideshow && homepageData.slideshow.length > 0
 
   </div>
 </main>
-
-<script is:inline>
-  (function() {
-    function startHeroCarousel() {
-      const slides = document.querySelectorAll('[data-hero-carousel-slide]');
-      if (!slides || slides.length <= 1) return;
-
-      let currentIdx = 0;
-      const changeDelay = 5000;
-
-      setInterval(() => {
-        slides[currentIdx].style.opacity = '0';
-        slides[currentIdx].style.zIndex = '0';
-        currentIdx = (currentIdx + 1) % slides.length;
-        slides[currentIdx].style.opacity = '0.4';
-        slides[currentIdx].style.zIndex = '1';
-      }, changeDelay);
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', startHeroCarousel);
-    } else {
-      startHeroCarousel();
-    }
-  })();
-</script>
