@@ -209,3 +209,30 @@ content:
       - name: cta_btn_text
         label: "Promo Button Action text"
         type: string
+        
+- name: attractions
+    label: "9. Local Attractions Guide"
+    type: file
+    path: src/content/attractions.json
+    format: json
+    list: true
+    collapsed: true
+    fields:
+      - name: title
+        label: "Attraction Location Name"
+        type: string
+      - name: distance
+        label: "Distance Proximity (e.g., 0.9 Miles / 15 Min Walk)"
+        type: string
+      - name: tagline
+        label: "Short Promo Subtitle Tagline"
+        type: string
+      - name: category
+        label: "Classification Category (e.g., City Center, Nature)"
+        type: string
+      - name: image
+        label: "Showcase Feature Photo"
+        type: image
+      - name: description
+        label: "Historical / Travel Description"
+        type: text
