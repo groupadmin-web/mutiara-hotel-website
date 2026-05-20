@@ -9,13 +9,24 @@ const attractions = Array.isArray(attractionsData) ? attractionsData : [];
 <Layout title="Local Attractions | Mutiara Hotel & Convention">
   <div class="bg-gray-50 min-h-screen py-16 px-4 sm:px-6 lg:px-8">
     
-    <div class="max-w-6xl mx-auto flex justify-end gap-2 mb-8">
-      <button id="lang-en" class="px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-lg border border-gray-200 shadow-sm transition-all cursor-pointer">
-        🇬🇧 English
-      </button>
-      <button id="lang-id" class="px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-lg border border-gray-200 shadow-sm transition-all cursor-pointer">
-        🇮🇩 Indonesia
-      </button>
+    <div class="max-w-6xl mx-auto flex justify-end items-center gap-3 mb-8">
+      <span class="text-[10px] tracking-widest font-sans font-bold text-slate-400 uppercase">Language Mode:</span>
+      <div class="bg-slate-100 p-1 rounded-xl inline-flex items-center border border-slate-200/60 shadow-inner">
+        <button 
+          id="lang-en" 
+          type="button"
+          class="px-4 py-1.5 text-[11px] font-sans font-bold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer"
+        >
+          Original
+        </button>
+        <button 
+          id="lang-id" 
+          type="button"
+          class="px-4 py-1.5 text-[11px] font-sans font-bold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer"
+        >
+          Indonesia (AI)
+        </button>
+      </div>
     </div>
 
     <div class="max-w-4xl mx-auto text-center mb-16">
@@ -143,16 +154,17 @@ const attractions = Array.isArray(attractionsData) ? attractionsData : [];
 
     if (!btnEN || !btnID) return;
 
+    // Apply the exact high-end interactive pill-button styles matching your homepage mockup
     if (lang === 'id') {
-      btnID.className = "px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-lg bg-amber-600 text-white shadow-md cursor-pointer";
-      btnEN.className = "px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-lg bg-white text-gray-700 border border-gray-200 shadow-sm hover:bg-gray-50 cursor-pointer";
+      btnID.className = "px-4 py-1.5 text-[11px] font-sans font-bold uppercase tracking-wider rounded-lg bg-white text-slate-900 shadow-sm border border-slate-200/40 cursor-pointer";
+      btnEN.className = "px-4 py-1.5 text-[11px] font-sans font-bold uppercase tracking-wider rounded-lg text-slate-400 hover:text-slate-600 transition-colors cursor-pointer";
       
       document.getElementById('txt-subtitle').innerText = "JELAJAHI BANDUNG";
       document.getElementById('txt-title').innerText = "DESTINASI & ATRAKSI WISATA";
       document.getElementById('txt-desc').innerText = '"Dari jejak sejarah pusat kota lama hingga kawah vulkanik Jawa Barat yang memukau, rasakan pesona terbaik Bandung langsung dari pintu hunian kami."';
     } else {
-      btnEN.className = "px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-lg bg-amber-600 text-white shadow-md cursor-pointer";
-      btnID.className = "px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-lg bg-white text-gray-700 border border-gray-200 shadow-sm hover:bg-gray-50 cursor-pointer";
+      btnEN.className = "px-4 py-1.5 text-[11px] font-sans font-bold uppercase tracking-wider rounded-lg bg-white text-slate-900 shadow-sm border border-slate-200/40 cursor-pointer";
+      btnID.className = "px-4 py-1.5 text-[11px] font-sans font-bold uppercase tracking-wider rounded-lg text-slate-400 hover:text-slate-600 transition-colors cursor-pointer";
       
       document.getElementById('txt-subtitle').innerText = "EXPLORE BANDUNG";
       document.getElementById('txt-title').innerText = "DESTINATIONS & ATTRACTIONS";
