@@ -30,7 +30,7 @@ const rooms = Array.isArray(roomsData) ? roomsData : [];
               class="w-full h-full object-cover"
             />
             <div class="absolute top-4 right-4 bg-gray-900/80 backdrop-blur-sm text-white text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-md font-sans font-medium">
-              {room.view || "City View"}
+              {room.view || "Standard View"}
             </div>
           </div>
 
@@ -65,30 +65,44 @@ const rooms = Array.isArray(roomsData) ? roomsData : [];
               ))}
             </div>
 
-            {/* EXPANDABLE INLINE GALLERY FOR LIGHTBOX VIEWING */}
+            {/* THE NEW GALLERY TRIGGER BUTTON */}
             <button 
               data-gallery-trigger={index}
               class="block w-full bg-amber-600 hover:bg-amber-700 text-white text-center font-bold font-sans text-sm py-3.5 rounded-lg shadow-md hover:shadow-lg transition-all tracking-wider uppercase cursor-pointer"
             >
-              View Room Images
+              View Gallery
             </button>
           </div>
 
-          {/* HIDDEN MODAL GALLERY LAYER FOR THE DEMO */}
+          {/* LIGHTBOX POPUP MODAL MAPPED TO INDEPENDENT IMAGE STRINGS */}
           <div id={`gallery-modal-${index}`} class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
             <div class="bg-white rounded-xl p-6 max-w-4xl w-full shadow-2xl relative">
               <button data-close-trigger={index} class="absolute -top-12 right-0 text-white hover:text-amber-500 text-sm uppercase font-bold tracking-widest cursor-pointer">✕ Close</button>
-              <h3 class="text-xl font-serif font-bold text-gray-900 mb-4 uppercase tracking-wider">{room.title} Photos</h3>
+              <h3 class="text-xl font-serif font-bold text-gray-900 mb-4 uppercase tracking-wider">{room.title} Gallery Photo Showcase</h3>
               
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto p-1">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-h-[60vh] overflow-y-auto p-1">
+                {/* Main Feature Cover */}
                 <div class="aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                  <img src={room.image} class="w-full h-full object-cover" alt="Cover photo"/>
+                  <img src={room.image} class="w-full h-full object-cover" alt="Main cover display photo"/>
                 </div>
-                {room.room_gallery && room.room_gallery.map((imgUrl) => (
+                {/* Additional Upload Slot 1 */}
+                {room.room_gallery1 && (
                   <div class="aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                    <img src={imgUrl} class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" alt="Gallery asset"/>
+                    <img src={room.room_gallery1} class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" alt="Room detail image 1"/>
                   </div>
-                ))}
+                )}
+                {/* Additional Upload Slot 2 */}
+                {room.room_gallery2 && (
+                  <div class="aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                    <img src={room.room_gallery2} class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" alt="Room detail image 2"/>
+                  </div>
+                )}
+                {/* Additional Upload Slot 3 */}
+                {room.room_gallery3 && (
+                  <div class="aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                    <img src={room.room_gallery3} class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" alt="Room detail image 3"/>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -102,7 +116,6 @@ const rooms = Array.isArray(roomsData) ? roomsData : [];
 
 <script is:inline>
   function initGalleryPopups() {
-    // Select all our view buttons and close tags
     const openBtns = document.querySelectorAll('[data-gallery-trigger]');
     
     openBtns.forEach(btn => {
@@ -123,7 +136,6 @@ const rooms = Array.isArray(roomsData) ? roomsData : [];
     });
   }
 
-  // Ensure scripts hook properly across Astro transitions
   document.addEventListener('DOMContentLoaded', initGalleryPopups);
   document.addEventListener('astro:after-swap', initGalleryPopups);
   initGalleryPopups();
