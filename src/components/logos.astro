@@ -21,31 +21,31 @@ const safeBadges = badgesData || [];
             {/* INLINE CODE-DRAWN LOGO ENGINE */}
             <div class="h-10 w-full max-w-[130px] flex items-center justify-center mb-3 text-slate-400 group-hover:text-slate-900 transition-colors duration-500">
               
-              {/* BOOKING.COM MATCH */}
+              {/* BOOKING.COM MATCH - Cleaned up viewbox and paths */}
               {staffTypedName.includes("booking") && (
-                <svg class="h-5 w-auto fill-current" viewBox="0 0 200 30" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M14.7 3c7.2 0 11.8 4.2 11.8 10.4 0 6.3-4.9 10.5-12.2 10.5H3V3h11.7zm-8.2 4.1v5.1h7.5c4.1 0 6.5-2 6.5-4.8 0-2.8-2.4-4.6-6.4-4.6H6.5zm0 8.7v4.6h8.2c4.3 0 7-2 7-5.1 0-2.9-2.5-4.8-6.9-4.8H6.5zM38.5 10.2c5.8 0 10.1 4.5 10.1 10.4 0 5.9-4.3 10.4-10.1 10.4s-10.1-4.5-10.1-10.4c0-5.9 4.3-10.4 10.1-10.4zm0 3.7c3.5 0 6 2.8 6 6.7s-2.5 6.7-6 6.7-6-2.8-6-6.7 2.5-6.7 6-6.7zm24.2-3.7c5.8 0 10.1 4.5 10.1 10.4 0 5.9-4.3 10.4-10.1 10.4s-10.1-4.5-10.1-10.4c0-5.9 4.3-10.4 10.1-10.4zm0 3.7c3.5 0 6 2.8 6 6.7s-2.5 6.7-6 6.7-6-2.8-6-6.7 2.5-6.7 6-6.7zm17.9-9.7h4.1v13.4l8.5-9.6h5.1l-9.6 10.5 10.4 11.5h-5.2l-8.7-9.9v9.9h-4.6V4.2zm21.4 6c1.6 0 2.9 1.3 2.9 2.9 0 1.6-1.3 2.9-2.9 2.9s-2.9-1.3-2.9-2.9c0-1.6 1.3-2.9 2.9-2.9zm-2.1 6.5h4.1v14.1h-4.1V16.7zm12.3-6.5c2.4 0 4.2 1.2 5.1 3 1.2-2 3.4-3 6.1-3 4.8 0 7.7 3.2 7.7 8.5v8.6h-4.1v-8.2c0-3.3-1.6-5.1-4.6-5.1-2.9 0-4.8 1.9-4.8 5.2v8.1h-4.1v-8.2c0-3.3-1.6-5.1-4.6-5.1-2.9 0-4.8 1.9-4.8 5.2v8.1h-4.1V16.7h4.1v1.6zM153.3 21c0 6.1-4.5 10-10.5 10-5.3 0-9-3-10.1-7.7h4.3c.9 2.6 3 4.2 5.8 4.2 3.9 0 6.2-2.3 6.2-6.1v-1.6c-1.2 2-3.4 3-5.9 3-5.1 0-8.9-4.1-8.9-9.5 0-5.5 3.8-9.5 8.9-9.5 2.6 0 4.7 1.1 5.9 3.1V14h4.1v7zm-4.2-3.7c0-3.6-2.4-6.1-5.6-6.1s-5.6 2.5-5.6 6.1 2.4 6.1 5.6 6.1 5.6-2.5 5.6-6.1zm14.1 10c1.6 0 2.9 1.3 2.9 2.9 0 1.6-1.3 2.9-2.9 2.9s-2.9-1.3-2.9-2.9c0-1.6 1.3-2.9 2.9-2.9zm13.1-17.1c5.5 0 9.4 4.1 9.4 9.9 0 5.8-3.9 9.9-9.4 9.9-5.4 0-9.4-4.1-9.4-9.9 0-5.8 4-9.9 9.4-9.9zm0 3.7c3.2 0 5.2 2.6 5.2 6.2s-2 6.2-5.2 6.2-5.2-2.6-5.2-6.2 2-6.2 5.2-6.2zm18.8-3.7c2.4 0 4.2 1.2 5.1 3 1.2-2 3.4-3 6.1-3 4.8 0 7.7 3.2 7.7 8.5v8.6h-4.1v-8.2c0-3.3-1.6-5.1-4.6-5.1-2.9 0-4.8 1.9-4.8 5.2v8.1H183v-8.2c0-3.3-1.6-5.1-4.6-5.1-2.9 0-4.8 1.9-4.8 5.2v8.1h-4.1V16.7h4.1v1.6z"/>
-                </svg>
+                <div class="flex items-center justify-center bg-[#003580] text-white px-3 py-1 rounded font-sans font-bold tracking-tight text-sm select-none group-hover:bg-[#00224f] transition-colors">
+                  Booking.com
+                </div>
               )}
 
               {/* TRAVELOKA MATCH */}
               {staffTypedName.includes("traveloka") && (
-                <span class="text-lg font-black tracking-tight italic font-sans text-sky-600 group-hover:text-sky-500 transition-colors">
+                <span class="text-lg font-black tracking-tight italic font-sans text-sky-600 group-hover:text-sky-500 transition-colors select-none">
                   traveloka
                 </span>
               )}
 
               {/* AGODA MATCH */}
               {staffTypedName.includes("agoda") && (
-                <span class="text-xl font-extrabold tracking-tighter uppercase font-sans text-slate-700 group-hover:text-amber-600 transition-colors">
+                <span class="text-xl font-extrabold tracking-tighter uppercase font-sans text-slate-700 group-hover:text-amber-600 transition-colors select-none">
                   agoda
                 </span>
               )}
 
               {/* GOOGLE MATCH */}
               {staffTypedName.includes("google") && (
-                <div class="flex items-center gap-1 text-sm font-bold tracking-tight text-slate-600 group-hover:text-slate-900">
-                  <svg class="h-5 w-5 fill-current text-amber-600" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <div class="flex items-center gap-1.5 text-sm font-bold tracking-tight text-slate-600 group-hover:text-slate-900 select-none">
+                  <svg class="h-4 w-4 fill-current text-amber-600" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114A5.53 5.53 0 0 1 8.41 13c0-3.04 2.47-5.514 5.51-5.514 1.353 0 2.584.489 3.543 1.29l3.07-3.07C18.665 3.96 16.51 3 13.92 3 8.44 3 4 7.44 4 12.92c0 5.48 4.44 9.92 9.92 9.92 5.73 0 9.53-4.03 9.53-9.7 0-.6-.05-1.2-.16-1.855H12.24Z"/>
                   </svg>
                   <span>Google</span>
