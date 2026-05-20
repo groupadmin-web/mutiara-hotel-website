@@ -22,16 +22,9 @@ content:
         label: "Sub-Header High-Impact Hook"
         type: text
 
-      # THIS SETS UP THE CAROUSEL LIST EXACTLY LIKE GUEST REVIEWS
-      - name: slideshow
-        label: "Hero Slideshow Carousel"
-        type: array
-        list: true
-        collapsed: true
-        fields:
-          - name: slide_image
-            label: "Upload / Select Slide Photo"
-            type: image
+      - name: hero_image
+        label: "Hero Cover Photo"
+        type: image
 
       - name: show_partners
         label: "Display Partners & Awards Row on Website?"
