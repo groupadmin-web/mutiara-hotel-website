@@ -28,6 +28,18 @@ content:
         label: "Display Partners & Awards Row on Website?"
         type: boolean
         default: true
+      - name: cta_title
+        label: "Promotion Headline Title"
+        type: string
+        default: "Exclusive Seasonal Promotion"
+      - name: cta_desc
+        label: "Promotion Offer Details"
+        type: text
+        default: "Book directly through our website to unlock premium perks, complimentary high-speed Wi-Fi upgrades, and exclusive discounts on your next staycation or convention suite booking."
+      - name: cta_btn_text
+        label: "Promotion Button Action text"
+        type: string
+        default: "Claim Offer Now"
 
   - name: reviews
     label: "2. Guest Reviews Marquee"
