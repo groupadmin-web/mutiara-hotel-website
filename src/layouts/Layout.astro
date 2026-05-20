@@ -1,101 +1,118 @@
 ---
-import { SEO } from "astro-seo";
-import Footer from "@/components/footer.astro";
-import Navbar from "@/components/navbar/navbar.astro";
-import "@fontsource-variable/inter/index.css";
-import "@fontsource-variable/bricolage-grotesque";
-import "../styles/global.css";
-
-export interface Props {
+interface Props {
   title: string;
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
-
-const resolvedImageWithDomain = new URL(
-  "/opengraph.jpg",
-  Astro.site
-).toString();
-
 const { title } = Astro.props;
-
-const makeTitle = title
-  ? title + " | " + "Mutiara Hotel"
-  : "Mutiara Hotel - Premium Accommodations";
 ---
 
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <meta name="description" content="Mutiara Hotel & Convention - A sanctuary of luxury comfort and professional event execution in Bandung." />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-
-    <SEO
-      title={makeTitle}
-      description="Welcome to Mutiara Hotel. Book your stay with us directly for premium service and accommodation."
-      canonical={canonicalURL}
-      openGraph={{
-        basic: {
-          url: canonicalURL,
-          type: "website",
-          title: `Mutiara Hotel`,
-          image: resolvedImageWithDomain,
-        },
-      }}
-    />
+    <title>{title}</title>
   </head>
-  <body>
-    <Navbar />
-    <slot />
-    <Footer />
+  <body class="bg-white text-slate-900 min-h-screen flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-white">
+    
+    {/* MAIN SYSTEM SITE NAVIGATION SLOT */}
+    <main class="flex-grow">
+      <slot />
+    </main>
 
-    <a href="https://wa.me/6287722469110" class="whatsapp-icon-float" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
-      <svg viewBox="0 0 24 24" class="whatsapp-svg">
-        <path fill="#FFF" d="M12.012 2c-5.508 0-9.988 4.479-9.988 9.987 0 1.763.459 3.49 1.33 5.009l-1.353 4.937 5.055-1.326c1.47.8 3.125 1.222 4.814 1.223h.004c5.507 0 9.989-4.479 9.989-9.988 0-2.67-1.039-5.18-2.93-7.071C17.186 3.04 14.684 2 12.012 2zm5.727 14.043c-.235.662-1.36 1.205-1.879 1.282-.46.069-1.06.126-3.155-.701-2.678-1.057-4.407-3.786-4.542-3.963-.133-.177-1.082-1.437-1.082-2.742 0-1.306.683-1.948.924-2.214.241-.265.529-.332.706-.332.176 0 .353.003.507.01.16.007.375-.062.587.447.218.524.743 1.812.808 1.945.066.133.11.287.022.463-.088.177-.133.287-.265.442-.132.155-.278.347-.396.465-.133.133-.272.278-.118.543.155.265.687 1.134 1.474 1.833.1.089.197.177.291.26.702.615 1.295.82 1.57.954.276.133.438.11.603-.078.166-.188.706-.818.894-1.094.188-.276.376-.232.631-.138.254.094 1.61.76 1.886.898.276.138.459.208.526.32.066.111.066.645-.169 1.307z"/>
-      </svg>
-    </a>
+    {/* EXCLUSIVE REENGINEERED RESORT FOOTER CARPET */}
+    <footer class="bg-slate-950 text-slate-400 font-sans border-t border-slate-900 pt-16 pb-8 relative overflow-hidden">
+      
+      <div class="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none select-none"></div>
 
-    <style is:global>
-      img {
-        content-visibility: auto;
-      }
-      .whatsapp-icon-float {
-        position: fixed;
-        bottom: 24px;
-        right: 24px;
-        background-color: #25d366;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 2px 4px 12px rgba(0,0,0,0.3);
-        z-index: 99999;
-        transition: transform 0.2s ease, background-color 0.2s ease;
-      }
-      .whatsapp-svg {
-        width: 36px;
-        height: 36px;
-      }
-      .whatsapp-icon-float:hover {
-        transform: scale(1.1);
-        background-color: #128c7e;
-      }
-      @media (max-width: 768px) {
-        .whatsapp-icon-float {
-          bottom: 16px;
-          right: 16px;
-          width: 50px;
-          height: 50px;
-        }
-        .whatsapp-svg {
-          width: 30px;
-          height: 30px;
-        }
-      }
-    </style>
+      <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-12 border-b border-slate-900">
+        
+        {/* COLUMN 1: CORPORATE DISPATCH DESK */}
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col">
+            <span class="text-white text-xl font-serif font-bold tracking-tight">Mutiara</span>
+            <span class="text-[10px] text-amber-500 tracking-[0.25em] font-bold uppercase mt-0.5">Hotel & Convention</span>
+          </div>
+          <p class="text-xs leading-relaxed text-slate-500 max-w-xs mt-2">
+            Providing an impeccable blend of luxury hospitality and high-performance corporate event execution in the heart of Bandung City.
+          </p>
+        </div>
+
+        {/* COLUMN 2: QUICK LINK CLUSTERS */}
+        <div>
+          <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
+            Accommodations
+          </h4>
+          <ul class="flex flex-col gap-3 text-xs">
+            <li><a href="#rooms" class="hover:text-amber-500 transition-colors duration-300">Executive Deluxe Rooms</a></li>
+            <li><a href="#rooms" class="hover:text-amber-500 transition-colors duration-300">Business Premier Suites</a></li>
+            <li><a href="#rooms" class="hover:text-amber-500 transition-colors duration-300">Grand Family Sanctuaries</a></li>
+            <li><a href="https://m.mutiarahotel.com" target="_blank" rel="noopener noreferrer" class="text-amber-400 font-medium hover:underline">Direct Reservation Portal →</a></li>
+          </ul>
+        </div>
+
+        {/* COLUMN 3: EVENT SOLUTIONS SPACE */}
+        <div>
+          <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
+            Events & Conventions
+          </h4>
+          <ul class="flex flex-col gap-3 text-xs">
+            <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">Grand Magnolia Ballroom</a></li>
+            <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">Corporate Boardrooms</a></li>
+            <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">MICE Planning & Infrastructure</a></li>
+            <li><a href="#inquiry" class="hover:text-amber-500 transition-colors duration-300">Submit RFQ Request</a></li>
+          </ul>
+        </div>
+
+        {/* COLUMN 4: DIRECT VERIFIED CONCIERGE LOCATOR */}
+        <div>
+          <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
+            The Concierge Desk
+          </h4>
+          <div class="flex flex-col gap-3 text-xs leading-relaxed text-slate-400">
+            <p class="flex gap-2">
+              <span class="text-amber-500 select-none">📍</span>
+              <span>Jalan Kebon Kawung No. 60,<br />Bandung, West Java, Indonesia</span>
+            </p>
+            <p class="flex gap-2 mt-1">
+              <span class="text-amber-500 select-none">📞</span>
+              <a href="tel:+62224200888" class="hover:text-white transition-colors">+62 (022) 420 0888</a>
+            </p>
+            <p class="flex gap-2">
+              <span class="text-amber-500 select-none">💬</span>
+              <a href="https://wa.me/6287722469110" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors">WhatsApp Concierge Desk</a>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      {/* FOOTER CORE BOTTOM BASEMENT MARGINS */}
+      <div class="max-w-7xl mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-600 font-medium">
+        <p class="select-none">
+          &copy; {new Date().getFullYear()} Mutiara Hotel & Convention Bandung. All Rights Reserved.
+        </p>
+        <div class="flex gap-6">
+          <a href="#privacy" class="hover:text-slate-400 transition-colors">Privacy Charter</a>
+          <a href="#terms" class="hover:text-slate-400 transition-colors">Terms of Hospitality</a>
+          <span class="text-slate-800 select-none">|</span>
+          <p>Designed with Luxury Standards</p>
+        </div>
+      </div>
+
+    </footer>
+
   </body>
 </html>
+
+<style is:global>
+  /* Global micro reset overrides to safeguard template styling layers */
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+</style>
