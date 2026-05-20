@@ -6,10 +6,10 @@ import Hero from "@/components/hero.astro";
 import Logos from "@/components/logos.astro";
 import Layout from "@/layouts/Layout.astro";
 
-// Import your dynamic guest reviews database list
-import reviewsData from "@/content/reviews.json";
+// FORCED IMPORTS - Making absolutely sure Astro registers the paths
+import Stories from "../components/stories.astro"; 
+import reviewsData from "../content/reviews.json";
 
-// CHRONOLOGICAL SORTING ENGINE (Newest Date First)
 const sortedReviews = (reviewsData || []).sort((a, b) => {
   return new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime();
 });
@@ -19,8 +19,11 @@ const sortedReviews = (reviewsData || []).sort((a, b) => {
   
   <Hero />
 
+  <Features />
+  
+  <Stories /> 
+
   <Container>
-    <Features />
     <Logos />
     <Cta />
   </Container>
@@ -77,78 +80,23 @@ const sortedReviews = (reviewsData || []).sort((a, b) => {
       </div>
     </div>
   </section>
-  
-  <style>
-  .reviews-section {
-    padding: 40px 0;
-  }
-  /* NEW: Outer flex wrapper forces everything to snap dead center */
-/* Outer container wrapper spanning full width */
-  .reviews-grid-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 0 20px;
-    box-sizing: border-box;
-  }
-  
-  /* Horizontal row wrapper that forces boxes to center-align */
-  .reviews-grid {
-    display: flex;
-    flex-direction: column; /* Stacks vertically on mobile phones */
-    gap: 24px;
-    width: 100%;
-    max-width: 1140px;
-    justify-content: center; /* Centers items horizontally on desktop */
-    align-items: stretch;
-  }
-  
-  /* Responsive Desktop Layout Optimization Hook */
+</Layout>
+
+<style>
+  .reviews-section { padding: 40px 0; }
+  .reviews-grid-wrapper { width: 100%; display: flex; justify-content: center; padding: 0 20px; box-sizing: border-box; }
+  .reviews-grid { display: flex; flex-direction: column; gap: 24px; width: 100%; max-width: 1140px; justify-content: center; align-items: stretch; }
   @media (min-width: 768px) {
-    .reviews-grid {
-      flex-direction: row; /* Snaps into a horizontal row on tablets and desktops */
-      flex-wrap: wrap;     /* Wraps cleanly to a second centered row if you exceed 3-4 boxes */
-    }
-    .review-card {
-      width: 350px;        /* Keeps boxes uniform instead of stretching infinitely */
-      flex: 0 1 350px;
-    }
+    .reviews-grid { flex-direction: row; flex-wrap: wrap; }
+    .review-card { width: 350px; flex: 0 1 350px; }
   }
   .review-card {
-    background: white;
-    padding: 24px;
-    border-radius: 12px;
+    background: white; padding: 24px; border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    border: 1px solid #e5e7eb;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
+    border: 1px solid #e5e7eb; height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;
   }
-  .stars {
-    color: #fbbf24;
-    margin-bottom: 12px;
-    font-size: 16px;
-  }
-  .review-card .content {
-    color: #4b5563;
-    font-style: italic;
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-  .author-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid #f3f4f6;
-    padding-top: 14px;
-  }
-  .author-name {
-    color: #1f2937;
-    font-size: 14px;
-    font-weight: 500;
-  }
+  .stars { color: #fbbf24; margin-bottom: 12px; font-size: 16px; }
+  .review-card .content { color: #4b5563; font-style: italic; font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
+  .author-row { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #f3f4f6; padding-top: 14px; }
+  .author-name { color: #1f2937; font-size: 14px; font-weight: 500; }
 </style>
-</Layout>
