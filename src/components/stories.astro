@@ -4,25 +4,40 @@ import storiesData from "@/content/stories.json";
 const rawStories = storiesData || [];
 const today = new Date();
 
-// CALENDAR FILTER MACHINE logic
 const activeStories = rawStories.filter(story => {
   const start = story.start_date ? new Date(story.start_date) : null;
   const expiry = story.expiry_date ? new Date(story.expiry_date) : null;
-  
-  // Set time limits to midnight to make comparisons exact
-  if (start && start > today) return false; // Not yet started
-  if (expiry && expiry < today) return false; // Expired
+  if (start && start > today) return false;
+  if (expiry && expiry < today) return false;
   return true;
 });
 
 const archivedStories = rawStories.filter(story => {
   const expiry = story.expiry_date ? new Date(story.expiry_date) : null;
-  return expiry && expiry < today; // Only targets files whose calendar date is in the past
+  return expiry && expiry < today;
 });
 ---
 
-<section class="py-16 max-w-6xl mx-auto px-6 font-sans overflow-hidden">
+<section class="py-12 max-w-6xl mx-auto px-6 font-sans overflow-hidden" id="autotranslate-story-container">
   
+  <div class="flex justify-end items-center gap-2 mb-16 border-b border-slate-100 pb-4">
+    <span class="text-xs tracking-wider text-slate-400 font-medium">AUTO TRANSLATE :</span>
+    <div class="inline-flex rounded-md bg-slate-100 p-0.5" role="tablist">
+      <button 
+        class="auto-lang-btn px-3 py-1 text-xs font-semibold rounded transition-all bg-white text-slate-900 shadow-sm"
+        data-target-lang="original"
+      >
+        ORIGINAL
+      </button>
+      <button 
+        class="auto-lang-btn px-3 py-1 text-xs font-semibold rounded transition-all text-slate-500 hover:text-slate-900 flex items-center gap-1"
+        data-target-lang="translate"
+      >
+        <span>✨</span> <span id="translate-label-btn">TRANSLATE</span>
+      </button>
+    </div>
+  </div>
+
   <div class="space-y-28 md:space-y-36">
     {
       activeStories.map((story, index) => {
@@ -30,16 +45,23 @@ const archivedStories = rawStories.filter(story => {
         return (
           <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
             <div class={`w-full lg:w-1/2 aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 shadow-md transition-all duration-700 hover:shadow-xl ${isEven ? 'lg:order-1' : 'lg:order-2'}`}>
-              {story.story_image ? (
-                <img src={story.story_image} alt={story.title} class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />
-              ) : (
-                <div class="w-full h-full flex items-center justify-center text-slate-300 font-serif text-sm italic">No photo</div>
-              )}
+              {story.story_image && <img src={story.story_image} alt={story.title} class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" loading="lazy" />}
             </div>
+            
             <div class={`w-full lg:w-1/2 flex flex-col justify-center ${isEven ? 'lg:order-2' : 'lg:order-1'}`}>
-              {story.subtitle && <span class="text-xs font-semibold tracking-[0.25em] text-amber-600 uppercase mb-3 block">{story.subtitle}</span>}
-              <h3 class="font-serif text-2xl md:text-3xl text-slate-900 tracking-wide font-normal mb-5 leading-snug">{story.title}</h3>
-              <p class="text-slate-500 text-[15px] leading-relaxed font-light tracking-wide">{story.text_content}</p>
+              <div>
+                {story.subtitle && (
+                  <span class="text-xs font-semibold tracking-[0.25em] text-amber-600 uppercase mb-3 block translatable-text">
+                    {story.subtitle}
+                  </span>
+                )}
+                <h3 class="font-serif text-2xl md:text-3xl text-slate-900 tracking-wide font-normal mb-5 leading-snug translatable-text">
+                  {story.title}
+                </h3>
+                <p class="text-slate-500 text-[15px] leading-relaxed font-light tracking-wide translatable-text">
+                  {story.text_content}
+                </p>
+              </div>
             </div>
           </div>
         );
@@ -50,8 +72,8 @@ const archivedStories = rawStories.filter(story => {
   {archivedStories.length > 0 && (
     <div class="mt-32 pt-16 border-t border-slate-100">
       <div class="text-center mb-12">
-        <h4 class="font-serif text-2xl text-slate-800 font-normal">Past Events & Announcements</h4>
-        <p class="text-sm text-slate-400 mt-1">A historical log of Mutiara corporate features and seasonal gatherings</p>
+        <h4 class="font-serif text-2xl text-slate-800 font-normal translatable-text">Past Events & Announcements</h4>
+        <p class="text-sm text-slate-400 mt-1 translatable-text">A historical log of Mutiara corporate features and seasonal gatherings</p>
       </div>
       
       <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
@@ -61,9 +83,10 @@ const archivedStories = rawStories.filter(story => {
               <div class="aspect-video w-full rounded-lg overflow-hidden bg-slate-200 mb-4">
                 {story.story_image && <img src={story.story_image} alt={story.title} class="w-full h-full object-cover grayscale" />}
               </div>
-              <span class="text-[10px] font-bold tracking-wider text-slate-400 uppercase block mb-1">{story.subtitle || "ARCHIVE"}</span>
-              <h5 class="font-serif text-base text-slate-800 font-medium mb-2 leading-snug">{story.title}</h5>
-              <p class="text-slate-500 text-xs leading-relaxed font-light line-clamp-3">{story.text_content}</p>
+              
+              <span class="text-[10px] font-bold tracking-wider text-slate-400 uppercase block mb-1 translatable-text">{story.subtitle || "ARCHIVE"}</span>
+              <h5 class="font-serif text-base text-slate-800 font-medium mb-2 leading-snug translatable-text">{story.title}</h5>
+              <p class="text-slate-500 text-xs leading-relaxed font-light line-clamp-3 translatable-text">{story.text_content}</p>
             </div>
             {story.expiry_date && (
               <span class="text-[10px] text-amber-600/70 font-sans mt-4 block border-t border-slate-200/60 pt-2 font-medium">
@@ -76,3 +99,84 @@ const archivedStories = rawStories.filter(story => {
     </div>
   )}
 </section>
+
+<script>
+  const container = document.getElementById('autotranslate-story-container');
+  const buttons = document.querySelectorAll('.auto-lang-btn');
+  const textElements = container?.querySelectorAll('.translatable-text');
+  
+  // Local translation memory cache map to prevent multiple API requests
+  const translationCache = new Map();
+  let originalTexts = new Map();
+
+  // Save baseline original values upon load execution
+  textElements?.forEach((el, index) => {
+    originalTexts.set(index, el.innerHTML);
+  });
+
+  // Free Client-Side Translation Pipeline Gateway Router
+  async function translateText(text, targetLang) {
+    try {
+      const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`);
+      if (!response.ok) return text;
+      const data = await response.json();
+      return data[0].map(x => x[0]).join('');
+    } catch (e) {
+      console.error("Translation Engine Timeout:", e);
+      return text;
+    }
+  }
+
+  // Detect basic text alphabet profile to adjust label strings (e.g. if written in ID, target is EN)
+  const probeText = textElements && textElements[1] ? textElements[1].textContent || "" : "";
+  const isIndonesianBase = /\b(dan|yang|kamar|dengan|di|ke|untuk)\b/i.test(probeText);
+  const targetLanguageCode = isIndonesianBase ? 'en' : 'id';
+  
+  const labelBtn = document.getElementById('translate-label-btn');
+  if (labelBtn) {
+    labelBtn.textContent = isIndonesianBase ? "ENGLISH (AI)" : "INDONESIA (AI)";
+  }
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const mode = btn.getAttribute('data-target-lang');
+      
+      // Update UI button select highlight styling states
+      buttons.forEach(b => {
+        b.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+        b.classList.add('text-slate-500');
+      });
+      btn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+      btn.classList.remove('text-slate-500');
+
+      if (mode === 'original') {
+        // Reset directly back to original inputs securely
+        textElements?.forEach((el, index) => {
+          el.innerHTML = originalTexts.get(index);
+        });
+      } else {
+        // Run AI translation engine processing steps
+        btn.classList.add('animate-pulse');
+        
+        for (let index = 0; index < (textElements?.length || 0); index++) {
+          const el = textElements[index];
+          const rawOriginalText = originalTexts.get(index).trim();
+          
+          if (!rawOriginalText) continue;
+
+          if (translationCache.has(rawOriginalText)) {
+            el.innerHTML = translationCache.get(rawOriginalText);
+          } else {
+            // Strip structural tags for parsing safety inside translation loops
+            const textToTranslate = el.textContent || el.innerText;
+            const translatedResult = await translateText(textToTranslate, targetLanguageCode);
+            translationCache.set(rawOriginalText, translatedResult);
+            el.innerHTML = translatedResult;
+          }
+        }
+        
+        btn.classList.remove('animate-pulse');
+      }
+    });
+  });
+</script>
