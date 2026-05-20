@@ -35,11 +35,12 @@ content:
         type: text
 
       # THIS EXPLICITLY RENDERS CLEAN SELECTION/UPLOAD ARRAY CARDS
-      - name: slideshow_gallery
+      - name: carousel_images
         label: "Hero Slideshow Photos"
-        type: array
-        options:
-          structures: _structures.gallery_slides
+        type: list
+        spec:
+          type: image
+          label: "Slide Photo"
 
       - name: show_partners
         label: "Display Partners & Awards Row on Website?"
