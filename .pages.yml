@@ -65,7 +65,7 @@ content:
             - "Traveloka"
         default: "Google Review"
 
-  - name: rooms
+ - name: rooms
     label: "3. Rooms & Suites Showcase"
     type: file
     path: src/content/rooms.json
@@ -76,6 +76,9 @@ content:
       - name: title
         label: "Room Type Title"
         type: string
+      - name: description
+        label: "Short Elegant Description"
+        type: text
       - name: image
         label: "Room Feature Photo"
         type: image
@@ -85,13 +88,14 @@ content:
       - name: capacity
         label: "Max Guest Capacity"
         type: string
-      - name: size
-        label: "Room Dimensions"
+      - name: view
+        label: "Room View (e.g., Garden View)"
         type: string
-      - name: price_start
-        label: "Starting From Price Indicator"
+      - name: features
+        label: "Features & Amenities"
+        type: array
+        items:
         type: string
-
   - name: events
     label: "4. Convention & Events Spaces"
     type: file
