@@ -21,14 +21,14 @@ content:
       - name: tagline
         label: "Sub-Header High-Impact Hook"
         type: text
-        
-      # SWAP OUT THE SINGLE IMAGE FIELD FOR THIS ARRAY MULTI-IMAGE PICKER:
+
+      # Smooth Multi-Photo Array Input
       - name: banner_slides
         label: "Hero Slideshow Photos"
         type: array
-        items:
-          type: image
-          
+        options:
+          entry_input_type: image
+
       - name: show_partners
         label: "Display Partners & Awards Row on Website?"
         type: boolean
