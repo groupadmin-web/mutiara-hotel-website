@@ -26,10 +26,9 @@ content:
       - name: banner_slides
         label: "Hero Slideshow Photos"
         type: array
-      
-      # 2. THE CLOUDCANNON FIX: Explicitly dictate that everything matching inside the array is a direct image upload asset tracker
-      - name: banner_slides[*]
-        type: image
+        options:
+          # This explicitly forces CloudCannon to render clean add/remove image slots
+          entry_input_type: image
 
       - name: show_partners
         label: "Display Partners & Awards Row on Website?"
