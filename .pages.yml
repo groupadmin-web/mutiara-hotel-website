@@ -24,6 +24,10 @@ content:
       - name: background_image
         label: "Widescreen Edge-to-Edge Hero Image"
         type: image
+      - name: show_partners
+        label: "Display Partners & Awards Row on Website?"
+        type: boolean
+        default: true
 
   - name: reviews
     label: "2. Guest Reviews Marquee"
