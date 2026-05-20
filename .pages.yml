@@ -24,7 +24,7 @@ content:
 
       # Smooth Multi-Photo Array Input
       - name: banner_slides
-        label: "Hero Slideshow Photos"
+        label: "Banner Slideshow Photos"
         type: array
         options:
           entry_input_type: image
