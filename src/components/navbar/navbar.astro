@@ -18,7 +18,8 @@ const menuitems = [
 ];
 ---
 
-<header class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-sm shadow-sm transition-all border-b border-gray-100">
+{/* NAVBAR BACKDROP FIX: Fixed bg-white keeps the white background perfectly matched at all times */}
+<header class="sticky top-0 z-50 w-full bg-white shadow-sm transition-all border-b border-gray-100">
   <Container>
     <div class="flex flex-col lg:flex-row justify-between items-center py-4">
       <Astronav>
@@ -29,8 +30,7 @@ const menuitems = [
               <img 
                 src={homepageData.logo_image} 
                 alt="Mutiara Hotel & Convention Bandung Logo" 
-                /* mix-blend-multiply keys out the white/off-white background block instantly */
-                class="h-12 md:h-16 w-auto object-contain max-w-[200px] transition-transform duration-300 group-hover:scale-105 mix-blend-multiply" 
+                class="h-12 md:h-16 w-auto object-contain max-w-[200px] transition-transform duration-300 group-hover:scale-105" 
               />
             ) : (
               <span class="font-bold text-xl text-slate-900 uppercase">
@@ -110,9 +110,8 @@ const menuitems = [
       const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
       
       let currentActiveId = '';
-      const scrollPosition = window.scrollY + 250; // Offset window height allocation
+      const scrollPosition = window.scrollY + 250;
 
-      // Track sections that have explicit IDs defined
       document.querySelectorAll('section[id]').forEach((section) => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.offsetHeight;
@@ -130,8 +129,6 @@ const menuitems = [
         } else if (currentActiveId) {
           shouldHighlight = (href === `#${currentActiveId}`);
         } else {
-          // FOOLPROOF FALLBACK: If we haven't rolled down into an official custom section yet,
-          // HOME stays active automatically! No more dead zones.
           shouldHighlight = (href === '/' || href === '#');
         }
 
