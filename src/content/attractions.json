@@ -13,7 +13,7 @@ const attractions = Array.isArray(attractionsData) ? attractionsData : [];
       <span class="text-[10px] tracking-widest font-sans font-bold text-slate-400 uppercase">Language Mode:</span>
       <div class="bg-slate-100 p-1 rounded-xl inline-flex items-center border border-slate-200/60 shadow-inner">
         <button id="lang-en" type="button" class="px-4 py-1.5 text-[11px] font-sans font-bold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer">Original</button>
-        <button id="lang-id" type="button" class="px-4 py-1.5 text-[11px] font-sans font-bold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer">Indonesia (AI)</button>
+        <button id="lang-id" type="button" class="px-4 py-1.5 text-[11px] font-sans font-bold uppercase tracking-wider rounded-lg text-slate-400 hover:text-slate-600 transition-colors cursor-pointer">Indonesia (AI)</button>
       </div>
     </div>
 
@@ -24,9 +24,10 @@ const attractions = Array.isArray(attractionsData) ? attractionsData : [];
       <p id="txt-desc" class="text-lg text-gray-600 font-light max-w-2xl mx-auto italic">"From the heritage steps of the historic city center to the dramatic volcanic craters of West Java, experience the best of Bandung right from our doorstep."</p>
     </div>
 
-    <div id="attractions-grid" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div id="attractions-grid" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
       {attractions.map((item, index) => (
         <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+          
           <div class="relative h-60 bg-gray-200 overflow-hidden">
             <img 
               src={item.image || 
@@ -43,18 +44,23 @@ const attractions = Array.isArray(attractionsData) ? attractionsData : [];
               <span>📍</span> <span data-field="distance" data-index={index} data-en={item.distance}>{item.distance}</span>
             </div>
           </div>
+
           <div class="p-6 flex-grow flex flex-col justify-between">
             <div>
               <span data-field="tagline" data-index={index} data-en={item.tagline} class="text-amber-600 text-[10px] tracking-widest uppercase font-sans font-bold block mb-1">{item.tagline}</span>
-              <h2 data-field="title" data-index={index} data-en={item.title} class="text-xl font-serif font-bold text-gray-800 mb-3 uppercase tracking-wide line-clamp-2 min-h-[56px] flex items-center">{item.title}</h2>
+              <h2 data-field="title" data-index={index} data-en={item.title} class="text-xl font-serif font-bold text-gray-800 mb-3 uppercase tracking-wide min-h-[56px] flex items-center">{item.title}</h2>
               <div class="w-8 h-0.5 bg-gray-200 mb-4"></div>
-              <p data-field="description" data-index={index} data-en={item.description} class="text-gray-500 text-sm font-sans font-light leading-relaxed line-clamp-4">{item.description}</p>
+              
+              <p data-field="description" data-index={index} data-en={item.description} class="text-gray-500 text-sm font-sans font-light leading-relaxed transition-all duration-300">
+                {item.description}
+              </p>
             </div>
             <div class="border-t border-gray-100 pt-4 mt-6 flex items-center justify-between text-[11px] font-sans font-medium tracking-wider text-slate-400 uppercase">
               <span id={`region-tag-${index}`}>Bandung, IDN</span>
               <a id={`footer-tag-${index}`} href="#" target="_blank" rel="noopener noreferrer" class="text-amber-600 font-bold hover:text-amber-700 transition-colors cursor-pointer group-hover:underline">Local Guide →</a>
             </div>
           </div>
+
         </div>
       ))}
     </div>
@@ -98,16 +104,15 @@ const attractions = Array.isArray(attractionsData) ? attractionsData : [];
     }
   };
 
-  // Fixed Valid Google Maps URLs
   const mapsTable = {
-    "Museum of the Asian-African Conference": "https://www.google.com/maps/search/?api=1&query=Museum+of+the+Asian-African+Conference+Bandung",
-    "Taman Balai Kota Bandung": "https://www.google.com/maps/search/?api=1&query=Taman+Balai+Kota+Bandung",
-    "Braga City Walk": "https://www.google.com/maps/search/?api=1&query=Braga+City+Walk+Bandung",
-    "23 Paskal Shopping Centre": "https://www.google.com/maps/search/?api=1&query=23+Paskal+Shopping+Centre+Bandung",
-    "Gedung Sate": "https://www.google.com/maps/search/?api=1&query=Gedung+Sate+Bandung",
-    "Kawah Putih (White Crater)": "https://www.google.com/maps/search/?api=1&query=Kawah+Putih+Ciwidey",
-    "Mount Tangruban Perahu": "https://www.google.com/maps/search/?api=1&query=Tangkuban+Perahu+Lembang",
-    "Saung Angklung Udjo": "https://www.google.com/maps/search/?api=1&query=Saung+Angklung+Udjo+Bandung"
+    "Museum of the Asian-African Conference": "https://www.google.com/maps/dir/?api=1&destination=Museum+Konferensi+Asia-Afrika",
+    "Taman Balai Kota Bandung": "https://www.google.com/maps/dir/?api=1&destination=Taman+Balai+Kota+Bandung",
+    "Braga City Walk": "https://www.google.com/maps/dir/?api=1&destination=Braga+City+Walk",
+    "23 Paskal Shopping Centre": "https://www.google.com/maps/dir/?api=1&destination=23+Paskal+Shopping+Centre",
+    "Gedung Sate": "https://www.google.com/maps/dir/?api=1&destination=Gedung+Sate",
+    "Kawah Putih (White Crater)": "https://www.google.com/maps/dir/?api=1&destination=Kawah+Putih",
+    "Mount Tangruban Perahu": "https://www.google.com/maps/dir/?api=1&destination=Tangkuban+Perahu",
+    "Saung Angklung Udjo": "https://www.google.com/maps/dir/?api=1&destination=Saung+Angklung+Udjo"
   };
 
   function getLanguagePreference() {
