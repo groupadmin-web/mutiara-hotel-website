@@ -1,25 +1,50 @@
 ---
-// Standalone Custom Luxury Footer Component Asset Block
+import homepageData from "@/content/homepage.json";
+
+// Dynamic fallbacks if the main branding JSON variables aren't initialized
+const logoImage = homepageData.logo_image || "/logo.svg"; 
+const brandName = homepageData.logo_text || "Mutiara";
 ---
 
-<footer class="bg-slate-950 text-slate-400 font-sans border-t border-slate-900 pt-16 pb-8 relative overflow-hidden">
+<footer class="w-full bg-slate-950 text-slate-400 font-sans border-t border-slate-900 pt-16 pb-8 relative overflow-hidden left-0 right-0">
   
   <div class="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none select-none"></div>
 
+  {/* INTERNAL INNER GRID INNER SHIELD */}
   <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-12 border-b border-slate-900">
     
-    {/* COLUMN 1: RESORT IDENTITY & LOGO FIELD */}
+    {/* COLUMN 1: THE REAL VERIFIED NAVBAR BRAND LOGO IMAGE */}
     <div class="flex flex-col gap-4">
-      <div class="flex flex-col">
-        <span class="text-white text-xl font-serif font-bold tracking-tight">Mutiara</span>
-        <span class="text-[10px] text-amber-500 tracking-[0.25em] font-bold uppercase mt-0.5">Hotel & Convention</span>
+      <div class="flex flex-col items-start gap-2.5">
+        
+        {logoImage ? (
+          /* Uses the exact logo path managed in your navbar/homepage dataset */
+          <img 
+            src={logoImage} 
+            alt={`${brandName} Official Brand Logo`} 
+            class="h-12 w-auto object-contain brightness-100 filter text-white"
+          />
+        ) : (
+          /* Elegant EB Garamond typography fallback text if an image file fails to load */
+          <span 
+            class="text-white text-3xl font-medium tracking-wide" 
+            style="font-family: 'EB Garamond', Garamond, serif;"
+          >
+            {brandName}
+          </span>
+        )}
+        
+        {/* BRAND SUBTITLE */}
+        <span class="text-[10px] text-amber-500 tracking-[0.25em] font-bold uppercase mt-1">
+          Hotel & Convention
+        </span>
       </div>
       <p class="text-xs leading-relaxed text-slate-500 max-w-xs mt-2">
         Providing an impeccable blend of luxury hospitality and high-performance corporate event execution in the heart of Bandung City.
       </p>
     </div>
 
-    {/* COLUMN 2: ACCOMMODATION ANCHORS */}
+    {/* COLUMN 2: ACCOMMODATION ANCHORS (Updated with dynamic EB Garamond titles!) */}
     <div>
       <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
         Accommodations
@@ -63,7 +88,7 @@
 
   </div>
 
-  {/* BOTTOM CORE CREDIT DESK BAR - Follows current year autonomously */}
+  {/* BOTTOM CORE CREDIT DESK BAR */}
   <div class="max-w-7xl mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-600 font-medium">
     <p>
       &copy; {new Date().getFullYear()} Mutiara Hotel & Convention Bandung. All Rights Reserved.
