@@ -65,7 +65,7 @@ content:
             - "Traveloka"
         default: "Google Review"
 
-  - name: rooms
+ - name: rooms
     label: "3. Rooms & Suites Showcase"
     type: file
     path: src/content/rooms.json
@@ -80,8 +80,16 @@ content:
         label: "Short Elegant Description"
         type: text
       - name: image
-        label: "Room Feature Photo"
+        label: "Main Feature Photo (Cover)"
         type: image
+        
+      # THIS GIVES YOU A CLEAN, REPEATABLE LIST OF EXTRA PHOTOS INSIDE EACH ROOM CARD
+      - name: room_gallery
+        label: "Additional Room Gallery Photos"
+        type: array
+        options:
+          entry_input_type: image
+
       - name: bed_type
         label: "Bed Configuration Setup"
         type: string
