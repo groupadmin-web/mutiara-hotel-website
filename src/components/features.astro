@@ -1,69 +1,43 @@
 ---
-// @ts-ignore
-import { Icon } from "astro-icon/components";
+// Fetch your live dynamic experience data
+import featuresData from "@/content/features.json";
 
-const features = [
-  {
-    title: "Bring Your Own Framework",
-    description:
-      "Build your site using React, Svelte, Vue, Preact, web components, or just plain ol' HTML + JavaScript.",
-    icon: "bx:bxs-briefcase",
-  },
-  {
-    title: "100% Static HTML, No JS",
-    description:
-      "Astro renders your entire page to static HTML, removing all JavaScript from your final build by default.",
-    icon: "bx:bxs-window-alt",
-  },
-  {
-    title: "On-Demand Components",
-    description:
-      "Need some JS? Astro can automatically hydrate interactive components when they become visible on the page.  ",
-    icon: "bx:bxs-data",
-  },
-  {
-    title: "Broad Integration",
-    description:
-      "Astro supports TypeScript, Scoped CSS, CSS Modules, Sass, Tailwind, Markdown, MDX, and any other npm packages.",
-    icon: "bx:bxs-bot",
-  },
-  {
-    title: "SEO Enabled",
-    description:
-      "Automatic sitemaps, RSS feeds, pagination and collections take the pain out of SEO and syndication. It just works!",
-    icon: "bx:bxs-file-find",
-  },
-  {
-    title: "Community",
-    description:
-      "Astro is an open source project powered by hundreds of contributors making thousands of individual contributions.",
-    icon: "bx:bxs-user",
-  },
-];
+const safeFeatures = featuresData || [];
 ---
 
-<div class="mt-16 md:mt-0">
-  <h2 class="text-4xl lg:text-5xl font-bold lg:tracking-tight">
-    Everything you need to start a website
-  </h2>
-  <p class="text-lg mt-4 text-slate-600">
-    Astro comes batteries included. It takes the best parts of state-of-the-art
-    tools and adds its own innovations.
-  </p>
-</div>
+<section class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
+  
+  <div class="text-center max-w-2xl mx-auto mb-20">
+    <h2 class="text-xs font-semibold tracking-[0.25em] text-amber-600 uppercase mb-3">
+      The Mutiara Experience
+    </h2>
+    <h3 class="text-3xl md:text-4xl font-serif text-slate-900 tracking-wide font-normal leading-tight">
+      A Quiet Oasis of Refined Comfort
+    </h3>
+    <div class="h-[1px] w-12 bg-amber-500/40 mx-auto mt-6"></div>
+  </div>
 
-<div class="grid sm:grid-cols-2 md:grid-cols-3 mt-16 gap-16">
-  {
-    features.map((item) => (
-      <div class="flex gap-4 items-start">
-        <div class="mt-1 bg-black rounded-full  p-2 w-8 h-8 shrink-0">
-          <Icon class="text-white" name={item.icon} />
-        </div>
-        <div>
-          <h3 class="font-semibold text-lg">{item.title}</h3>{" "}
-          <p class="text-slate-500 mt-2 leading-relaxed">{item.description}</p>
-        </div>
-      </div>
-    ))
-  }
-</div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+    {
+      safeFeatures.map((item, index) => {
+        const formattedIndex = String(index + 1).padStart(2, '0');
+        
+        return (
+          <div class="flex flex-col pt-4 border-t border-slate-100 group hover:border-amber-500/40 transition-colors duration-500">
+            <span class="font-serif text-2xl font-light text-amber-600/60 mb-3 tracking-wider block">
+              {formattedIndex}
+            </span>
+            <div>
+              <h4 class="font-serif text-xl text-slate-800 font-medium tracking-wide mb-3">
+                {item.title}
+              </h4>
+              <p class="text-slate-500 text-[14px] leading-relaxed font-light font-sans tracking-wide">
+                {item.description}
+              </p>
+            </div>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>
