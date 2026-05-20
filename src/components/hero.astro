@@ -1,22 +1,32 @@
 ---
-// 1. Fetch your dynamic homepage database text and image configurations
-import homepageData from "@/content/homepage.json";
+// 1. Fetch your dynamic homepage database configurations
+import homepageData from "../content/homepage.json";
 
 // 2. Safely extract our user variables from the CMS data file
-const { welcome_title, tagline, booking_button_text, background_image } = homepageData;
+const { welcome_title, tagline, booking_button_text } = homepageData;
 
-// 3. Fallback high-resolution layout placeholder in case your staff hasn't uploaded an image/GIF yet
-const finalBgImage = background_image || "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80";
+// 3. Fallback high-resolution photos in case your staff hasn't uploaded slides yet
+const slides = homepageData.banner_slides && homepageData.banner_slides.length > 0
+  ? homepageData.banner_slides
+  : [
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1920&q=80"
+    ];
 ---
 
 <main class="relative bg-gray-950 text-white min-h-[80vh] w-full flex items-center justify-center overflow-hidden shadow-2xl">
   
   <div class="absolute inset-0 z-0 w-full h-full">
-    <img 
-      src={finalBgImage} 
-      alt="Mutiara Hotel Showcase Background" 
-      class="w-full h-full object-cover opacity-40 filter brightness-75 transition-all duration-500"
-    />
+    {slides.map((slideImage, index) => (
+      <img 
+        data-hero-carousel-slide 
+        src={slideImage} 
+        alt={`Mutiara Hotel Showcase Background Slide ${index + 1}`} 
+        class="absolute inset-0 w-full h-full object-cover filter brightness-75 transition-opacity duration-1000 ease-in-out"
+        style={`opacity: ${index === 0 ? '0.4' : '0'}; z-index: ${index === 0 ? '1' : '0'};`}
+      />
+    ))}
   </div>
 
   <div class="relative z-10 max-w-4xl mx-auto text-center px-6 py-24 flex flex-col items-center justify-center">
@@ -37,12 +47,6 @@ const finalBgImage = background_image || "https://images.unsplash.com/photo-1566
     <div class="flex justify-center w-full">
       <a 
         href="https://m.mutiarahotel.com" 
-        /* CHANGES MADE:
-          - Reduced min-w from 280px to 220px
-          - Reduced vertical padding from py-5 to py-3.5
-          - Reduced horizontal padding from px-8 to px-6
-          - Adjusted font size to text-base md:text-lg for sharp proportion
-        */
         class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-base md:text-lg px-6 py-3.5 rounded-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2.5 tracking-wide min-w-[220px]"
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6 shrink-0 text-amber-100">
@@ -54,3 +58,34 @@ const finalBgImage = background_image || "https://images.unsplash.com/photo-1566
 
   </div>
 </main>
+
+<script is:inline>
+  (function() {
+    function startHeroCarousel() {
+      const slides = document.querySelectorAll('[data-hero-carousel-slide]');
+      if (!slides || slides.length <= 1) return;
+
+      let currentIdx = 0;
+      const changeDelay = 5000; // Transitions images every 5 seconds
+
+      setInterval(() => {
+        // Fade out previous image container asset
+        slides[currentIdx].style.opacity = '0';
+        slides[currentIdx].style.zIndex = '0';
+
+        // Advanced cycle index loop
+        currentIdx = (currentIdx + 1) % slides.length;
+
+        // Fade in new target background photo smoothly
+        slides[currentIdx].style.opacity = '0.4'; // Preserves your signature layout opacity
+        slides[currentIdx].style.zIndex = '1';
+      }, changeDelay);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startHeroCarousel);
+    } else {
+      startHeroCarousel();
+    }
+  })();
+</script>
