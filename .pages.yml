@@ -164,12 +164,11 @@ content:
         label: "Score/Label Notation"
         type: string
 
-  - name: promotion
+- name: promotion
     label: "8. Promotions & Offers Banner"
     type: file
     path: src/content/promotion.json
     format: json
-    # Explicitly telling the uploader to put assets inside the standard hotel image cache directory:
     media:
       input: public/images
       output: /images
@@ -186,6 +185,8 @@ content:
       - name: banner_bg_image
         label: "Promo Background Photo File (Applies when 'Photo Background' is selected)"
         type: image
+        # THE FIX: Tell the CMS this field can safely be left blank
+        required: false
       - name: cta_title
         label: "Promo Headline Title"
         type: string
@@ -193,7 +194,5 @@ content:
         label: "Promo Offer Details Paragraph"
         type: text
       - name: cta_btn_text
-        label: "Promo Button Action text"
-        type: string
         label: "Promo Button Action text"
         type: string
