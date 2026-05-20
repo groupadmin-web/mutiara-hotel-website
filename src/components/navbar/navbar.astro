@@ -124,6 +124,11 @@ const menuitems = [
 
     // 2. Otherwise run homepage section scroll spy logic
     function checkActiveSection() {
+      // SECURITY GATE: Stop execution instantly if any modal sets body overflow to hidden!
+      if (document.body.style.overflow === 'hidden') {
+        return;
+      }
+
       const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
       let currentActiveId = '';
       const scrollPosition = window.scrollY + 250;
@@ -160,12 +165,11 @@ const menuitems = [
       });
     }
 
-    window.addEventListener('scroll', checkActiveSection);
-    window.addEventListener('resize', checkActiveSection);
+    // Turn event tracking passive so hovers don't force page paint delays
+    window.addEventListener('scroll', checkActiveSection, { passive: true });
+    window.addEventListener('resize', checkActiveSection, { passive: true });
     checkActiveSection();
   }
 
   window.addEventListener('DOMContentLoaded', initScrollTracking);
   window.addEventListener('astro:after-swap', initScrollTracking);
-  initScrollTracking();
-</script>
