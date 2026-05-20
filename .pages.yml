@@ -65,7 +65,7 @@ content:
             - "Traveloka"
         default: "Google Review"
 
- - name: rooms
+  - name: rooms
     label: "3. Rooms & Suites Showcase"
     type: file
     path: src/content/rooms.json
@@ -82,8 +82,6 @@ content:
       - name: image
         label: "Main Feature Photo (Cover)"
         type: image
-        
-      # THIS GIVES YOU A CLEAN, REPEATABLE LIST OF EXTRA PHOTOS INSIDE EACH ROOM CARD
       - name: room_gallery1
         label: "Additional Room Gallery Photos"
         type: image
@@ -93,7 +91,6 @@ content:
       - name: room_gallery3
         label: "Additional Room Gallery Photos"
         type: image
-      
       - name: bed_type
         label: "Bed Configuration Setup"
         type: string
@@ -209,30 +206,30 @@ content:
       - name: cta_btn_text
         label: "Promo Button Action text"
         type: string
-        
+
   - name: attractions
-      label: "9. Local Attractions Guide"
-      type: file
-      path: src/content/attractions.json
-      format: json
-      list: true
-      collapsed: true
-      fields:
-        - name: title
-          label: "Attraction Location Name"
-          type: string
-        - name: distance
-          label: "Distance Proximity (e.g., 0.9 Miles / 15 Min Walk)"
-          type: string
-        - name: tagline
-          label: "Short Promo Subtitle Tagline"
-          type: string
-        - name: category
-          label: "Classification Category (e.g., City Center, Nature)"
-          type: string
-        - name: image
-          label: "Showcase Feature Photo"
-          type: image
-        - name: description
-          label: "Historical / Travel Description"
-          type: text
+    label: "9. Local Attractions Guide"
+    type: file
+    path: src/content/attractions.json
+    format: json
+    list: true
+    collapsed: true
+    fields:
+      - name: title
+        label: "Attraction Location Name"
+        type: string
+      - name: distance
+        label: "Distance Proximity (e.g., 0.9 Miles / 15 Min Walk)"
+        type: string
+      - name: tagline
+        label: "Short Promo Subtitle Tagline"
+        type: string
+      - name: category
+        label: "Classification Category (e.g., City Center, Nature)"
+        type: string
+      - name: image
+        label: "Showcase Feature Photo"
+        type: image
+      - name: description
+        label: "Historical / Travel Description"
+        type: text
