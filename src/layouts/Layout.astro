@@ -7,30 +7,27 @@ const { title } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Mutiara Hotel & Convention - A sanctuary of luxury comfort and professional event execution in Bandung." />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Mutiara Hotel & Convention Bandung" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="bg-white text-slate-900 min-h-screen flex flex-col justify-between antialiased selection:bg-amber-500 selection:text-white">
+  <body class="bg-white text-slate-900 min-h-screen flex flex-col justify-between antialiased">
     
-    {/* MAIN SYSTEM SITE NAVIGATION SLOT */}
+    {/* MAIN CONTENT PORTAL SLOT */}
     <main class="flex-grow">
       <slot />
     </main>
 
-    {/* EXCLUSIVE REENGINEERED RESORT FOOTER CARPET */}
+    {/* EXCLUSIVE LUXURY RESORT FOOTER */}
     <footer class="bg-slate-950 text-slate-400 font-sans border-t border-slate-900 pt-16 pb-8 relative overflow-hidden">
       
-      <div class="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none select-none"></div>
-
       <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-12 border-b border-slate-900">
         
-        {/* COLUMN 1: CORPORATE DISPATCH DESK */}
+        {/* COLUMN 1: CORPORATE IDENTITY */}
         <div class="flex flex-col gap-4">
           <div class="flex flex-col">
             <span class="text-white text-xl font-serif font-bold tracking-tight">Mutiara</span>
@@ -41,7 +38,7 @@ const { title } = Astro.props;
           </p>
         </div>
 
-        {/* COLUMN 2: QUICK LINK CLUSTERS */}
+        {/* COLUMN 2: ACCOMMODATIONS */}
         <div>
           <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
             Accommodations
@@ -54,51 +51,45 @@ const { title } = Astro.props;
           </ul>
         </div>
 
-        {/* COLUMN 3: EVENT SOLUTIONS SPACE */}
+        {/* COLUMN 3: CONVENTIONS */}
         <div>
           <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
             Events & Conventions
           </h4>
           <ul class="flex flex-col gap-3 text-xs">
-            <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">Grand Magnolia Ballroom</a></li>
+            <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">Grand Ballroom</a></li>
             <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">Corporate Boardrooms</a></li>
-            <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">MICE Planning & Infrastructure</a></li>
-            <li><a href="#inquiry" class="hover:text-amber-500 transition-colors duration-300">Submit RFQ Request</a></li>
+            <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">MICE Infrastructure</a></li>
           </ul>
         </div>
 
-        {/* COLUMN 4: DIRECT VERIFIED CONCIERGE LOCATOR */}
+        {/* COLUMN 4: DIRECT CONCIERGE LOCATOR */}
         <div>
           <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
             The Concierge Desk
           </h4>
           <div class="flex flex-col gap-3 text-xs leading-relaxed text-slate-400">
             <p class="flex gap-2">
-              <span class="text-amber-500 select-none">📍</span>
+              <span class="text-amber-500">📍</span>
               <span>Jalan Kebon Kawung No. 60,<br />Bandung, West Java, Indonesia</span>
             </p>
             <p class="flex gap-2 mt-1">
-              <span class="text-amber-500 select-none">📞</span>
+              <span class="text-amber-500">📞</span>
               <a href="tel:+62224200888" class="hover:text-white transition-colors">+62 (022) 420 0888</a>
-            </p>
-            <p class="flex gap-2">
-              <span class="text-amber-500 select-none">💬</span>
-              <a href="https://wa.me/6287722469110" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors">WhatsApp Concierge Desk</a>
             </p>
           </div>
         </div>
 
       </div>
 
-      {/* FOOTER CORE BOTTOM BASEMENT MARGINS */}
+      {/* FOOTER BOTTOM BASEMENT BAR */}
       <div class="max-w-7xl mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-600 font-medium">
-        <p class="select-none">
+        <p>
           &copy; {new Date().getFullYear()} Mutiara Hotel & Convention Bandung. All Rights Reserved.
         </p>
         <div class="flex gap-6">
           <a href="#privacy" class="hover:text-slate-400 transition-colors">Privacy Charter</a>
-          <a href="#terms" class="hover:text-slate-400 transition-colors">Terms of Hospitality</a>
-          <span class="text-slate-800 select-none">|</span>
+          <span class="text-slate-800">|</span>
           <p>Designed with Luxury Standards</p>
         </div>
       </div>
@@ -109,10 +100,10 @@ const { title } = Astro.props;
 </html>
 
 <style is:global>
-  /* Global micro reset overrides to safeguard template styling layers */
   html, body {
     margin: 0;
     padding: 0;
     width: 100%;
+    scroll-behavior: smooth;
   }
 </style>
