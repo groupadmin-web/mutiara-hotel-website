@@ -65,7 +65,6 @@ const rooms = Array.isArray(roomsData) ? roomsData : [];
               ))}
             </div>
 
-            {/* THE GALLERY TRIGGER BUTTON */}
             <button 
               data-gallery-trigger={index}
               class="block w-full bg-amber-600 hover:bg-amber-700 text-white text-center font-bold font-sans text-sm py-3.5 rounded-lg shadow-md hover:shadow-lg transition-all tracking-wider uppercase cursor-pointer"
@@ -74,42 +73,101 @@ const rooms = Array.isArray(roomsData) ? roomsData : [];
             </button>
           </div>
 
-          {/* LIGHTBOX POPUP MODAL WITH HORIZONTAL ROW FLOW */}
-          <div id={`gallery-modal-${index}`} class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-            <div class="bg-white rounded-xl p-6 max-w-4xl w-full shadow-2xl relative">
-              <button data-close-trigger={index} class="absolute -top-12 right-0 text-white hover:text-amber-500 text-sm uppercase font-bold tracking-widest cursor-pointer">✕ Close</button>
-              <h3 class="text-xl font-serif font-bold text-gray-900 mb-6 uppercase tracking-wider">{room.title} Gallery Photo Showcase</h3>
+          {/* DYNAMIC HILTON SPLIT POPUP MODAL */}
+          <div id={`gallery-modal-${index}`} class="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-50 hidden items-center justify-center p-4 sm:p-6 md:p-10">
+            <div class="bg-white rounded-2xl max-w-5xl w-full shadow-2xl overflow-hidden flex flex-col md:flex-row relative animate-in fade-in zoom-in-95 duration-200 h-auto max-h-[90vh]">
               
-              {/* HORIZONTAL FLEXBOX CONTAINER */}
-              <div class="flex flex-row flex-wrap items-center justify-start gap-4 p-2 max-h-[60vh] overflow-y-auto">
-                
-                {/* Main Feature Cover */}
-                <div class="w-40 sm:w-52 aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm flex-shrink-0">
-                  <img src={room.image} class="w-full h-full object-cover" alt="Main cover display photo"/>
+              <button data-close-trigger={index} class="absolute top-4 right-4 z-50 bg-white hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold shadow-md cursor-pointer transition-all">
+                ✕
+              </button>
+
+              <div class="md:w-7/12 bg-slate-900 relative flex items-center justify-center min-h-[300px] md:min-h-full">
+                <img 
+                  id={`modal-display-img-${index}`}
+                  src={room.image} 
+                  class="w-full h-full object-cover absolute inset-0" 
+                  alt="Current showcase display view"
+                />
+                <div class="absolute bottom-4 left-4 bg-slate-950/70 backdrop-blur-sm text-white text-xs tracking-widest px-3 py-1.5 rounded-md uppercase font-sans">
+                  {room.view}
                 </div>
-                
-                {/* Additional Upload Slot 1 */}
-                {room.room_gallery1 && (
-                  <div class="w-40 sm:w-52 aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm flex-shrink-0">
-                    <img src={room.room_gallery1} class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" alt="Room detail image 1"/>
-                  </div>
-                )}
-                
-                {/* Additional Upload Slot 2 */}
-                {room.room_gallery2 && (
-                  <div class="w-40 sm:w-52 aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm flex-shrink-0">
-                    <img src={room.room_gallery2} class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" alt="Room detail image 2"/>
-                  </div>
-                )}
-                
-                {/* Additional Upload Slot 3 */}
-                {room.room_gallery3 && (
-                  <div class="w-40 sm:w-52 aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-sm flex-shrink-0">
-                    <img src={room.room_gallery3} class="w-full h-full object-cover hover:scale-105 transition-transform duration-200" alt="Room detail image 3"/>
-                  </div>
-                )}
-                
+
+                {/* HORIZONTAL MINI CAROUSEL OVERLAY BAR FOR FAST TOGGLE */}
+                <div class="absolute bottom-4 right-4 flex items-center gap-2 bg-white/10 backdrop-blur-md p-1.5 rounded-lg border border-white/20">
+                  <button data-thumb-switch={room.image} data-target-modal={index} class="w-12 h-8 rounded overflow-hidden opacity-100 hover:opacity-100 transition-all border-2 border-amber-500 flex-shrink-0 cursor-pointer">
+                    <img src={room.image} class="w-full h-full object-cover" />
+                  </button>
+                  {room.room_gallery1 && (
+                    <button data-thumb-switch={room.room_gallery1} data-target-modal={index} class="w-12 h-8 rounded overflow-hidden opacity-60 hover:opacity-100 transition-all border border-transparent flex-shrink-0 cursor-pointer">
+                      <img src={room.room_gallery1} class="w-full h-full object-cover" />
+                    </button>
+                  )}
+                  {room.room_gallery2 && (
+                    <button data-thumb-switch={room.room_gallery2} data-target-modal={index} class="w-12 h-8 rounded overflow-hidden opacity-60 hover:opacity-100 transition-all border border-transparent flex-shrink-0 cursor-pointer">
+                      <img src={room.room_gallery2} class="w-full h-full object-cover" />
+                    </button>
+                  )}
+                  {room.room_gallery3 && (
+                    <button data-thumb-switch={room.room_gallery3} data-target-modal={index} class="w-12 h-8 rounded overflow-hidden opacity-60 hover:opacity-100 transition-all border border-transparent flex-shrink-0 cursor-pointer">
+                      <img src={room.room_gallery3} class="w-full h-full object-cover" />
+                    </button>
+                  )}
+                </div>
               </div>
+
+              <div class="md:w-5/12 p-6 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[50vh] md:max-h-[90vh]">
+                <div>
+                  <span class="text-amber-600 font-sans text-xs tracking-widest uppercase font-bold">Accommodation</span>
+                  <h3 class="text-2xl md:text-3xl font-serif font-bold text-gray-900 mt-1 mb-4 uppercase tracking-wide">{room.title}</h3>
+                  <div class="w-12 h-0.5 bg-amber-600 mb-6"></div>
+                  
+                  <p class="text-gray-600 font-sans text-sm font-light leading-relaxed mb-6">
+                    {room.description}
+                  </p>
+
+                  <h4 class="text-xs tracking-wider uppercase font-sans font-bold text-gray-400 mb-3">Room Highlights</h4>
+                  <div class="space-y-4 mb-6 text-sm font-sans text-gray-700">
+                    <div class="flex items-start gap-3">
+                      <span class="text-base">👥</span>
+                      <div>
+                        <strong class="block text-xs font-bold text-gray-900 uppercase tracking-wide">Guests Capacity</strong>
+                        <span class="text-xs text-gray-500 font-light">Accommodates {room.capacity}</span>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                      <span class="text-base">🛏️</span>
+                      <div>
+                        <strong class="block text-xs font-bold text-gray-900 uppercase tracking-wide">Bed Layout Configuration</strong>
+                        <span class="text-xs text-gray-500 font-light">{room.bed_type} Setup</span>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                      <span class="text-base">📍</span>
+                      <div>
+                        <strong class="block text-xs font-bold text-gray-900 uppercase tracking-wide">Premium Location</strong>
+                        <span class="text-xs text-gray-500 font-light">Features a {room.view} aspect</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h4 class="text-xs tracking-wider uppercase font-sans font-bold text-gray-400 mb-3">Included Amenities</h4>
+                  <div class="flex flex-wrap gap-2 mb-8">
+                    {room.features && room.features.map((feature) => (
+                      <span class="bg-slate-100 text-slate-800 text-[10px] tracking-wide uppercase px-3 py-1.5 rounded font-medium font-sans border border-slate-200">
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <a 
+                  href="https://m.mutiarahotel.com" 
+                  class="block w-full bg-slate-900 hover:bg-slate-800 text-white text-center font-bold font-sans text-sm py-4 rounded-xl shadow transition-all tracking-wider uppercase mt-4"
+                >
+                  Book This Room
+                </a>
+              </div>
+
             </div>
           </div>
 
@@ -121,10 +179,56 @@ const rooms = Array.isArray(roomsData) ? roomsData : [];
 </Layout>
 
 <script is:inline>
-  function initGalleryPopups() {
-    const openBtns = document.querySelectorAll('[data-gallery-trigger]');
-    
-    openBtns.forEach(btn => {
+  function initSplitGalleryPopups() {
+    // 1. Setup open handlers
+    document.querySelectorAll('[data-gallery-trigger]').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = btn.getAttribute('data-gallery-trigger');
-        const
+        const modal = document.getElementById(`gallery-modal-${idx}`);
+        if (modal) {
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden'; // Freeze body scrolling
+        }
+      });
+    });
+
+    // 2. Setup close handlers
+    document.querySelectorAll('[data-close-trigger]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = btn.getAttribute('data-close-trigger');
+        const modal = document.getElementById(`gallery-modal-${idx}`);
+        if (modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = ''; // Unfreeze body scrolling
+        }
+      });
+    });
+
+    // 3. Setup dynamic slide switcher logic
+    document.querySelectorAll('[data-thumb-switch]').forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const newSrc = thumb.getAttribute('data-thumb-switch');
+        const idx = thumb.getAttribute('data-target-modal');
+        const targetHeroImage = document.getElementById(`modal-display-img-${idx}`);
+        
+        if (targetHeroImage) {
+          targetHeroImage.src = newSrc;
+        }
+
+        // Cycle borders gracefully on the active item
+        thumb.parentElement.querySelectorAll('[data-thumb-switch]').forEach(b => {
+          b.classList.remove('border-amber-500');
+          b.classList.add('border-transparent');
+          b.style.opacity = "0.6";
+        });
+        thumb.classList.add('border-amber-500');
+        thumb.classList.remove('border-transparent');
+        thumb.style.opacity = "1";
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initSplitGalleryPopups);
+  document.addEventListener('astro:after-swap', initSplitGalleryPopups);
+  initSplitGalleryPopups();
+</script>
