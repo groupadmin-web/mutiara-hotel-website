@@ -1,8 +1,18 @@
 {
   "welcome_title": "MUTIARA HOTEL & CONVENTION",
-  "logo_text": "MUTIARA HOTEL AND CONVENTION",
+  "logo_text": "MUTIARA HOTEL & CONVENTION",
   "logo_image": "/images/Logo MTR Convention.png",
   "tagline": "Our hotel blends the charm of modern hospitality and the sophistication of the colonial era boutique hotel.",
-  "hero_image": "/images/slide-1.jpg",
+  "slideshow": [
+    {
+      "slide_image": "/images/slide-1.jpg"
+    },
+    {
+      "slide_image": "/images/slide-2.jpg"
+    },
+    {
+      "slide_image": "/images/slide-3.jpg"
+    }
+  ],
   "show_partners": true
 }
