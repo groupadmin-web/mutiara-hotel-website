@@ -2,21 +2,29 @@
 // src/components/hero.astro
 import homepageData from "../content/homepage.json";
 
-// Extract content text fields and the single hero image path safely
+// 1. Grab your main text configurations and the uploaded file path from the CMS
 const { welcome_title, tagline, booking_button_text, hero_image } = homepageData;
 
-// Fallback background image if none is selected
-const backgroundImage = hero_image || "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80";
+// 2. The script builds a slideshow loop automatically by looking for fallback variants
+const slides = [
+  hero_image || "/images/slide-1.jpg",
+  "/images/slide-2.jpg",
+  "/images/slide-3.jpg"
+];
 ---
 
 <main class="relative bg-gray-950 text-white min-h-[80vh] w-full flex items-center justify-center overflow-hidden shadow-2xl">
   
   <div class="absolute inset-0 z-0 w-full h-full">
-    <img 
-      src={backgroundImage} 
-      alt="Mutiara Hotel Showcase Background" 
-      class="absolute inset-0 w-full h-full object-cover filter brightness-50 opacity-40"
-    />
+    {slides.map((slideImage, index) => (
+      <img 
+        data-hero-carousel-slide 
+        src={slideImage} 
+        alt={`Mutiara Hotel Showcase Background Slide ${index + 1}`} 
+        class="absolute inset-0 w-full h-full object-cover filter brightness-75 transition-opacity duration-1000 ease-in-out"
+        style={`opacity: ${index === 0 ? '0.4' : '0'}; z-index: ${index === 0 ? '1' : '0'};`}
+      />
+    ))}
   </div>
 
   <div class="relative z-10 max-w-4xl mx-auto text-center px-6 py-24 flex flex-col items-center justify-center">
@@ -48,3 +56,29 @@ const backgroundImage = hero_image || "https://images.unsplash.com/photo-1542314
 
   </div>
 </main>
+
+<script is:inline>
+  (function() {
+    function startHeroCarousel() {
+      const slides = document.querySelectorAll('[data-hero-carousel-slide]');
+      if (!slides || slides.length <= 1) return;
+
+      let currentIdx = 0;
+      const changeDelay = 5000;
+
+      setInterval(() => {
+        slides[currentIdx].style.opacity = '0';
+        slides[currentIdx].style.zIndex = '0';
+        currentIdx = (currentIdx + 1) % slides.length;
+        slides[currentIdx].style.opacity = '0.4';
+        slides[currentIdx].style.zIndex = '1';
+      }, changeDelay);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startHeroCarousel);
+    } else {
+      startHeroCarousel();
+    }
+  })();
+</script>
