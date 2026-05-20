@@ -61,7 +61,7 @@ const menuitems = [
                       <a
                         href={item.path}
                         data-nav-link
-                        class="nav-item flex lg:px-3 py-2 items-center text-sm font-semibold tracking-wide text-slate-700 hover:text-amber-600 transition-all uppercase relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-amber-600 after:transform after:scale-x-0 after:transition-transform duration-300"
+                        class="nav-item flex lg:px-3 py-2 items-center text-sm font-bold tracking-wide text-slate-700 hover:text-amber-600 transition-all uppercase relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-amber-600 after:transform after:scale-x-0 after:transition-transform duration-300"
                       >
                         <span> {item.title}</span>
                       </a>
@@ -101,13 +101,20 @@ const menuitems = [
   </Container>
 </header>
 
-{/* DYNAMIC SCROLL SPY TRACKER SCRIPT */}
 <script>
   function setupScrollSpy() {
     const navLinks = document.querySelectorAll('[data-nav-link]');
     const sections = document.querySelectorAll('section[id]');
 
-    // Options configuration: triggers right when the section takes up 40% of the viewport screen
+    // 1. FORCED INITIALIZATION: Make HOME active immediately on fresh load
+    navLinks.forEach((link) => {
+      const href = link.getAttribute('href');
+      if (href === '/' || href === '#') {
+        link.classList.add('text-amber-600', 'after:scale-x-100');
+        link.classList.remove('text-slate-700');
+      }
+    });
+
     const options = {
       root: null,
       rootMargin: '-20% 0px -40% 0px',
@@ -122,7 +129,7 @@ const menuitems = [
           navLinks.forEach((link) => {
             const href = link.getAttribute('href');
             
-            // Check if the link target aligns with the current active screen section
+            // Handle scrolling matching rules
             if (href === `#${id}` || (id === 'hero' && href === '/')) {
               link.classList.add('text-amber-600', 'after:scale-x-100');
               link.classList.remove('text-slate-700');
@@ -135,26 +142,26 @@ const menuitems = [
       });
     }, options);
 
-    // Tell the observer engine to actively monitor your landing section blocks
     sections.forEach((section) => observer.observe(section));
     
-    // Handle specific fallback case for absolute top of page scrolling (Home highlight)
+    // Smooth reset tracker back to HOME if they scroll all the way back to absolute top
     window.addEventListener('scroll', () => {
-      if (window.scrollY < 200 && navLinks.length > 0) {
-        navLinks.forEach((link, idx) => {
-          if (link.getAttribute('href') === '/') {
+      if (window.scrollY < 100) {
+        navLinks.forEach((link) => {
+          const href = link.getAttribute('href');
+          if (href === '/') {
             link.classList.add('text-amber-600', 'after:scale-x-100');
             link.classList.remove('text-slate-700');
           } else {
             link.classList.remove('text-amber-600', 'after:scale-x-100');
-            if (!link.classList.contains('text-slate-700')) link.classList.add('text-slate-700');
+            link.classList.add('text-slate-700');
           }
         });
       }
     });
   }
 
-  // Lifecycle execution triggers for standard loads and Astro SPA updates
+  // Bind to system startup processes
   document.addEventListener('DOMContentLoaded', setupScrollSpy);
   document.addEventListener('astro:after-swap', setupScrollSpy);
   setupScrollSpy();
