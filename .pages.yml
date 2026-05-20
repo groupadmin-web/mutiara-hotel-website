@@ -3,7 +3,7 @@ media:
   output: /images
 
 content:
-- name: homepage
+  - name: homepage
     label: "1. Brand & Header Setup"
     type: file
     path: src/content/homepage.json
@@ -22,12 +22,14 @@ content:
         label: "Sub-Header High-Impact Hook"
         type: text
 
-      # Smooth Multi-Photo Array Input
+      # 1. Declare the container key as an array field type
       - name: banner_slides
-        label: "Banner Slideshow Photos"
+        label: "Hero Slideshow Photos"
         type: array
-        options:
-          entry_input_type: image
+      
+      # 2. THE CLOUDCANNON FIX: Explicitly dictate that everything matching inside the array is a direct image upload asset tracker
+      - name: banner_slides[*]
+        type: image
 
       - name: show_partners
         label: "Display Partners & Awards Row on Website?"
@@ -70,7 +72,7 @@ content:
             - "Traveloka"
         default: "Google Review"
 
- - name: rooms
+  - name: rooms
     label: "3. Rooms & Suites Showcase"
     type: file
     path: src/content/rooms.json
@@ -99,8 +101,9 @@ content:
       - name: features
         label: "Features & Amenities"
         type: array
-        items:
+      - name: features[*]
         type: string
+
   - name: events
     label: "4. Convention & Events Spaces"
     type: file
@@ -173,7 +176,7 @@ content:
         label: "Score/Label Notation"
         type: string
 
-- name: promotion
+  - name: promotion
     label: "8. Promotions & Offers Banner"
     type: file
     path: src/content/promotion.json
@@ -194,7 +197,6 @@ content:
       - name: banner_bg_image
         label: "Promo Background Photo File (Applies when 'Photo Background' is selected)"
         type: image
-        # THE FIX: Tell the CMS this field can safely be left blank
         required: false
       - name: cta_title
         label: "Promo Headline Title"
