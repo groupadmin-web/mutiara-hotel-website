@@ -29,7 +29,8 @@ const menuitems = [
               <img 
                 src={homepageData.logo_image} 
                 alt="Mutiara Hotel & Convention Bandung Logo" 
-                class="h-12 md:h-16 w-auto object-contain max-w-[200px] transition-transform duration-300 group-hover:scale-105" 
+                /* mix-blend-multiply keys out the white/off-white background block instantly */
+                class="h-12 md:h-16 w-auto object-contain max-w-[200px] transition-transform duration-300 group-hover:scale-105 mix-blend-multiply" 
               />
             ) : (
               <span class="font-bold text-xl text-slate-900 uppercase">
@@ -101,68 +102,55 @@ const menuitems = [
   </Container>
 </header>
 
-<script>
-  function setupScrollSpy() {
-    const navLinks = document.querySelectorAll('[data-nav-link]');
-    const sections = document.querySelectorAll('section[id]');
+<script is:inline>
+  function initScrollTracking() {
+    const links = document.querySelectorAll('[data-nav-link]');
+    
+    function checkActiveSection() {
+      const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
+      
+      let currentActiveId = '';
+      const scrollPosition = window.scrollY + 250; // Offset window height allocation
 
-    // 1. FORCED INITIALIZATION: Make HOME active immediately on fresh load
-    navLinks.forEach((link) => {
-      const href = link.getAttribute('href');
-      if (href === '/' || href === '#') {
-        link.classList.add('text-amber-600', 'after:scale-x-100');
-        link.classList.remove('text-slate-700');
-      }
-    });
-
-    const options = {
-      root: null,
-      rootMargin: '-20% 0px -40% 0px',
-      threshold: 0
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.getAttribute('id');
-          
-          navLinks.forEach((link) => {
-            const href = link.getAttribute('href');
-            
-            // Handle scrolling matching rules
-            if (href === `#${id}` || (id === 'hero' && href === '/')) {
-              link.classList.add('text-amber-600', 'after:scale-x-100');
-              link.classList.remove('text-slate-700');
-            } else {
-              link.classList.remove('text-amber-600', 'after:scale-x-100');
-              link.classList.add('text-slate-700');
-            }
-          });
+      // Track sections that have explicit IDs defined
+      document.querySelectorAll('section[id]').forEach((section) => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          currentActiveId = section.getAttribute('id');
         }
       });
-    }, options);
 
-    sections.forEach((section) => observer.observe(section));
-    
-    // Smooth reset tracker back to HOME if they scroll all the way back to absolute top
-    window.addEventListener('scroll', () => {
-      if (window.scrollY < 100) {
-        navLinks.forEach((link) => {
-          const href = link.getAttribute('href');
-          if (href === '/') {
-            link.classList.add('text-amber-600', 'after:scale-x-100');
-            link.classList.remove('text-slate-700');
-          } else {
-            link.classList.remove('text-amber-600', 'after:scale-x-100');
-            link.classList.add('text-slate-700');
-          }
-        });
-      }
-    });
+      links.forEach((link) => {
+        const href = link.getAttribute('href');
+        let shouldHighlight = false;
+
+        if (isAtBottom) {
+          shouldHighlight = (href === '#contact');
+        } else if (currentActiveId) {
+          shouldHighlight = (href === `#${currentActiveId}`);
+        } else {
+          // FOOLPROOF FALLBACK: If we haven't rolled down into an official custom section yet,
+          // HOME stays active automatically! No more dead zones.
+          shouldHighlight = (href === '/' || href === '#');
+        }
+
+        if (shouldHighlight) {
+          link.classList.add('text-amber-600', 'after:scale-x-100');
+          link.classList.remove('text-slate-700');
+        } else {
+          link.classList.remove('text-amber-600', 'after:scale-x-100');
+          link.classList.add('text-slate-700');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkActiveSection);
+    window.addEventListener('resize', checkActiveSection);
+    checkActiveSection();
   }
 
-  // Bind to system startup processes
-  document.addEventListener('DOMContentLoaded', setupScrollSpy);
-  document.addEventListener('astro:after-swap', setupScrollSpy);
-  setupScrollSpy();
+  window.addEventListener('DOMContentLoaded', initScrollTracking);
+  window.addEventListener('astro:after-swap', initScrollTracking);
+  initScrollTracking();
 </script>
