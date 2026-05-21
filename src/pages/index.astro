@@ -8,11 +8,11 @@ import Layout from "@/layouts/Layout.astro";
 
 import Rooms from "../components/rooms.astro";
 import Stories from "../components/stories.astro"; 
-import reviewsData from "../content/reviews.json";
 
-// FETCH DATA PAYLOAD FOR THE DYNAMIC HOMEPAGE PREVIEW ROWS
-import galleryData from "../content/gallery.json";
-import eventData from "../content/events.json";
+// FIXED DATA PAYLOAD ENGINES: Utilizing your core shorthand alias macros to clear compile gates
+import reviewsData from "@/content/reviews.json";
+import galleryData from "@/content/gallery.json";
+import eventData from "@/content/events.json";
 
 const homeGalleryTeasers = (galleryData || []).slice(0, 3);
 const homeEventItems = eventData || [];
