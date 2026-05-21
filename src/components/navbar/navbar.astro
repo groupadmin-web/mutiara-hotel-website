@@ -14,11 +14,11 @@ const menuitems = [
   { title: "GALLERY", path: "/gallery" },
   { title: "MEETINGS & EVENTS", path: "/meetings-events" },
   { title: "Q&A", path: "#qa" },
-  { title: "CONTACT", path: "#contact" },
+  { title: "CONTACT", path: "#footer" }, // INSTANT SCROLL DIRECTION ROUTED TO FOOTER GLOBALLY
 ];
 ---
 
-{/* NAVBAR BACKDROP FIX: Fixed bg-white keeps the white background perfectly matched at all times */}
+{/* NAVBAR BACKDROP FIX */}
 <header class="sticky top-0 z-50 w-full bg-white shadow-sm transition-all border-b border-gray-100">
   <Container>
     <div class="flex flex-col lg:flex-row justify-between items-center py-4">
@@ -90,108 +90,4 @@ const menuitems = [
       <div class="hidden lg:flex items-center">
         <a 
           href="https://m.mutiarahotel.com" 
-          class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm px-5 py-2.5 rounded-md shadow-md transition-all flex items-center justify-center gap-2 tracking-wide"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4 text-amber-100">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
-          </svg>
-          <span>Book Now</span>
-        </a>
-      </div>
-    </div>
-  </Container>
-</header>
-
-<script is:inline>
-  function initScrollTracking() {
-    const links = document.querySelectorAll('[data-nav-link]');
-    const currentPath = window.location.pathname;
-
-    // 1. SMART URL PATH CHECKER: Locks down active header illumination patterns for dedicated pages
-    const pathTriggers = ['/rooms', '/attractions', '/gallery', '/meetings-events'];
-    const hasMatch = pathTriggers.some(trigger => currentPath.includes(trigger));
-
-    if (hasMatch) {
-      links.forEach((link) => {
-        const href = link.getAttribute('href');
-        let shouldHighlight = false;
-
-        if (currentPath.includes('/rooms') && (href === '/rooms' || href.includes('rooms'))) {
-          shouldHighlight = true;
-        }
-        if (currentPath.includes('/attractions') && (href === '/attractions' || href.includes('attractions'))) {
-          shouldHighlight = true;
-        }
-        if (currentPath.includes('/gallery') && (href === '/gallery' || href.includes('gallery'))) {
-          shouldHighlight = true;
-        }
-        if (currentPath.includes('/meetings-events') && (href === '/meetings-events' || href.includes('meetings-events'))) {
-          shouldHighlight = true;
-        }
-
-        if (shouldHighlight) {
-          link.classList.add('text-amber-600', 'after:scale-x-100');
-          link.classList.remove('text-slate-700');
-        } else {
-          link.classList.remove('text-amber-600', 'after:scale-x-100');
-          link.classList.add('text-slate-700');
-        }
-      });
-      return;
-    }
-
-    // 2. Otherwise run homepage section scroll spy logic
-    function checkActiveSection() {
-      // SECURITY GATE: Stop execution instantly if any modal sets body overflow to hidden!
-      if (document.body.style.overflow === 'hidden') {
-        return;
-      }
-
-      const isAtBottom = (window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 50;
-      let currentActiveId = '';
-      const scrollPosition = window.scrollY + 250;
-
-      document.querySelectorAll('section[id]').forEach((section) => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-          currentActiveId = section.getAttribute('id');
-        }
-      });
-
-      links.forEach((link) => {
-        const href = link.getAttribute('href');
-        let shouldHighlight = false;
-
-        // Skip static full-page links during scroll listener evaluation checks
-        if (href === '/rooms' || href.includes('rooms')) return;
-        if (href === '/attractions' || href.includes('attractions')) return;
-        if (href === '/gallery' || href.includes('gallery')) return;
-        if (href === '/meetings-events' || href.includes('meetings-events')) return;
-
-        if (isAtBottom) {
-          shouldHighlight = (href === '#contact');
-        } else if (currentActiveId) {
-          shouldHighlight = (href === `#${currentActiveId}`);
-        } else {
-          shouldHighlight = (href === '/' || href === '#');
-        }
-
-        if (shouldHighlight) {
-          link.classList.add('text-amber-600', 'after:scale-x-100');
-          link.classList.remove('text-slate-700');
-        } else {
-          link.classList.remove('text-amber-600', 'after:scale-x-100');
-          link.classList.add('text-slate-700');
-        }
-      });
-    }
-
-    window.addEventListener('scroll', checkActiveSection, { passive: true });
-    window.addEventListener('resize', checkActiveSection, { passive: true });
-    checkActiveSection();
-  }
-
-  window.addEventListener('DOMContentLoaded', initScrollTracking);
-  window.addEventListener('astro:after-swap', initScrollTracking);
-</script>
+          class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-sm px-5 py-2
