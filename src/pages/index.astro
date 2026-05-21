@@ -44,10 +44,10 @@ const isSlider = sortedReviews.length > 4;
               <div class="review-card">
                 <div>
                   <div class="stars">
-                    {review.stars?.includes("5") && "⭐⭐⭐⭐⭐"}
-                    {review.stars?.includes("4") && "⭐⭐⭐⭐"}
-                    {review.stars?.includes("3") && "⭐⭐⭐"}
-                    {!review.stars?.includes("Stars") && !["5", "4", "3"].includes(review.stars) && review.stars}
+                    {review.stars && review.stars.toString().includes("5") && "⭐⭐⭐⭐⭐"}
+                    {review.stars && review.stars.toString().includes("4") && "⭐⭐⭐⭐"}
+                    {review.stars && review.stars.toString().includes("3") && "⭐⭐⭐"}
+                    {review.stars && !review.stars.toString().includes("5") && !review.stars.toString().includes("4") && !review.stars.toString().includes("3") && review.stars}
                   </div>
                   <p class="content">"{review.content}"</p>
                 </div>
@@ -91,10 +91,10 @@ const isSlider = sortedReviews.length > 4;
                 <div class="review-card">
                   <div>
                     <div class="stars">
-                      {review.stars?.includes("5") && "⭐⭐⭐⭐⭐"}
-                      {review.stars?.includes("4") && "⭐⭐⭐⭐"}
-                      {review.stars?.includes("3") && "⭐⭐⭐"}
-                      {!review.stars?.includes("Stars") && !["5", "4", "3"].includes(review.stars) && review.stars}
+                      {review.stars && review.stars.toString().includes("5") && "⭐⭐⭐⭐⭐"}
+                      {review.stars && review.stars.toString().includes("4") && "⭐⭐⭐⭐"}
+                      {review.stars && review.stars.toString().includes("3") && "⭐⭐⭐"}
+                      {review.stars && !review.stars.toString().includes("5") && !review.stars.toString().includes("4") && !review.stars.toString().includes("3") && review.stars}
                     </div>
                     <p class="content">"{review.content}"</p>
                   </div>
@@ -140,7 +140,6 @@ const isSlider = sortedReviews.length > 4;
 <style>
   .reviews-section { padding: 40px 0; }
   
-  /* Viewport mask bounds */
   .marquee-viewport {
     width: 100%;
     overflow: hidden;
@@ -148,14 +147,12 @@ const isSlider = sortedReviews.length > 4;
     padding: 14px 0;
   }
 
-  /* Main Flex assembly row binding both tracks */
   .marquee-track {
     display: flex;
     flex-direction: row;
     width: max-content;
   }
 
-  /* Identical layout segments moving together */
   .marquee-group {
     display: flex;
     flex-direction: row;
@@ -164,12 +161,10 @@ const isSlider = sortedReviews.length > 4;
     shrink: 0;
   }
 
-  /* HARDWARE ACCELERATED PURE CSS MARQUEE ENGINE */
   .animate-marquee {
     animation: marqueeAnimation 25s linear infinite;
   }
 
-  /* HOVER HANDLES: Pauses the animation smoothly when mouse is over cards */
   .animate-marquee:hover {
     animation-play-state: paused;
   }
@@ -179,11 +174,10 @@ const isSlider = sortedReviews.length > 4;
       transform: translateX(0%);
     }
     100% {
-      transform: translateX(-50%); /* Moves exactly one track length down before loop */
+      transform: translateX(-50%);
     }
   }
 
-  /* Static Grid override if <= 4 reviews */
   .marquee-track:not(.animate-marquee) {
     width: 100%;
     max-width: 1200px;
@@ -191,7 +185,6 @@ const isSlider = sortedReviews.length > 4;
     justify-content: center;
   }
 
-  /* Fallback mobile views layout behavior */
   @media (max-width: 1024px) {
     .marquee-viewport {
       overflow-x: auto;
