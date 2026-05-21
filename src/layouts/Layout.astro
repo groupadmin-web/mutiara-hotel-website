@@ -52,24 +52,46 @@ const makeTitle = title
   <body>
     
     <div class="fixed top-4 right-4 z-[999999] pointer-events-auto sm:right-6">
-      <div class="bg-white/90 backdrop-blur-md px-2 py-1 rounded-full flex items-center gap-1.5 border border-slate-200/80 shadow-md transition-all duration-300 hover:border-slate-300">
+      <div class="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2.5 border border-slate-200/80 shadow-md transition-all duration-300 hover:border-slate-300">
+        
+        <span id="global-lang-label" class="text-[9px] tracking-wide font-sans font-medium text-slate-400 italic pr-0.5 select-none hidden xs:inline-block">
+          Translates entire site
+        </span>
+
+        <div class="w-[1px] h-3 bg-slate-200 hidden xs:inline-block"></div>
+
         <button 
           id="global-nav-en" 
           type="button" 
-          class="p-1 rounded-full transition-all duration-200 hover:scale-110 cursor-pointer text-base leading-none select-none"
+          class="w-5 h-5 rounded-full overflow-hidden transition-all duration-200 hover:scale-110 cursor-pointer flex items-center justify-center border border-slate-200/40 select-none shadow-sm"
           title="English"
         >
-          🇬🇧
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" class="w-full h-full object-cover">
+            <clipPath id="s"><path d="M0 0h60v30H0z"/></clipPath>
+            <g clip-path="url(#s)">
+              <path d="M0 0h60v30H0z" fill="#012169"/>
+              <path d="M0 0l60 30M60 0L0 30" stroke="#fff" stroke-width="6"/>
+              <path d="M0 0l60 30M60 0L0 30" stroke="#c8102e" stroke-width="4"/>
+              <path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/>
+              <path d="M30 0v30M0 15h60" stroke="#c8102e" stroke-width="6"/>
+            </g>
+          </svg>
         </button>
+
         <div class="w-[1px] h-3 bg-slate-300"></div>
+
         <button 
           id="global-nav-id" 
           type="button" 
-          class="p-1 rounded-full transition-all duration-200 hover:scale-110 cursor-pointer text-base leading-none select-none"
+          class="w-5 h-5 rounded-full overflow-hidden transition-all duration-200 hover:scale-110 cursor-pointer flex items-center justify-center border border-slate-200/40 select-none shadow-sm"
           title="Indonesia"
         >
-          🇮🇩
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" class="w-full h-full object-cover">
+            <path fill="#e21c0e" d="M0 0h3v1H0z"/>
+            <path fill="#fff" d="M0 1h3v1H0z"/>
+          </svg>
         </button>
+
       </div>
     </div>
 
@@ -122,11 +144,18 @@ const makeTitle = title
           height: 30px;
         }
       }
+      /* Extra breakpoint for compact mobile styling safety */
+      @media (max-width: 400px) {
+        .hidden.xs\:inline-block {
+          display: none !important;
+        }
+      }
     </style>
 
     <script is:inline>
       const globalTranslations = {
         id: {
+          "global-lang-label": "Terjemahkan seluruh situs",
           "accomm-sub": "AKOMODASI",
           "accomm-title": "Penginapan Butik Kolonial yang Abadi",
           "accomm-desc": "Dengan 112 kamar yang ditata indah di 6 lantai, Mutiara Hotel & Convention memadukan lantai ubin otentik dan tata letak kayu klasik dengan kenyamanan modern. Dari kamar budget yang nyaman hingga suite keluarga multi-kamar yang luas, setiap ruang kedap suara sepenuhnya dan ber-AC untuk menjadi tempat perlindungan pribadi Anda.",
@@ -135,6 +164,7 @@ const makeTitle = title
           "leisure-desc": "Lepaskan penat dari kesibukan Pasirkaliki di dalam taman halaman kami yang damai. Nikmati pagi Anda dengan sarapan lezat di Restoran Tiara dengan pemandangan air langsung, atau bersantai di kursi berjemur premium di tepi kolam renang sementara layanan pramutamu dan meja layanan tamu 24 jam kami mengurus setiap kebutuhan perjalanan Anda."
         },
         en: {
+          "global-lang-label": "Translates entire site",
           "accomm-sub": "THE ACCOMMODATIONS",
           "accomm-title": "Timeless Colonial Boutique Lodging",
           "accomm-desc": "With 112 beautifully arranged rooms stretching across 6 floors, Mutiara Hotel & Convention pairs authentic tiled floors and classic woodwork layouts with modern comforts. From cozy budget stays to sprawling multi-room family suites, every space is fully soundproofed and air-conditioned to serve as your private sanctuary.",
@@ -152,26 +182,36 @@ const makeTitle = title
         const lang = getLanguageSetting();
         const flagEN = document.getElementById('global-nav-en');
         const flagID = document.getElementById('global-nav-id');
+        const labelEl = document.getElementById('global-lang-label');
         
         if (!flagEN || !flagID) return;
 
-        // Clean flag styling toggles using style filters instead of modifying classes
+        // Dynamic label translation update injection
+        if (labelEl && globalTranslations[lang]["global-lang-label"]) {
+          labelEl.innerText = globalTranslations[lang]["global-lang-label"];
+        }
+
+        // Smooth opacity and scale transformations
         if (lang === 'id') {
           flagID.style.filter = 'grayscale(0%)';
           flagID.style.opacity = '1';
-          flagID.style.transform = 'scale(1.1)';
+          flagID.style.transform = 'scale(1.15)';
+          flagID.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
           
-          flagEN.style.filter = 'grayscale(80%)';
-          flagEN.style.opacity = '0.4';
-          flagEN.style.transform = 'scale(1)';
+          flagEN.style.filter = 'grayscale(100%)';
+          flagEN.style.opacity = '0.35';
+          flagEN.style.transform = 'scale(0.9)';
+          flagEN.style.boxShadow = 'none';
         } else {
           flagEN.style.filter = 'grayscale(0%)';
           flagEN.style.opacity = '1';
-          flagEN.style.transform = 'scale(1.1)';
+          flagEN.style.transform = 'scale(1.15)';
+          flagEN.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
           
-          flagID.style.filter = 'grayscale(80%)';
-          flagID.style.opacity = '0.4';
-          flagID.style.transform = 'scale(1)';
+          flagID.style.filter = 'grayscale(100%)';
+          flagID.style.opacity = '0.35';
+          flagID.style.transform = 'scale(0.9)';
+          flagID.style.boxShadow = 'none';
         }
 
         document.querySelectorAll('[data-translate-key]').forEach(el => {
@@ -186,34 +226,4 @@ const makeTitle = title
 
       function setupLanguageListeners() {
         const btnEN = document.getElementById('global-nav-en');
-        const btnID = document.getElementById('global-nav-id');
-
-        if (btnEN) {
-          btnEN.onclick = () => {
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', 'en');
-            window.history.pushState({}, '', url);
-            applyGlobalTranslation();
-          };
-        }
-
-        if (btnID) {
-          btnID.onclick = () => {
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', 'id');
-            window.history.pushState({}, '', url);
-            applyGlobalTranslation();
-          };
-        }
-      }
-
-      setupLanguageListeners();
-      applyGlobalTranslation();
-
-      document.addEventListener('astro:after-swap', () => {
-        setupLanguageListeners();
-        applyGlobalTranslation();
-      });
-    </script>
-  </body>
-</html>
+        const btnID = document.getElementById('
