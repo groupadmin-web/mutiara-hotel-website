@@ -161,6 +161,18 @@ const makeTitle = title
         .whatsapp-icon-float { bottom: 16px; right: 16px; width: 50px; height: 50px; }
         .whatsapp-svg { width: 30px; height: 30px; }
       }
+      
+      /* Injected structural properties for dynamic AI-Translated notice elements */
+      .ai-translated-notice {
+        display: block;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 10px;
+        color: #94a3b8;
+        margin-top: 4px;
+        font-style: normal !important;
+        font-weight: 500;
+        letter-spacing: 0.025em;
+      }
     </style>
 
     <script is:inline>
@@ -180,7 +192,7 @@ const makeTitle = title
         if (!textArray || textArray.length === 0) return [];
         const combinedPayload = textArray.join(' ||| ');
         try {
-          const apiEndpoint = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(combinedPayload)}`;
+          const apiEndpoint = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(combinedPayload)}`;
           const rawResponse = await fetch(apiEndpoint);
           const parsedData = await rawResponse.json();
           if (parsedData && parsedData[0]) {
@@ -189,9 +201,19 @@ const makeTitle = title
           }
           return textArray;
         } catch (err) {
-          console.error("Batch Translation Stream dropped, falling back to raw items:", err);
+          console.error("Batch Translation Stream dropped:", err);
           return textArray;
         }
+      }
+
+      // LOCAL TEXT CHARACTER DETECTOR MATRIX
+      function detectStringSourceLanguage(text) {
+        const clean = text.trim().toLowerCase();
+        if (/[\u4e00-\u9fa5]/.test(clean)) return 'zh';
+        if (/\b(dan|yang|kamar|dengan|di|ke|untuk|kami|bisa|bagus|sekali|mantap|nyaman|tempatnya|sangat|sayang)\b/i.test(clean)) {
+          return 'id';
+        }
+        return 'en';
       }
 
       async function executeUniversalTranslation() {
@@ -238,7 +260,12 @@ const makeTitle = title
           if (labelEl) labelEl.innerText = "SELECT LANGUAGE:";
         }
 
+        // Clean any residual floating labels to recalculate cleanly
+        rootContainer.querySelectorAll('.ai-translated-notice').forEach(el => el.remove());
+
         const nodesToTranslate = [];
+        
+        // STANDARD LAYOUT SCANNER
         const walker = document.createTreeWalker(rootContainer, NodeFilter.SHOW_TEXT, {
           acceptNode: function(node) {
             if (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE') {
@@ -247,12 +274,10 @@ const makeTitle = title
 
             const textClean = node.textContent.trim().toLowerCase();
 
-            // BRAND INTERCEPT BYPASS
             if (node.textContent.toLowerCase().includes('mutiara') && textClean.length < 40) {
               return NodeFilter.FILTER_REJECT;
             }
 
-            // BUTTON & INTERACTIVE LAYER STABILIZATION SHIELD
             if (
               textClean === 'book now' || 
               textClean === 'claim offer now' || 
@@ -265,12 +290,13 @@ const makeTitle = title
               return NodeFilter.FILTER_REJECT;
             }
 
+            // REVIEWS SEGREGATION SHIELD: Force skips profiles, star metrics, and brand logo wrappers
             if (
               node.parentElement.tagName === 'BUTTON' || 
               node.parentElement.tagName === 'A' ||
               node.parentElement.classList.contains('btn') ||
               node.parentElement.classList.contains('button') ||
-              node.parentElement.closest('.notranslate, .skip-translation, [id*="lang-"]')
+              node.parentElement.closest('.notranslate, .skip-translation, .author-row, .platform-logo-wrapper, [id*="lang-"]')
             ) {
               return NodeFilter.FILTER_REJECT;
             }
@@ -283,10 +309,20 @@ const makeTitle = title
           nodesToTranslate.push(walker.currentNode);
         }
 
+        // SURGICAL REVIEWS OVERRIDE INGESTION HOOK
+        const reviewElements = rootContainer.querySelectorAll('.review-content-text');
+        reviewElements.forEach(el => {
+          if (el.firstChild && el.firstChild.nodeType === Node.TEXT_NODE) {
+            if (!nodesToTranslate.includes(el.firstChild)) {
+              nodesToTranslate.push(el.firstChild);
+            }
+          }
+        });
+
         const stringsToProcess = [];
         nodesToTranslate.forEach(node => {
           if (!baselineTextCache.has(node)) {
-            baselineTextCache.set(node, node.textContent);
+            baselineTextCache.set(node, node.textContent.replace(/^"|"$/g, ''));
           }
           stringsToProcess.push(baselineTextCache.get(node));
         });
@@ -295,9 +331,10 @@ const makeTitle = title
           const translatedBatchResults = await fetchBatchTranslation(stringsToProcess, activeLanguage);
           
           nodesToTranslate.forEach((textNode, index) => {
-            let convertedText = translatedBatchResults[index] || baselineTextCache.get(textNode);
+            const originalValue = baselineTextCache.get(textNode);
+            let convertedText = translatedBatchResults[index] || originalValue;
             
-            // POST-TRANSLATION BRAND PROTECTION FORCE
+            // Post-translation brand safety locks
             convertedText = convertedText.replace(/Hotel Mutiara & Konvensi/gi, 'Mutiara Hotel & Convention');
             convertedText = convertedText.replace(/Mutiara Hotel & Konvensi/gi, 'Mutiara Hotel & Convention');
             convertedText = convertedText.replace(/Hotel Mutiara/gi, 'Mutiara Hotel');
@@ -305,16 +342,75 @@ const makeTitle = title
             convertedText = convertedText.replace(/珍珠酒店/g, 'Mutiara Hotel');
 
             if (textNode.parentElement.classList.contains('review-content-text')) {
-              textNode.textContent = `"${convertedText.replace(/^"|"$/g, '')}"`;
+              textNode.textContent = `"${convertedText.trim()}"`;
+              
+              // INJECT VISUAL TRANS PILL IF LANGUAGE WAS CONVERTED
+              const sourceLang = detectStringSourceLanguage(originalValue);
+              if (sourceLang !== activeLanguage) {
+                const noticeLabel = document.createElement('span');
+                noticeLabel.className = 'ai-translated-notice';
+                
+                if (activeLanguage === 'id') {
+                  noticeLabel.innerText = sourceLang === 'zh' ? '✨ Diterjemahkan dari Bahasa Mandarin' : '✨ Diterjemahkan dari Bahasa Inggris';
+                } else if (activeLanguage === 'zh') {
+                  noticeLabel.innerText = sourceLang === 'id' ? '✨ 翻译自印尼语' : '✨ 翻译自英语';
+                }
+                textNode.parentElement.appendChild(noticeLabel);
+              }
             } else {
               textNode.textContent = convertedText;
             }
           });
         } else {
+          // ENGLISH ROUTE MULTI-SOURCE SENSOR PIPELINE
+          const nativeEnglishBatch = [];
+          nodesToTranslate.forEach(node => {
+            const val = baselineTextCache.get(node);
+            const sourceLang = detectStringSourceLanguage(val);
+            if (textNodeIsReview(node) && sourceLang !== 'en') {
+              nativeEnglishBatch.push({ node, text: val });
+            }
+          });
+
+          if (nativeEnglishBatch.length > 0) {
+            const reviewTextsOnly = nativeEnglishBatch.map(item => item.text);
+            const translatedReviews = await fetchBatchTranslation(reviewTextsOnly, 'en');
+            
+            nativeEnglishBatch.forEach((item, idx) => {
+              const textNode = item.node;
+              const originalValue = item.text;
+              let convertedText = translatedReviews[idx] || originalValue;
+              
+              convertedText = convertedText.replace(/Hotel Mutiara & Konvensi/gi, 'Mutiara Hotel & Convention');
+              convertedText = convertedText.replace(/Hotel Mutiara/gi, 'Mutiara Hotel');
+
+              textNode.textContent = `"${convertedText.trim()}"`;
+
+              const noticeLabel = document.createElement('span');
+              noticeLabel.className = 'ai-translated-notice';
+              const sourceLang = detectStringSourceLanguage(originalValue);
+              noticeLabel.innerText = sourceLang === 'id' ? '✨ Translated from Indonesian' : '✨ Translated from Chinese';
+              textNode.parentElement.appendChild(noticeLabel);
+            });
+          }
+
+          // Instantly map remaining cache text parameters
           nodesToTranslate.forEach(textNode => {
-            textNode.textContent = baselineTextCache.get(textNode);
+            const baseTxt = baselineTextCache.get(textNode);
+            const isReviewNode = textNode.parentElement.classList.contains('review-content-text');
+            const sourceLang = detectStringSourceLanguage(baseTxt);
+            
+            if (!isReviewNode) {
+              textNode.textContent = baseTxt;
+            } else if (sourceLang === 'en') {
+              textNode.textContent = `"${baseTxt}"`;
+            }
           });
         }
+      }
+
+      function textNodeIsReview(node) {
+        return node && node.parentElement && node.parentElement.classList.contains('review-content-text');
       }
 
       function setupLanguageListeners() {
