@@ -3,16 +3,16 @@ import Layout from "@/layouts/Layout.astro";
 import Container from "@/components/container.astro";
 
 // Pure flat file relative import pattern matching PitchAI's data models exactly
-import eventData from "../content/events.json";
+import eventData from "@/content/events.json";
 
 const events = eventData || [];
 ---
 
 <Layout title="Conventions, Meetings & Events Spaces">
   <div id="universal-translation-root">
-    <Container>
+    <Container class="py-12">
       
-      <div class="text-center max-w-3xl mx-auto my-16">
+      <div class="text-center max-w-3xl mx-auto my-12">
         <span class="text-xs font-sans font-bold tracking-widest text-amber-600 uppercase block mb-2">Venues & Celebrations</span>
         <h1 class="text-4xl font-serif font-bold text-gray-800 mb-3">Mutiara Convention Center</h1>
         <div class="h-0.5 w-16 bg-amber-500 mx-auto mb-5"></div>
@@ -21,9 +21,9 @@ const events = eventData || [];
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24 w-full">
         {events.map((event) => (
-          <div class="bg-white rounded-2xl border border-gray-200/60 shadow-sm overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-md">
+          <div class="bg-white rounded-2xl border border-gray-200/60 shadow-sm overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-md w-full">
             
             {/* CONTENT AREA */}
             <div class="p-8">
@@ -61,8 +61,7 @@ const events = eventData || [];
         ))}
       </div>
 
-      {/* CALL TO ACTION ROW */}
-      <div class="bg-amber-900 rounded-2xl text-white p-8 md:p-12 text-center max-w-4xl mx-auto mb-24 relative overflow-hidden shadow-md">
+      <div class="bg-amber-900 rounded-2xl text-white p-8 md:p-12 text-center max-w-4xl mx-auto mb-24 relative overflow-hidden shadow-md w-full">
         <span class="text-xs font-sans font-bold tracking-widest text-amber-400 uppercase block mb-3">Plan Your Next Gathering</span>
         <h2 class="text-3xl font-serif font-bold mb-4">Book a Dedicated Event Space</h2>
         <p class="text-slate-200 text-sm leading-relaxed max-w-xl mx-auto mb-8">
