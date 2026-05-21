@@ -127,30 +127,27 @@ const isSlider = sortedReviews.length > 4;
                       </div>
                     </div>
                   </div>
-                ))
-              }
-            </div>
-          )}
+                )
+              )
+            }
+          </div>
+        )}
 
-        </div>
       </div>
-    </section>
+    </div>
   </div>
 </Layout>
 
 <script is:inline>
-  // Cache to keep original English text values safe so it can toggle back instantly
   const baselineTextCache = new Map();
 
   function getTargetLanguage() {
     return new URLSearchParams(window.location.search).get('lang') === 'id' ? 'id' : 'en';
   }
 
-  // Pure automated proxy translation engine
   async function fetchAsyncTranslation(textString, targetLangCode) {
     if (!textString || textString.trim() === "" || !isNaN(textString)) return textString;
     try {
-      // Direct connection to a free, open runtime translation engine port
       const apiEndpoint = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(textString)}`;
       const rawResponse = await fetch(apiEndpoint);
       const parsedData = await rawResponse.json();
@@ -170,7 +167,6 @@ const isSlider = sortedReviews.length > 4;
     const workingWorkspace = document.getElementById('automated-translate-workspace');
     if (!workingWorkspace) return;
 
-    // Use a clean tree walker loop to look at pure text-nodes only, skipping empty nodes or styles
     const domTreeWalker = document.createTreeWalker(
       workingWorkspace, 
       NodeFilter.SHOW_TEXT, 
@@ -179,6 +175,12 @@ const isSlider = sortedReviews.length > 4;
           if (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE') {
             return NodeFilter.FILTER_REJECT;
           }
+          
+          // SKIPS LOGOS, NAVBAR, FOOTER AUTOMATICALLY IF INHERITED INSIDE CORES
+          if (node.parentElement.closest('.notranslate, .skip-translation')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          
           return node.textContent.trim().length > 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
         }
       }
@@ -189,7 +191,6 @@ const isSlider = sortedReviews.length > 4;
       nodesToTranslate.push(domTreeWalker.currentNode);
     }
 
-    // Process translations asynchronously
     for (const textNode of nodesToTranslate) {
       if (!baselineTextCache.has(textNode)) {
         baselineTextCache.set(textNode, textNode.textContent);
@@ -198,22 +199,18 @@ const isSlider = sortedReviews.length > 4;
       const originalEnglishText = baselineTextCache.get(textNode);
 
       if (activeLanguage === 'id') {
-        // Run translation dynamically on demand
         const convertedIndonesianText = await fetchAsyncTranslation(originalEnglishText, 'id');
         textNode.textContent = convertedIndonesianText;
       } else {
-        // Return directly to pristine initial cached text string when selecting English
         textNode.textContent = originalEnglishText;
       }
     }
   }
 
-  // Universal layout flag sync link listener
   window.addEventListener('globalLangChange', () => {
     executeAutomatedTranslationSweep();
   });
 
-  // Initialization sweeps
   executeAutomatedTranslationSweep();
   document.addEventListener('astro:after-swap', executeAutomatedTranslationSweep);
 </script>
