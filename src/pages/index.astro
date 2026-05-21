@@ -43,16 +43,16 @@ const isSlider = sortedReviews.length > 4;
               sortedReviews.map((review) => (
                 <div class="review-card">
                   <div>
-                    <div class="stars">
+                    <div class="stars notranslate">
                       {review.stars && review.stars.toString().includes("5") && "⭐⭐⭐⭐⭐"}
                       {review.stars && review.stars.toString().includes("4") && "⭐⭐⭐⭐"}
                       {review.stars && review.stars.toString().includes("3") && "⭐⭐⭐"}
                       {review.stars && !review.stars.toString().includes("5") && !review.stars.toString().includes("4") && !review.stars.toString().includes("3") && review.stars}
                     </div>
-                    <p class="content">"{review.content}"</p>
+                    <p class="content review-content-text">"{review.content}"</p>
                   </div>
                   
-                  <div class="author-row">
+                  <div class="author-row notranslate">
                     <div class="flex flex-col">
                       <span class="author-name">{review.author_name || "Verified Guest"}</span>
                       {review.date && (
@@ -84,22 +84,23 @@ const isSlider = sortedReviews.length > 4;
             }
           </div>
 
+          {/* TRACK LANE 2 (DUPLICATED FOR ANIMATION LOOP) */}
           {isSlider && (
             <div class="marquee-group" aria-hidden="true">
               {
                 sortedReviews.map((review) => (
                   <div class="review-card">
                     <div>
-                      <div class="stars">
+                      <div class="stars notranslate">
                         {review.stars && review.stars.toString().includes("5") && "⭐⭐⭐⭐⭐"}
                         {review.stars && review.stars.toString().includes("4") && "⭐⭐⭐⭐"}
                         {review.stars && review.stars.toString().includes("3") && "⭐⭐⭐"}
                         {review.stars && !review.stars.toString().includes("5") && !review.stars.toString().includes("4") && !review.stars.toString().includes("3") && review.stars}
                       </div>
-                      <p class="content">"{review.content}"</p>
+                      <p class="content review-content-text">"{review.content}"</p>
                     </div>
                     
-                    <div class="author-row">
+                    <div class="author-row notranslate">
                       <div class="flex flex-col">
                         <span class="author-name">{review.author_name || "Verified Guest"}</span>
                         {review.date && (
@@ -127,14 +128,14 @@ const isSlider = sortedReviews.length > 4;
                       </div>
                     </div>
                   </div>
-                )
-              )
-            }
-          </div>
-        )}
+                ))
+              }
+            </div>
+          )}
 
+        </div>
       </div>
-    </div>
+    </section>
   </div>
 </Layout>
 
@@ -176,7 +177,6 @@ const isSlider = sortedReviews.length > 4;
             return NodeFilter.FILTER_REJECT;
           }
           
-          // SKIPS LOGOS, NAVBAR, FOOTER AUTOMATICALLY IF INHERITED INSIDE CORES
           if (node.parentElement.closest('.notranslate, .skip-translation')) {
             return NodeFilter.FILTER_REJECT;
           }
@@ -200,7 +200,13 @@ const isSlider = sortedReviews.length > 4;
 
       if (activeLanguage === 'id') {
         const convertedIndonesianText = await fetchAsyncTranslation(originalEnglishText, 'id');
-        textNode.textContent = convertedIndonesianText;
+        
+        // Retain semantic block quotes on loop rendering elements
+        if (textNode.parentElement.classList.contains('review-content-text')) {
+          textNode.textContent = `"${convertedIndonesianText.replace(/^"|"$/g, '')}"`;
+        } else {
+          textNode.textContent = convertedIndonesianText;
+        }
       } else {
         textNode.textContent = originalEnglishText;
       }
