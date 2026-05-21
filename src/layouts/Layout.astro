@@ -176,20 +176,21 @@ const makeTitle = title
         return localStorage.getItem('mutiara_user_lang') || 'en';
       }
 
-      async function fetchAsyncTranslation(textString, targetLangCode) {
-        if (!textString || textString.trim() === "" || !isNaN(textString)) return textString;
+      async function fetchBatchTranslation(textArray, targetLangCode) {
+        if (!textArray || textArray.length === 0) return [];
+        const combinedPayload = textArray.join(' ||| ');
         try {
-          const apiEndpoint = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(textString)}`;
+          const apiEndpoint = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(combinedPayload)}`;
           const rawResponse = await fetch(apiEndpoint);
           const parsedData = await rawResponse.json();
-          
           if (parsedData && parsedData[0]) {
-            return parsedData[0].map(phrase => phrase[0]).join('');
+            const fullyTranslatedString = parsedData[0].map(phrase => phrase[0]).join('');
+            return fullyTranslatedString.split(/\s*\|\|\|\s*/);
           }
-          return textString;
+          return textArray;
         } catch (err) {
-          console.error("Translation server drop:", err);
-          return textString;
+          console.error("Batch Translation Stream dropped, falling back to raw items:", err);
+          return textArray;
         }
       }
 
@@ -246,7 +247,7 @@ const makeTitle = title
 
             const textClean = node.textContent.trim().toLowerCase();
 
-            // BRAND INTERCEPT BYPASS: Allow long descriptions containing the brand text to proceed smoothly
+            // BRAND INTERCEPT BYPASS
             if (node.textContent.toLowerCase().includes('mutiara') && textClean.length < 40) {
               return NodeFilter.FILTER_REJECT;
             }
@@ -282,15 +283,19 @@ const makeTitle = title
           nodesToTranslate.push(walker.currentNode);
         }
 
-        for (const textNode of nodesToTranslate) {
-          if (!baselineTextCache.has(textNode)) {
-            baselineTextCache.set(textNode, textNode.textContent);
+        const stringsToProcess = [];
+        nodesToTranslate.forEach(node => {
+          if (!baselineTextCache.has(node)) {
+            baselineTextCache.set(node, node.textContent);
           }
+          stringsToProcess.push(baselineTextCache.get(node));
+        });
 
-          const originalText = baselineTextCache.get(textNode);
-
-          if (activeLanguage !== 'en') {
-            let convertedText = await fetchAsyncTranslation(originalText, activeLanguage);
+        if (activeLanguage !== 'en') {
+          const translatedBatchResults = await fetchBatchTranslation(stringsToProcess, activeLanguage);
+          
+          nodesToTranslate.forEach((textNode, index) => {
+            let convertedText = translatedBatchResults[index] || baselineTextCache.get(textNode);
             
             // POST-TRANSLATION BRAND PROTECTION FORCE
             convertedText = convertedText.replace(/Hotel Mutiara & Konvensi/gi, 'Mutiara Hotel & Convention');
@@ -304,9 +309,11 @@ const makeTitle = title
             } else {
               textNode.textContent = convertedText;
             }
-          } else {
-            textNode.textContent = originalText;
-          }
+          });
+        } else {
+          nodesToTranslate.forEach(textNode => {
+            textNode.textContent = baselineTextCache.get(textNode);
+          });
         }
       }
 
