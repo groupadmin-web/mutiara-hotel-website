@@ -31,22 +31,8 @@ const teamCollection = defineCollection({
   }),
 });
 
-// NEW: 100% HEADLESS CMS READY VALIDATION SCHEMA FOR YOUR GALLERY
-const galleryCollection = defineCollection({
-  type: "data", // Enforces strict JSON structure validation
-  schema: z.object({
-    id: z.string(),
-    title: z.string(),
-    category: z.string(),
-    image: z.string().url(), // Ensures inputs from your CMS dashboard are valid secure assets URLs
-    description: z.string(),
-  }),
-});
-
 // 3. Export a single `collections` object to register your collection(s)
-//    This key matches your collection file/directory name in "src/content"
 export const collections = {
   'blog': blogCollection,
   'team': teamCollection,
-  'gallery': galleryCollection, // Links your new gallery schema directly to the Astro compiler
 };
