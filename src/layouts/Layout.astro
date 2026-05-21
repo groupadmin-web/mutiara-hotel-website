@@ -97,7 +97,9 @@ const makeTitle = title
 
     <Navbar />
 
-    <slot />
+    <main id="universal-translation-root">
+      <slot />
+    </main>
 
     <Footer />
 
@@ -108,9 +110,7 @@ const makeTitle = title
     </a>
 
     <style is:global>
-      img {
-        content-visibility: auto;
-      }
+      img { content-visibility: auto; }
       .whatsapp-icon-float {
         position: fixed;
         bottom: 24px;
@@ -126,59 +126,110 @@ const makeTitle = title
         z-index: 99999;
         transition: transform 0.2s ease, background-color 0.2s ease;
       }
-      .whatsapp-svg {
-        width: 36px;
-        height: 36px;
-      }
-      .whatsapp-icon-float:hover {
-        transform: scale(1.1);
-        background-color: #128c7e;
-      }
+      .whatsapp-svg { width: 36px; height: 36px; }
+      .whatsapp-icon-float:hover { transform: scale(1.1); background-color: #128c7e; }
       @media (max-width: 768px) {
-        .whatsapp-icon-float {
-          bottom: 16px;
-          right: 16px;
-          width: 50px;
-          height: 50px;
-        }
-        .whatsapp-svg {
-          width: 30px;
-          height: 30px;
-        }
-      }
-      @media (max-width: 400px) {
-        .hidden.xs\:inline-block {
-          display: none !important;
-        }
+        .whatsapp-icon-float { bottom: 16px; right: 16px; width: 50px; height: 50px; }
+        .whatsapp-svg { width: 30px; height: 30px; }
       }
     </style>
 
     <script is:inline>
+      const baselineTextCache = new Map();
+
       function getLanguageSetting() {
         return new URLSearchParams(window.location.search).get('lang') === 'id' ? 'id' : 'en';
       }
 
-      function executeGlobalTranslation() {
-        const targetLang = getLanguageSetting();
+      async function fetchAsyncTranslation(textString, targetLangCode) {
+        if (!textString || textString.trim() === "" || !isNaN(textString)) return textString;
+        try {
+          const apiEndpoint = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(textString)}`;
+          const rawResponse = await fetch(apiEndpoint);
+          const parsedData = await rawResponse.json();
+          
+          if (parsedData && parsedData[0]) {
+            return parsedData[0].map(phrase => phrase[0]).join('');
+          }
+          return textString;
+        } catch (err) {
+          console.error("Translation server drop:", err);
+          return textString;
+        }
+      }
+
+      async function executeUniversalTranslation() {
+        const activeLanguage = getLanguageSetting();
+        const rootContainer = document.getElementById('universal-translation-root');
+        if (!rootContainer) return;
+
+        // Visual selection indicator logic for flags
         const flagEN = document.getElementById('global-nav-en');
         const flagID = document.getElementById('global-nav-id');
         const labelEl = document.getElementById('global-lang-label');
-        
-        if (!flagEN || !flagID) return;
-
-        if (targetLang === 'id') {
-          flagID.style.filter = 'none'; flagID.style.opacity = '1'; flagID.style.transform = 'scale(1.2)';
-          flagID.style.boxShadow = '0 0 0 2px #d97706, 0 4px 6px -1px rgba(0,0,0,0.1)';
-          flagEN.style.filter = 'grayscale(100%) brightness(85%)'; flagEN.style.opacity = '0.3'; flagEN.style.transform = 'scale(0.9)'; flagEN.style.boxShadow = 'none';
-          if (labelEl) labelEl.innerText = "PILIHAN BAHASA:";
-        } else {
-          flagEN.style.filter = 'none'; flagEN.style.opacity = '1'; flagEN.style.transform = 'scale(1.2)';
-          flagEN.style.boxShadow = '0 0 0 2px #d97706, 0 4px 6px -1px rgba(0,0,0,0.1)';
-          flagID.style.filter = 'grayscale(100%) brightness(85%)'; flagID.style.opacity = '0.3'; flagID.style.transform = 'scale(0.9)'; flagID.style.boxShadow = 'none';
-          if (labelEl) labelEl.innerText = "SELECT LANGUAGE:";
+        if (flagEN && flagID) {
+          if (activeLanguage === 'id') {
+            flagID.style.filter = 'none'; flagID.style.opacity = '1'; flagID.style.transform = 'scale(1.2)'; flagID.style.boxShadow = '0 0 0 2px #d97706';
+            flagEN.style.filter = 'grayscale(100%)'; flagEN.style.opacity = '0.3'; flagEN.style.transform = 'scale(0.9)'; flagEN.style.boxShadow = 'none';
+            if (labelEl) labelEl.innerText = "PILIHAN BAHASA:";
+          } else {
+            flagEN.style.filter = 'none'; flagEN.style.opacity = '1'; flagEN.style.transform = 'scale(1.2)'; flagEN.style.boxShadow = '0 0 0 2px #d97706';
+            flagID.style.filter = 'grayscale(100%)'; flagID.style.opacity = '0.3'; flagID.style.transform = 'scale(0.9)'; flagID.style.boxShadow = 'none';
+            if (labelEl) labelEl.innerText = "SELECT LANGUAGE:";
+          }
         }
 
-        window.dispatchEvent(new CustomEvent('globalLangChange', { detail: { lang: targetLang } }));
+        // UNIVERSAL TREE SCANNER: Gathers textual content safely across any routed page body
+        const nodesToTranslate = [];
+        const walker = document.createTreeWalker(rootContainer, NodeFilter.SHOW_TEXT, {
+          acceptNode: function(node) {
+            if (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE') {
+              return NodeFilter.FILTER_REJECT;
+            }
+
+            // BRAND SYSTEM EXCLUSION: Never translate corporate identifiers
+            if (node.textContent.toLowerCase().includes('mutiara')) {
+              return NodeFilter.FILTER_REJECT;
+            }
+
+            // INTERACTIVE COMPONENT LAYER EXCLUSION (Keeps buttons/links pristine English)
+            if (
+              node.parentElement.tagName === 'BUTTON' || 
+              node.parentElement.tagName === 'A' ||
+              node.parentElement.classList.contains('btn') ||
+              node.parentElement.classList.contains('button') ||
+              node.parentElement.closest('.notranslate, .skip-translation')
+            ) {
+              return NodeFilter.FILTER_REJECT;
+            }
+
+            return node.textContent.trim().length > 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+          }
+        });
+
+        while (walker.nextNode()) {
+          nodesToTranslate.push(walker.currentNode);
+        }
+
+        // Send strings through API channels asynchronously
+        for (const textNode of nodesToTranslate) {
+          if (!baselineTextCache.has(textNode)) {
+            baselineTextCache.set(textNode, textNode.textContent);
+          }
+
+          const originalText = baselineTextCache.get(textNode);
+
+          if (activeLanguage === 'id') {
+            const convertedText = await fetchAsyncTranslation(originalText, 'id');
+            if (textNode.parentElement.classList.contains('review-content-text')) {
+              textNode.textContent = `"${convertedText.replace(/^"|"$/g, '')}"`;
+            } else {
+              textNode.textContent = convertedText;
+            }
+          } else {
+            textNode.textContent = originalText;
+          }
+        }
       }
 
       function setupLanguageListeners() {
@@ -191,7 +242,7 @@ const makeTitle = title
             const url = new URL(window.location.href);
             url.searchParams.set('lang', 'en');
             window.history.pushState({}, '', url);
-            executeGlobalTranslation();
+            executeUniversalTranslation();
           };
         }
 
@@ -201,19 +252,19 @@ const makeTitle = title
             const url = new URL(window.location.href);
             url.searchParams.set('lang', 'id');
             window.history.pushState({}, '', url);
-            executeGlobalTranslation();
+            executeUniversalTranslation();
           };
         }
       }
 
-      // Initial runs
+      // Initial running calls
       setupLanguageListeners();
-      executeGlobalTranslation();
+      executeUniversalTranslation();
 
-      // Lifecycle router listener re-bindings
+      // Clear sync hook routines across multi-page router switches
       document.addEventListener('astro:after-swap', () => {
         setupLanguageListeners();
-        executeGlobalTranslation();
+        executeUniversalTranslation();
       });
     </script>
   </body>
