@@ -52,10 +52,10 @@ const makeTitle = title
   <body>
     
     <div class="fixed top-4 right-4 z-[999999] pointer-events-auto sm:right-6">
-      <div class="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2.5 border border-slate-200/80 shadow-md transition-all duration-300 hover:border-slate-300">
+      <div class="bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2.5 border border-slate-200/90 shadow-lg transition-all duration-300">
         
-        <span id="global-lang-label" class="text-[9px] tracking-wide font-sans font-medium text-slate-400 italic pr-0.5 select-none hidden xs:inline-block">
-          Translates entire site
+        <span id="global-lang-label" class="text-[9px] tracking-wide font-sans font-semibold text-slate-400 uppercase pr-0.5 select-none hidden xs:inline-block">
+          SELECT LANGUAGE:
         </span>
 
         <div class="w-[1px] h-3 bg-slate-200 hidden xs:inline-block"></div>
@@ -63,10 +63,10 @@ const makeTitle = title
         <button 
           id="global-nav-en" 
           type="button" 
-          class="w-5 h-5 rounded-full overflow-hidden transition-all duration-200 hover:scale-110 cursor-pointer flex items-center justify-center border border-slate-200/40 select-none shadow-sm"
+          class="w-5 h-5 rounded-full overflow-hidden transition-all duration-200 hover:scale-110 cursor-pointer flex items-center justify-center select-none outline-none transition-shadow aspect-square shrink-0"
           title="English"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" class="w-full h-full object-cover">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" preserveAspectRatio="none" class="w-full h-full object-cover block pointer-events-none">
             <clipPath id="s"><path d="M0 0h60v30H0z"/></clipPath>
             <g clip-path="url(#s)">
               <path d="M0 0h60v30H0z" fill="#012169"/>
@@ -78,15 +78,15 @@ const makeTitle = title
           </svg>
         </button>
 
-        <div class="w-[1px] h-3 bg-slate-300"></div>
+        <div class="w-[1px] h-3 bg-slate-200"></div>
 
         <button 
           id="global-nav-id" 
           type="button" 
-          class="w-5 h-5 rounded-full overflow-hidden transition-all duration-200 hover:scale-110 cursor-pointer flex items-center justify-center border border-slate-200/40 select-none shadow-sm"
+          class="w-5 h-5 rounded-full overflow-hidden transition-all duration-200 hover:scale-110 cursor-pointer flex items-center justify-center select-none outline-none transition-shadow aspect-square shrink-0"
           title="Indonesia"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" class="w-full h-full object-cover">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" preserveAspectRatio="none" class="w-full h-full object-cover block pointer-events-none">
             <path fill="#e21c0e" d="M0 0h3v1H0z"/>
             <path fill="#fff" d="M0 1h3v1H0z"/>
           </svg>
@@ -120,7 +120,7 @@ const makeTitle = title
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 2px 4px 12px rgba(0,0,0,0.3);
+        box-shadow: 2px 4px 12 rgba(0,0,0,0.3);
         z-index: 99999;
         transition: transform 0.2s ease, background-color 0.2s ease;
       }
@@ -144,7 +144,6 @@ const makeTitle = title
           height: 30px;
         }
       }
-      /* Extra breakpoint for compact mobile styling safety */
       @media (max-width: 400px) {
         .hidden.xs\:inline-block {
           display: none !important;
@@ -155,22 +154,22 @@ const makeTitle = title
     <script is:inline>
       const globalTranslations = {
         id: {
-          "global-lang-label": "Terjemahkan seluruh situs",
+          "global-lang-label": "PILIHAN BAHASA:",
           "accomm-sub": "AKOMODASI",
           "accomm-title": "Penginapan Butik Kolonial yang Abadi",
           "accomm-desc": "Dengan 112 kamar yang ditata indah di 6 lantai, Mutiara Hotel & Convention memadukan lantai ubin otentik dan tata letak kayu klasik dengan kenyamanan modern. Dari kamar budget yang nyaman hingga suite keluarga multi-kamar yang luas, setiap ruang kedap suara sepenuhnya dan ber-AC untuk menjadi tempat perlindungan pribadi Anda.",
           "leisure-sub": "REKREASI & KETENANGAN",
           "leisure-title": "Keramahtamahan Otentik di Sisi Kolam Renang Kristal",
-          "leisure-desc": "Lepaskan penat dari kesibukan Pasirkaliki di dalam taman halaman kami yang damai. Nikmati pagi Anda dengan sarapan lezat di Restoran Tiara dengan pemandangan air langsung, atau bersantai di kursi berjemur premium di tepi kolam renang sementara layanan pramutamu dan meja layanan tamu 24 jam kami mengurus setiap kebutuhan perjalanan Anda."
+          "leisure-desc": "Lepaskan penat dari kesibukan Pasirikaliki di dalam taman halaman kami yang damai. Nikmati pagi Anda dengan sarapan lezat di Restoran Tiara dengan pemandangan air langsung, atau bersantai di kursi berjemur premium di tepi kolam renang sementara layanan pramutamu dan meja layanan tamu 24 jam kami mengurus setiap kebutuhan perjalanan Anda."
         },
         en: {
-          "global-lang-label": "Translates entire site",
+          "global-lang-label": "SELECT LANGUAGE:",
           "accomm-sub": "THE ACCOMMODATIONS",
           "accomm-title": "Timeless Colonial Boutique Lodging",
           "accomm-desc": "With 112 beautifully arranged rooms stretching across 6 floors, Mutiara Hotel & Convention pairs authentic tiled floors and classic woodwork layouts with modern comforts. From cozy budget stays to sprawling multi-room family suites, every space is fully soundproofed and air-conditioned to serve as your private sanctuary.",
           "leisure-sub": "LEISURE & CALM",
           "leisure-title": "Authentic Hospitality by the Crystalline Pool",
-          "leisure-desc": "Escape the bustle of Pasirkaliki inside our peaceful courtyard garden. Spend your mornings enjoying a hearty breakfast at Tiara Restaurant with direct views of the water, or lounge on our premium poolside sun chairs while our 24-hour concierge and guest service desk takes care of your every travel requirement."
+          "leisure-desc": "Escape the bustle of Pasirikaliki inside our peaceful courtyard garden. Spend your mornings enjoying a hearty breakfast at Tiara Restaurant with direct views of the water, or lounge on our premium poolside sun chairs while our 24-hour concierge and guest service desk takes care of your every travel requirement."
         }
       };
 
@@ -186,30 +185,28 @@ const makeTitle = title
         
         if (!flagEN || !flagID) return;
 
-        // Dynamic label translation update injection
         if (labelEl && globalTranslations[lang]["global-lang-label"]) {
           labelEl.innerText = globalTranslations[lang]["global-lang-label"];
         }
 
-        // Smooth opacity and scale transformations
         if (lang === 'id') {
-          flagID.style.filter = 'grayscale(0%)';
+          flagID.style.filter = 'none';
           flagID.style.opacity = '1';
-          flagID.style.transform = 'scale(1.15)';
-          flagID.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+          flagID.style.transform = 'scale(1.2)';
+          flagID.style.boxShadow = '0 0 0 2px #d97706, 0 4px 6px -1px rgba(0,0,0,0.1)';
           
-          flagEN.style.filter = 'grayscale(100%)';
-          flagEN.style.opacity = '0.35';
+          flagEN.style.filter = 'grayscale(100%) brightness(85%)';
+          flagEN.style.opacity = '0.3';
           flagEN.style.transform = 'scale(0.9)';
           flagEN.style.boxShadow = 'none';
         } else {
-          flagEN.style.filter = 'grayscale(0%)';
+          flagEN.style.filter = 'none';
           flagEN.style.opacity = '1';
-          flagEN.style.transform = 'scale(1.15)';
-          flagEN.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+          flagEN.style.transform = 'scale(1.2)';
+          flagEN.style.boxShadow = '0 0 0 2px #d97706, 0 4px 6px -1px rgba(0,0,0,0.1)';
           
-          flagID.style.filter = 'grayscale(100%)';
-          flagID.style.opacity = '0.35';
+          flagID.style.filter = 'grayscale(100%) brightness(85%)';
+          flagID.style.opacity = '0.3';
           flagID.style.transform = 'scale(0.9)';
           flagID.style.boxShadow = 'none';
         }
@@ -226,4 +223,34 @@ const makeTitle = title
 
       function setupLanguageListeners() {
         const btnEN = document.getElementById('global-nav-en');
-        const btnID = document.getElementById('
+        const btnID = document.getElementById('global-nav-id');
+
+        if (btnEN) {
+          btnEN.onclick = () => {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', 'en');
+            window.history.pushState({}, '', url);
+            applyGlobalTranslation();
+          };
+        }
+
+        if (btnID) {
+          btnID.onclick = () => {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', 'id');
+            window.history.pushState({}, '', url);
+            applyGlobalTranslation();
+          };
+        }
+      }
+
+      setupLanguageListeners();
+      applyGlobalTranslation();
+
+      document.addEventListener('astro:after-swap', () => {
+        setupLanguageListeners();
+        applyGlobalTranslation();
+      });
+    </script>
+  </body>
+</html>
