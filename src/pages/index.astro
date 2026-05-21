@@ -176,12 +176,19 @@ const isSlider = sortedReviews.length > 4;
           if (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE') {
             return NodeFilter.FILTER_REJECT;
           }
+
+          // BRAND SAFETY PROTECTOR: If text contains the core brand name, freeze translation immediately
+          if (node.textContent.toLowerCase().includes('mutiara')) {
+            return NodeFilter.FILTER_REJECT;
+          }
           
-          // BUTTON EXCLUSION INTERCEPT: Drops buttons, interactive links, or explicit block classes from translating
+          // BUTTON & LINK CLASS INTRUSION FILTERS
           if (
             node.parentElement.tagName === 'BUTTON' || 
             node.parentElement.tagName === 'A' || 
-            node.parentElement.closest('.notranslate, .skip-translation')
+            node.parentElement.classList.contains('btn') ||
+            node.parentElement.classList.contains('button') ||
+            node.parentElement.closest('.notranslate, .skip-translation, nav, footer')
           ) {
             return NodeFilter.FILTER_REJECT;
           }
