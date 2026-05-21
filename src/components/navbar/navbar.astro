@@ -11,7 +11,8 @@ const menuitems = [
   { title: "HOME", path: "/" },
   { title: "ROOMS", path: "/rooms" },
   { title: "TOURIST ATTRACTIONS", path: "/attractions" },
-  { title: "GALLERY", path: "#gallery" },
+  // UPDATED LINK TARGET: Pointing directly to your clean dedicated subpage route
+  { title: "GALLERY", path: "/gallery" },
   { title: "MEETINGS & EVENTS", path: "#events" },
   { title: "Q&A", path: "#qa" },
   { title: "CONTACT", path: "#contact" },
@@ -107,8 +108,8 @@ const menuitems = [
     const links = document.querySelectorAll('[data-nav-link]');
     const currentPath = window.location.pathname;
 
-    // 1. SMART URL PATH CHECKER: Lights up top-level subpages correctly!
-    if (currentPath.includes('/rooms') || currentPath.includes('/attractions')) {
+    // 1. SMART URL PATH CHECKER: Lights up active subpage headers smoothly
+    if (currentPath.includes('/rooms') || currentPath.includes('/attractions') || currentPath.includes('/gallery')) {
       links.forEach((link) => {
         const href = link.getAttribute('href');
         let shouldHighlight = false;
@@ -117,6 +118,10 @@ const menuitems = [
           shouldHighlight = true;
         }
         if (currentPath.includes('/attractions') && (href === '/attractions' || href.includes('attractions'))) {
+          shouldHighlight = true;
+        }
+        // ADDED VALIDATION RULE: Locks active highlight state when browser sits on the gallery route
+        if (currentPath.includes('/gallery') && (href === '/gallery' || href.includes('gallery'))) {
           shouldHighlight = true;
         }
 
@@ -154,7 +159,10 @@ const menuitems = [
         const href = link.getAttribute('href');
         let shouldHighlight = false;
 
+        // Skip standalone deep subpage links inside homepage logic cycles
         if (href === '/rooms' || href.includes('rooms')) return;
+        if (href === '/attractions' || href.includes('attractions')) return;
+        if (href === '/gallery' || href.includes('gallery')) return;
 
         if (isAtBottom) {
           shouldHighlight = (href === '#contact');
@@ -174,7 +182,6 @@ const menuitems = [
       });
     }
 
-    // Turn event tracking passive so hovers don't force page paint delays
     window.addEventListener('scroll', checkActiveSection, { passive: true });
     window.addEventListener('resize', checkActiveSection, { passive: true });
     checkActiveSection();
@@ -182,3 +189,4 @@ const menuitems = [
 
   window.addEventListener('DOMContentLoaded', initScrollTracking);
   window.addEventListener('astro:after-swap', initScrollTracking);
+</script>
