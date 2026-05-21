@@ -50,6 +50,32 @@ const makeTitle = title
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
   </head>
   <body>
+    
+    <div class="w-full bg-white border-b border-gray-100 py-2 px-6 flex justify-end items-center sticky top-0 z-[100000]">
+      <div class="max-w-7xl mx-auto w-full flex justify-end items-center gap-3">
+        <span class="text-[9px] tracking-widest font-sans font-bold text-slate-400 uppercase">Select Language:</span>
+        <div class="bg-slate-100 p-1 rounded-full inline-flex items-center border border-slate-200/50 shadow-inner gap-1">
+          <button 
+            id="global-nav-en" 
+            type="button" 
+            class="p-1 rounded-full transition-all duration-200 hover:scale-110 cursor-pointer text-lg leading-none"
+            title="English"
+          >
+            🇬🇧
+          </button>
+          <div class="w-[1px] h-3 bg-slate-300"></div>
+          <button 
+            id="global-nav-id" 
+            type="button" 
+            class="p-1 rounded-full transition-all duration-200 hover:scale-110 cursor-pointer text-lg leading-none"
+            title="Indonesia"
+          >
+            🇮🇩
+          </button>
+        </div>
+      </div>
+    </div>
+
     <Navbar />
     <slot />
     <Footer />
@@ -100,5 +126,103 @@ const makeTitle = title
         }
       }
     </style>
+
+    <script is:inline>
+      const globalTranslations = {
+        id: {
+          // --- HOMEPAGE TRANSLATION VALUES ---
+          "accomm-sub": "AKOMODASI",
+          "accomm-title": "Penginapan Butik Kolonial yang Abadi",
+          "accomm-desc": "Dengan 112 kamar yang ditata indah di 6 lantai, Mutiara Hotel & Convention memadukan lantai ubin otentik dan tata letak kayu klasik dengan kenyamanan modern. Dari kamar budget yang nyaman hingga suite keluarga multi-kamar yang luas, setiap ruang kedap suara sepenuhnya dan ber-AC untuk menjadi tempat perlindungan pribadi Anda.",
+          "leisure-sub": "REKREASI & KETENANGAN",
+          "leisure-title": "Keramahtamahan Otentik di Sisi Kolam Renang Kristal",
+          "leisure-desc": "Lepaskan penat dari kesibukan Pasirkaliki di dalam taman halaman kami yang damai. Nikmati pagi Anda dengan sarapan lezat di Restoran Tiara dengan pemandangan air langsung, atau bersantai di kursi berjemur premium di tepi kolam renang sementara layanan pramutamu dan meja layanan tamu 24 jam kami mengurus setiap kebutuhan perjalanan Anda."
+        },
+        en: {
+          // --- HOMEPAGE TRANSLATION VALUES ---
+          "accomm-sub": "THE ACCOMMODATIONS",
+          "accomm-title": "Timeless Colonial Boutique Lodging",
+          "accomm-desc": "With 112 beautifully arranged rooms stretching across 6 floors, Mutiara Hotel & Convention pairs authentic tiled floors and classic woodwork layouts with modern comforts. From cozy budget stays to sprawling multi-room family suites, every space is fully soundproofed and air-conditioned to serve as your private sanctuary.",
+          "leisure-sub": "LEISURE & CALM",
+          "leisure-title": "Authentic Hospitality by the Crystalline Pool",
+          "leisure-desc": "Escape the bustle of Pasirkaliki inside our peaceful courtyard garden. Spend your mornings enjoying a hearty breakfast at Tiara Restaurant with direct views of the water, or lounge on our premium poolside sun chairs while our 24-hour concierge and guest service desk takes care of your every travel requirement."
+        }
+      };
+
+      function getLanguageSetting() {
+        return new URLSearchParams(window.location.search).get('lang') === 'id' ? 'id' : 'en';
+      }
+
+      function applyGlobalTranslation() {
+        const lang = getLanguageSetting();
+        const flagEN = document.getElementById('global-nav-en');
+        const flagID = document.getElementById('global-nav-id');
+        
+        if (!flagEN || !flagID) return;
+
+        // Visual adjustment filters for selected and unselected states
+        if (lang === 'id') {
+          flagID.style.filter = 'grayscale(0%)';
+          flagID.style.opacity = '1';
+          flagID.style.transform = 'scale(1.1)';
+          
+          flagEN.style.filter = 'grayscale(60%)';
+          flagEN.style.opacity = '0.5';
+          flagEN.style.transform = 'scale(1)';
+        } else {
+          flagEN.style.filter = 'grayscale(0%)';
+          flagEN.style.opacity = '1';
+          flagEN.style.transform = 'scale(1.1)';
+          
+          flagID.style.filter = 'grayscale(60%)';
+          flagID.style.opacity = '0.5';
+          flagID.style.transform = 'scale(1)';
+        }
+
+        // Loop through and modify text domains holding validation translation keys
+        document.querySelectorAll('[data-translate-key]').forEach(el => {
+          const key = el.getAttribute('data-translate-key');
+          if (globalTranslations[lang] && globalTranslations[lang][key]) {
+            el.innerText = globalTranslations[lang][key];
+          }
+        });
+        
+        // Dispatches events so child components can react
+        window.dispatchEvent(new CustomEvent('globalLangChange', { detail: { lang } }));
+      }
+
+      function setupLanguageListeners() {
+        const btnEN = document.getElementById('global-nav-en');
+        const btnID = document.getElementById('global-nav-id');
+
+        if (btnEN) {
+          btnEN.onclick = () => {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', 'en');
+            window.history.pushState({}, '', url);
+            applyGlobalTranslation();
+          };
+        }
+
+        if (btnID) {
+          btnID.onclick = () => {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', 'id');
+            window.history.pushState({}, '', url);
+            applyGlobalTranslation();
+          };
+        }
+      }
+
+      // Initial execution sequence loops
+      setupLanguageListeners();
+      applyGlobalTranslation();
+
+      // View swap handler matching Astro routing transitions
+      document.addEventListener('astro:after-swap', () => {
+        setupLanguageListeners();
+        applyGlobalTranslation();
+      });
+    </script>
   </body>
 </html>
