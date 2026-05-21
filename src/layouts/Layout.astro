@@ -120,7 +120,7 @@ const makeTitle = title
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 2px 4px 12 rgba(0,0,0,0.3);
+        box-shadow: 2px 4px 12px rgba(0,0,0,0.3);
         z-index: 99999;
         transition: transform 0.2s ease, background-color 0.2s ease;
       }
@@ -152,6 +152,7 @@ const makeTitle = title
     </style>
 
     <script is:inline>
+      // 1. MASTER DICTIONARY
       const globalTranslations = {
         id: {
           "global-lang-label": "PILIHAN BAHASA:",
@@ -173,23 +174,34 @@ const makeTitle = title
         }
       };
 
-      function getLanguageSetting() {
+      // Tracks the current active translation state on screen to prevent double running
+      let currentlyRenderedLang = null;
+
+      function getUrlLanguageSetting() {
         return new URLSearchParams(window.location.search).get('lang') === 'id' ? 'id' : 'en';
       }
 
-      function applyGlobalTranslation() {
-        const lang = getLanguageSetting();
+      function applyGlobalTranslation(forceUpdate = false) {
+        const targetLang = getUrlLanguageSetting();
+        
+        // SMART CHECK: If the page language matches what's already on screen, stop here!
+        if (!forceUpdate && currentlyRenderedLang === targetLang) {
+          return; 
+        }
+
         const flagEN = document.getElementById('global-nav-en');
         const flagID = document.getElementById('global-nav-id');
         const labelEl = document.getElementById('global-lang-label');
         
         if (!flagEN || !flagID) return;
 
-        if (labelEl && globalTranslations[lang]["global-lang-label"]) {
-          labelEl.innerText = globalTranslations[lang]["global-lang-label"];
+        // 1. Update text label
+        if (labelEl && globalTranslations[targetLang]["global-lang-label"]) {
+          labelEl.innerText = globalTranslations[targetLang]["global-lang-label"];
         }
 
-        if (lang === 'id') {
+        // 2. High-Contrast Flag Ring Highlight Toggles
+        if (targetLang === 'id') {
           flagID.style.filter = 'none';
           flagID.style.opacity = '1';
           flagID.style.transform = 'scale(1.2)';
@@ -211,14 +223,19 @@ const makeTitle = title
           flagID.style.boxShadow = 'none';
         }
 
+        // 3. Execute text replacement on elements with data-translate-key tags
         document.querySelectorAll('[data-translate-key]').forEach(el => {
           const key = el.getAttribute('data-translate-key');
-          if (globalTranslations[lang] && globalTranslations[lang][key]) {
-            el.innerText = globalTranslations[lang][key];
+          if (globalTranslations[targetLang] && globalTranslations[targetLang][key]) {
+            el.innerText = globalTranslations[targetLang][key];
           }
         });
         
-        window.dispatchEvent(new CustomEvent('globalLangChange', { detail: { lang } }));
+        // Update state tracking sync variable
+        currentlyRenderedLang = targetLang;
+
+        // Dispatch global event signal for pages like attractions.astro to intercept
+        window.dispatchEvent(new CustomEvent('globalLangChange', { detail: { lang: targetLang } }));
       }
 
       function setupLanguageListeners() {
@@ -228,28 +245,35 @@ const makeTitle = title
         if (btnEN) {
           btnEN.onclick = () => {
             const url = new URL(window.location.href);
-            url.searchParams.set('lang', 'en');
-            window.history.pushState({}, '', url);
-            applyGlobalTranslation();
+            // Only update if it's a real language change
+            if (url.searchParams.get('lang') !== 'en' && getUrlLanguageSetting() !== 'en') {
+              url.searchParams.set('lang', 'en');
+              window.history.pushState({}, '', url);
+              applyGlobalTranslation();
+            }
           };
         }
 
         if (btnID) {
           btnID.onclick = () => {
             const url = new URL(window.location.href);
-            url.searchParams.set('lang', 'id');
-            window.history.pushState({}, '', url);
-            applyGlobalTranslation();
+            // Only update if it's a real language change
+            if (url.searchParams.get('lang') !== 'id') {
+              url.searchParams.set('lang', 'id');
+              window.history.pushState({}, '', url);
+              applyGlobalTranslation();
+            }
           };
         }
       }
 
+      // Initial execution sequence loop lines
       setupLanguageListeners();
-      applyGlobalTranslation();
+      applyGlobalTranslation(true); // Force true on fresh boot layouts
 
       document.addEventListener('astro:after-swap', () => {
         setupLanguageListeners();
-        applyGlobalTranslation();
+        applyGlobalTranslation(true); // Force true when swapping views via client router
       });
     </script>
   </body>
