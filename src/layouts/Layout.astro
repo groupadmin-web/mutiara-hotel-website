@@ -201,7 +201,7 @@ const makeTitle = title
         return 'en';
       }
 
-      // LIGHTNING SINGLE-PAYLOAD PIPELINE
+      // STANDARD LAYOUT BATCH PIPELINE (Safe for standard text layouts)
       async function fetchBatchTranslation(textArray, targetLangCode) {
         if (!textArray || textArray.length === 0) return [];
         const combinedPayload = textArray.join(' ||| ');
@@ -215,16 +215,30 @@ const makeTitle = title
           }
           return textArray;
         } catch (err) {
-          console.error("Batch Translation Stream dropped:", err);
+          console.error("Batch Stream Dropped:", err);
           return textArray;
         }
       }
 
-      // ACCURATE LOCAL LANGUAGE EVALUATOR (Zero Latency)
+      // ISOLATED SLANG-SAFE REVIEWS TRANSLATION PIPELINE
+      async function fetchSingleStringTranslation(textString, targetLangCode) {
+        if (!textString || textString.trim() === "") return textString;
+        try {
+          const apiEndpoint = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLangCode}&dt=t&q=${encodeURIComponent(textString)}`;
+          const rawResponse = await fetch(apiEndpoint);
+          const parsedData = await rawResponse.json();
+          if (parsedData && parsedData[0]) {
+            return parsedData[0].map(phrase => phrase[0]).join('');
+          }
+          return textString;
+        } catch (err) {
+          return textString;
+        }
+      }
+
       function detectStringSourceLanguage(text) {
         const clean = text.trim().toLowerCase();
         if (/[\u4e00-\u9fa5]/.test(clean)) return 'zh';
-        // Comprehensive check for standard text phrases and common trailing slang characters
         if (
           /\b(dan|yang|kamar|dengan|di|ke|untuk|kami|bisa|bagus|sekali|mantap|nyaman|tempatnya|sangat|sayang|wangi|kolam|kolamnya|liburannya|hari)\b/i.test(clean) ||
           /(d{2,}|s{2,}|g{2,}|a{2,})\b/.test(clean)
@@ -268,8 +282,10 @@ const makeTitle = title
 
         rootContainer.querySelectorAll('.ai-translated-notice').forEach(el => el.remove());
 
-        const nodesToTranslate = [];
+        const standardNodes = [];
+        const reviewNodes = [];
         
+        // STANDARD LAYOUT ELEMENT FILTER
         const walker = document.createTreeWalker(rootContainer, NodeFilter.SHOW_TEXT, {
           acceptNode: function(node) {
             if (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE') {
@@ -304,72 +320,88 @@ const makeTitle = title
               return NodeFilter.FILTER_REJECT;
             }
 
+            // SEGREGATION STEP: Separate review nodes entirely from standard layouts
+            if (node.parentElement.classList.contains('review-content-text')) {
+              if (!reviewNodes.includes(node)) reviewNodes.push(node);
+              return NodeFilter.FILTER_REJECT;
+            }
+
             return node.textContent.trim().length > 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
           }
         });
 
         while (walker.nextNode()) {
-          nodesToTranslate.push(walker.currentNode);
+          standardNodes.push(walker.currentNode);
         }
 
+        // Secondary verification loop targeting raw classes explicitly
         const reviewElements = rootContainer.querySelectorAll('.review-content-text');
         reviewElements.forEach(el => {
           if (el.firstChild && el.firstChild.nodeType === Node.TEXT_NODE) {
-            if (!nodesToTranslate.includes(el.firstChild)) {
-              nodesToTranslate.push(el.firstChild);
+            if (!reviewNodes.includes(el.firstChild)) {
+              reviewNodes.push(el.firstChild);
             }
           }
         });
 
-        const stringsToProcess = [];
-        nodesToTranslate.forEach(node => {
+        // --- STEP 1: RUN LIGHTNING BATCH ON THE STANDARD PAGE CONTENT ---
+        const standardStrings = [];
+        standardNodes.forEach(node => {
           if (!baselineTextCache.has(node)) {
-            baselineTextCache.set(node, node.textContent.replace(/^"|"$/g, ''));
+            baselineTextCache.set(node, node.textContent);
           }
-          stringsToProcess.push(baselineTextCache.get(node));
+          standardStrings.push(baselineTextCache.get(node));
         });
 
-        const translatedBatchResults = await fetchBatchTranslation(stringsToProcess, activeLanguage);
-        
-        nodesToTranslate.forEach((textNode, index) => {
-          const originalValue = baselineTextCache.get(textNode);
-          let convertedText = translatedBatchResults[index] || originalValue;
+        if (activeLanguage !== 'en') {
+          const standardResults = await fetchBatchTranslation(standardStrings, activeLanguage);
+          standardNodes.forEach((node, idx) => {
+            let convertedText = standardResults[idx] || baselineTextCache.get(node);
+            convertedText = convertedText.replace(/Hotel Mutiara & Konvensi/gi, 'Mutiara Hotel & Convention');
+            convertedText = convertedText.replace(/Hotel Mutiara/gi, 'Mutiara Hotel');
+            convertedText = convertedText.replace(/珍珠酒店及会议中心/g, 'Mutiara Hotel & Convention');
+            node.textContent = convertedText;
+          });
+        } else {
+          standardNodes.forEach(node => {
+            node.textContent = baselineTextCache.get(node);
+          });
+        }
+
+        // --- STEP 2: RUN SLANG-SAFE TRANSLATION ROUTINE FOR GUEST REVIEWS ---
+        for (const reviewNode of reviewNodes) {
+          if (!baselineTextCache.has(reviewNode)) {
+            baselineTextCache.set(reviewNode, reviewNode.textContent.replace(/^"|"$/g, ''));
+          }
           
-          convertedText = convertedText.replace(/Hotel Mutiara & Konvensi/gi, 'Mutiara Hotel & Convention');
-          convertedText = convertedText.replace(/Mutiara Hotel & Konvensi/gi, 'Mutiara Hotel & Convention');
-          convertedText = convertedText.replace(/Hotel Mutiara/gi, 'Mutiara Hotel');
-          convertedText = convertedText.replace(/珍珠酒店及会议中心/g, 'Mutiara Hotel & Convention');
-          convertedText = convertedText.replace(/珍珠酒店/g, 'Mutiara Hotel');
+          const originalValue = baselineTextCache.get(reviewNode);
+          const reviewSourceLang = detectStringSourceLanguage(originalValue);
 
-          const isReviewBox = textNode.parentElement.classList.contains('review-content-text');
-          const sourceLang = detectStringSourceLanguage(originalValue);
-
-          if (sourceLang === activeLanguage) {
-            if (isReviewBox) {
-              textNode.textContent = `"${originalValue.trim()}"`;
-            } else {
-              textNode.textContent = originalValue;
-            }
+          if (reviewSourceLang === activeLanguage) {
+            reviewNode.textContent = `"${originalValue.trim()}"`;
           } else {
-            if (isReviewBox) {
-              textNode.textContent = `"${convertedText.trim()}"`;
-              
-              const noticeLabel = document.createElement('span');
-              noticeLabel.className = 'ai-translated-notice';
-              
-              if (activeLanguage === 'id') {
-                noticeLabel.innerText = sourceLang === 'zh' ? '✨ Diterjemahkan dari Bahasa Mandarin' : '✨ Diterjemahkan dari Bahasa Inggris';
-              } else if (activeLanguage === 'zh') {
-                noticeLabel.innerText = sourceLang === 'id' ? '✨ 翻译自印尼语' : '✨ 翻译自英语';
-              } else {
-                noticeLabel.innerText = sourceLang === 'id' ? '✨ Translated from Indonesian' : '✨ Translated from Chinese';
-              }
-              textNode.parentElement.appendChild(noticeLabel);
+            // Safe, continuous translation loop execution matching targets directly
+            let convertedReviewText = await fetchSingleStringTranslation(originalValue, activeLanguage);
+            
+            convertedReviewText = convertedReviewText.replace(/Hotel Mutiara & Konvensi/gi, 'Mutiara Hotel & Convention');
+            convertedReviewText = convertedReviewText.replace(/Hotel Mutiara/gi, 'Mutiara Hotel');
+            convertedReviewText = convertedReviewText.replace(/珍珠酒店及会议中心/g, 'Mutiara Hotel & Convention');
+
+            reviewNode.textContent = `"${convertedReviewText.trim()}"`;
+
+            // Inject dynamic indicator notice
+            const noticeLabel = document.createElement('span');
+            noticeLabel.className = 'ai-translated-notice';
+            if (activeLanguage === 'id') {
+              noticeLabel.innerText = reviewSourceLang === 'zh' ? '✨ Diterjemahkan dari Bahasa Mandarin' : '✨ Diterjemahkan dari Bahasa Inggris';
+            } else if (activeLanguage === 'zh') {
+              noticeLabel.innerText = reviewSourceLang === 'id' ? '✨ 翻译自印尼语' : '✨ 翻译自英语';
             } else {
-              textNode.textContent = convertedText;
+              noticeLabel.innerText = reviewSourceLang === 'id' ? '✨ Translated from Indonesian' : '✨ Translated from Chinese';
             }
+            reviewNode.parentElement.appendChild(noticeLabel);
           }
-        });
+        }
       }
 
       function setupLanguageListeners() {
