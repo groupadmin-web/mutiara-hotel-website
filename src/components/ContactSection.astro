@@ -1,0 +1,92 @@
+---
+// src/components/ContactSection.astro
+---
+
+<section id="contact" class="py-24 bg-white border-t border-gray-100">
+  <div class="max-w-7xl mx-auto px-6">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-stretch">
+      
+      <div class="lg:col-span-1 flex flex-col justify-between space-y-8">
+        <div>
+          <span class="text-xs font-sans font-bold tracking-widest text-amber-600 uppercase block mb-2">Connect Directly</span>
+          <h2 class="text-3xl font-serif font-bold text-gray-800 mb-3">Get in Touch</h2>
+          <div class="h-0.5 w-16 bg-amber-500 mb-6"></div>
+          <p class="text-sm text-gray-500 font-sans leading-relaxed">
+            Skip the long email wait times. Our front desk and corporate marketing teams are standing by on WhatsApp to answer your questions regarding room availability, group rates, or convention center setups instantly.
+          </p>
+        </div>
+
+        <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm aspect-[4/3] lg:aspect-square bg-gray-50 flex-grow">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.913508491873!2d107.59371427588079!3d-6.901048867533036!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e6144e12fbbf%3A0x6b876fc156477e!2sMutiara%20Hotel!5e0!3m2!1sen!2sid!4v1716330000000!5m2!1sen!2sid" 
+            class="w-full h-full border-0 block" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2 bg-slate-50/70 rounded-3xl border border-gray-200/50 p-8 md:p-12 flex flex-col justify-center">
+        <div class="max-w-xl mx-auto w-full space-y-8 text-center lg:text-left">
+          
+          <div class="space-y-3">
+            <div class="p-3.5 bg-emerald-50 text-emerald-600 rounded-2xl w-14 h-14 flex items-center justify-center mx-auto lg:mx-0 shadow-sm border border-emerald-100/50">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 0 1-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8Z" />
+              </svg>
+            </div>
+            <h3 class="text-2xl font-serif font-bold text-gray-800 pt-2">Instant Digital Front Desk</h3>
+            <p class="text-sm text-gray-500 font-sans leading-relaxed max-w-md mx-auto lg:mx-0">
+              Select the option that best fits your needs to open a direct secure text line with our representatives.
+            </p>
+          </div>
+
+          <div class="space-y-4 pt-2">
+            
+            <a 
+              href="https://wa.me/6287722469110?text=Hi%20Mutiara%20Hotel%20Team,%20I%20would%20like%20to%20inquire%20about%20room%20availability,%20suite%20types,%20and%20booking%20rates%20for%20an%20upcoming%20stay." 
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex flex-col sm:flex-row items-center justify-between gap-4 bg-white hover:border-emerald-500 border border-gray-200/80 p-6 rounded-2xl shadow-sm transition-all duration-300 text-left cursor-pointer select-none"
+            >
+              <div class="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
+                  <span class="font-sans font-bold text-sm">RM</span>
+                </div>
+                <div>
+                  <h4 class="font-serif font-bold text-gray-800 text-lg group-hover:text-emerald-600 transition-colors">Rooms & Accommodations Desk</h4>
+                  <p class="text-xs text-gray-400 font-sans mt-0.5">Book guest suites, check weekend rates, or modify hotel reservations.</p>
+                </div>
+              </div>
+              <span class="bg-emerald-600 text-white font-sans font-bold text-[10px] uppercase tracking-wider px-4 py-2 rounded-full shadow-sm group-hover:bg-emerald-700 transition-colors whitespace-nowrap">Chat Now</span>
+            </a>
+
+            <a 
+              href="https://wa.me/6287722469110?text=Hi%20Mutiara%20Marketing%20Desk,%20I%20am%20planning%20an%20event%20and%20would%20like%20to%20request%20a%20proposal%20and%20capacity%20sheet%20for%20your%20convention%20halls." 
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex flex-col sm:flex-row items-center justify-between gap-4 bg-white hover:border-amber-500 border border-gray-200/80 p-6 rounded-2xl shadow-sm transition-all duration-300 text-left cursor-pointer select-none"
+            >
+              <div class="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center shrink-0">
+                  <span class="font-sans font-bold text-sm">MKT</span>
+                </div>
+                <div>
+                  <h4 class="font-serif font-bold text-gray-800 text-lg group-hover:text-amber-600 transition-colors">Conventions & Marketing Office</h4>
+                  <p class="text-xs text-gray-400 font-sans mt-0.5">Request meeting proposals, banquet menu prices, or corporate tour packages.</p>
+                </div>
+              </div>
+              <span class="bg-gray-900 text-white font-sans font-bold text-[10px] uppercase tracking-wider px-4 py-2 rounded-full shadow-sm group-hover:bg-amber-600 transition-colors whitespace-nowrap">Connect Desk</span>
+            </a>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
