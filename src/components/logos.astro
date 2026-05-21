@@ -12,7 +12,8 @@ const officialLogos = {
 ---
 
 {showPartnersRow && (
-  <div class="mt-24 mb-16 max-w-7xl mx-auto px-6 font-sans">
+  /* ADDED PROTECTION: The 'notranslate' class completely locks this row to prevent language changes */
+  <div class="mt-24 mb-16 max-w-7xl mx-auto px-6 font-sans notranslate">
     
     <p class="text-center text-xs font-bold tracking-[0.25em] text-slate-500 uppercase mb-12 select-none">
       Official Reservation Channels & Verification Partners
@@ -43,7 +44,6 @@ const officialLogos = {
                   alt="Traveloka" 
                   class="max-h-5 object-contain select-none" 
                   loading="lazy"
-                  /* Inline safety script: If the image fails to load, it automatically swaps to pristine styled text instantly */
                   onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
                 />
                 <span class="text-lg font-black tracking-tight italic font-sans text-sky-600 select-none hidden">
