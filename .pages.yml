@@ -233,3 +233,27 @@ content:
       - name: description
         label: "Historical / Travel Description"
         type: text
+
+  - name: gallery
+    label: "10. Dynamic Gallery & Collections"
+    type: file
+    path: src/content/gallery.json
+    format: json
+    list: true
+    collapsed: true
+    fields:
+      - name: id
+        label: "Unique Item Identification Code"
+        type: string
+      - name: title
+        label: "Collection Asset Title"
+        type: string
+      - name: category
+        label: "Filter Category Group (e.g., artifacts, rooms, dining)"
+        type: string
+      - name: image
+        label: "Gallery Showcase Photo"
+        type: image
+      - name: description
+        label: "Artistic / Layout Description Paragraph"
+        type: text
