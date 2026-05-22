@@ -21,10 +21,9 @@ const menuitems = [
 {/* NAVBAR BACKDROP FIX */}
 <header class="sticky top-0 z-50 w-full bg-white shadow-sm transition-all border-b border-gray-100">
   <Container>
-    {/* FIXED: Added a custom minimum height (min-h-[90px] md:min-h-0) on mobile to ensure the white navbar background expands to comfortably enclose the stacked icons */}
-    <div class="flex flex-col lg:flex-row justify-between items-center py-4 w-full min-h-[90px] lg:min-h-0">
+    {/* TUNED: Reduced min-h-[90px] to min-h-[80px] to instantly shrink the overall navbar height footprint */}
+    <div class="flex flex-col lg:flex-row justify-between items-center py-4 w-full min-h-[80px] lg:min-h-0">
       <Astronav>
-        {/* FIXED: The parent row container is now forced to be relative so we can map absolute coordinates to sub-elements */}
         <div class="flex w-full lg:w-auto items-center justify-between relative">
           
           <a href="/" class="flex items-center tracking-wider font-serif group">
@@ -41,8 +40,8 @@ const menuitems = [
             )}
           </a>
           
-          {/* FIXED ABSOLUTE ENGINE: Pins the burger lines mathematically inside the white navbar canvas, right beneath the bubble space */}
-          <div class="block lg:hidden absolute top-12 right-2 z-50 text-slate-950 hover:text-amber-600 transition-colors cursor-pointer p-1">
+          {/* TUNED: Changed top-12 to top-9 and right-2 to right-1 to tuck the burger tightly beneath the capsule */}
+          <div class="block lg:hidden absolute top-9 right-1 z-50 text-slate-950 hover:text-amber-600 transition-colors cursor-pointer p-1">
             <MenuIcon class="w-6 h-6" />
           </div>
         </div>
