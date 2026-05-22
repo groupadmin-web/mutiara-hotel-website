@@ -14,7 +14,7 @@ const menuitems = [
   { title: "GALLERY", path: "/gallery" },
   { title: "MEETINGS & EVENTS", path: "/meetings-events" },
   { title: "Q&A", path: "#qa" },
-  { title: "CONTACT", path: "/#footer" }, // INSTANT SCROLL DIRECTION ROUTED TO FOOTER GLOBALLY
+  { title: "CONTACT", path: "/#footer" }, 
 ];
 ---
 
@@ -23,8 +23,8 @@ const menuitems = [
   <Container>
     <div class="flex flex-col lg:flex-row justify-between items-center py-4">
       <Astronav>
-        {/* FIXED: Responsive padding boundary clears the mobile floating language toggle pill container */}
-        <div class="flex w-full lg:w-auto items-center justify-between pr-36 lg:pr-0">
+        {/* REMOVED the pr-36 from this row wrapper so the logo stays normally on the left edge */}
+        <div class="flex w-full lg:w-auto items-center justify-between">
           
           <a href="/" class="flex items-center tracking-wider font-serif group">
             {homepageData.logo_image ? (
@@ -40,8 +40,8 @@ const menuitems = [
             )}
           </a>
           
-          {/* FIXED: Z-indexing layer depth and deep contrast color anchors make the menu button fully interactive */}
-          <div class="block lg:hidden relative z-50 text-slate-950 hover:text-amber-600 transition-colors cursor-pointer p-2">
+          {/* FIXED POSITION ENGINE: Moves the burger directly beneath the bubble on mobile, resets on desktop */}
+          <div class="block lg:hidden relative z-50 text-slate-950 hover:text-amber-600 transition-all cursor-pointer p-2 translate-y-12 -translate-x-6 lg:translate-y-0 lg:translate-x-0">
             <MenuIcon class="w-6 h-6" />
           </div>
         </div>
@@ -109,7 +109,6 @@ const menuitems = [
     const links = document.querySelectorAll('[data-nav-link]');
     const currentPath = window.location.pathname;
 
-    // 1. SMART URL PATH CHECKER
     const pathTriggers = ['/rooms', '/attractions', '/gallery', '/meetings-events'];
     const hasMatch = pathTriggers.some(trigger => currentPath.includes(trigger));
 
@@ -134,7 +133,6 @@ const menuitems = [
       return;
     }
 
-    // 2. HOMEPAGE SCROLL SPY ENGINE
     function checkActiveSection() {
       if (document.body.style.overflow === 'hidden') return;
 
