@@ -2,7 +2,7 @@
 import Container from "@/components/container.astro";
 import Link from "@/components/ui/link.astro";
 import Dropdown from "./dropdown.astro";
-import { Astronav, MenuItems } from "astro-navbar";
+import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
 
 // Fetch your dynamic brand data from your header setup file
 import homepageData from "@/content/homepage.json";
@@ -23,6 +23,7 @@ const menuitems = [
   <Container>
     <div class="flex flex-col lg:flex-row justify-between items-center py-4 w-full">
       <Astronav>
+        {/* FIXED: Uses a relative positioning bridge to completely isolate layout scaling zones */}
         <div class="flex w-full lg:w-auto items-center justify-between relative">
           
           <a href="/" class="flex items-center tracking-wider font-serif group">
@@ -39,16 +40,10 @@ const menuitems = [
             )}
           </a>
           
-          {/* FIXED: Native interactive button trigger guarantees visibility and high touch targeting */}
-          <button 
-            id="astronav-menu" 
-            aria-label="Toggle Menu" 
-            class="block lg:hidden text-slate-950 hover:text-amber-600 transition-colors cursor-pointer p-2 focus:outline-none"
-          >
-            <svg class="w-6 h-6 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-          </button>
+          {/* FIXED: Keeps the official plugin component so click toggles work, but pins it firmly to the right edge */}
+          <div class="block lg:hidden text-slate-950 hover:text-amber-600 transition-colors cursor-pointer p-2 relative z-50">
+            <MenuIcon class="w-6 h-6" />
+          </div>
         </div>
         
         <MenuItems class="hidden w-full lg:w-auto mt-4 lg:flex lg:mt-0">
@@ -80,10 +75,10 @@ const menuitems = [
             }
           </ul>
           
-          {/* MOBILE DRAWER ROW CONTENT STACK */}
+          {/* MOBILE EXPANDED UTILITY DRAWER */}
           <div class="lg:hidden flex flex-col gap-4 mt-6 pt-4 border-t border-gray-100 w-full">
             
-            {/* MOBILE LANGUAGE SELECTOR BUTTON ARRAY */}
+            {/* MOBILE ONLY NATIVE LANGUAGE DROPDOWN REPLICA LAYER */}
             <div class="flex items-center justify-center gap-6 py-3 bg-slate-50 rounded-xl border border-slate-100">
               <button onclick="window.gtranslate && window.gtranslate('en|en')" class="flex items-center gap-1.5 text-xs font-bold text-slate-800 tracking-wider">
                 <span class="text-sm">🇬🇧</span> EN
@@ -126,13 +121,14 @@ const menuitems = [
   </Container>
 </header>
 
-{/* INJECTED GLOBAL CSS SQUASH TO FORCE THIRD-PARTY CAPSULE TO ONLY DISPLAY ON DESKTOP OVERLAY */}
+{/* FIXED: Strict global styling injection prevents third-party widgets from crowding mobile rows */}
 <style is:global>
   @media (max-width: 1023px) {
     .gtranslate_wrapper, 
     #google_translate_element,
     .skiptranslate,
-    div[class*="gtranslate"] {
+    div[class*="gtranslate"],
+    [id*="gtranslate"] {
       display: none !important;
       visibility: hidden !important;
       opacity: 0 !important;
