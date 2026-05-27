@@ -102,9 +102,8 @@ content:
         type: string
       - name: features
         label: "Features & Amenities"
-        type: array
-      - name: features[*]
         type: string
+        list: true
 
   - name: events
     label: "4. Convention & Events Spaces"
