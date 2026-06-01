@@ -261,7 +261,7 @@ content:
         label: "Historical / Curated Description Paragraph"
         type: text
   - name: qna_section
-    label: "7. Frequently Asked Questions (Q&A)"
+    label: "11. Frequently Asked Questions (Q&A)"
     type: file
     path: src/content/qna.json
     format: json
