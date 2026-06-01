@@ -152,7 +152,7 @@ content:
       - name: subtitle
         label: "Small Tagline Category"
         type: string
-      - name: description
+      - name: text_content
         label: "Detailed Descriptive Paragraph"
         type: text
       - name: start_date
