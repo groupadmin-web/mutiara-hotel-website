@@ -1,4 +1,5 @@
 ---
+// src/components/navbar/navbar.astro
 import Container from "@/components/container.astro";
 import Link from "@/components/ui/link.astro";
 import Dropdown from "./dropdown.astro";
@@ -7,13 +8,17 @@ import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
 // Fetch your dynamic brand data from your header setup file
 import homepageData from "@/content/homepage.json";
 
+// FETCH & NORMALIZE CURRENT PAGE ROUTE (Case-insensitive & handles trailing slashes perfectly)
+const requestUrlPath = new URL(Astro.request.url).pathname;
+const currentPath = requestUrlPath.toLowerCase().replace(/\/$/, "") || "/";
+
 const menuitems = [
   { title: "HOME", path: "/" },
   { title: "ROOMS", path: "/rooms" },
   { title: "TOURIST ATTRACTIONS", path: "/attractions" },
   { title: "GALLERY", path: "/gallery" },
   { title: "MEETINGS & EVENTS", path: "/meetings-events" },
-  { title: "Q&A", path: "#qa" },
+  { title: "Q&A", path: "/qna" }, // Restored standard clean standalone route
   { title: "CONTACT", path: "/#footer" }, 
 ];
 ---
@@ -21,7 +26,6 @@ const menuitems = [
 {/* NAVBAR BACKDROP FIX */}
 <header class="sticky top-0 z-50 w-full bg-white shadow-sm transition-all border-b border-gray-100">
   <Container>
-    {/* UPDATED: Tightened to min-h-[72px] to snap the white background cleanly up against your raised elements */}
     <div class="flex flex-col lg:flex-row justify-between items-center py-4 w-full min-h-[72px] lg:min-h-0">
       <Astronav>
         <div class="flex w-full lg:w-auto items-center justify-between relative">
@@ -40,8 +44,7 @@ const menuitems = [
             )}
           </a>
           
-          {/* UPDATED: Set mathematically to top-8 to pull the burger lines right underneath the bubble capsule */}
-          <div class="block lg:hidden absolute top-8 right-1 z-50 text-slate-950 hover:text-amber-600 transition-colors cursor-pointer p-1">
+          <div class="block lg:hidden absolute top-3 right-1 z-50 text-slate-950 hover:text-amber-600 transition-colors cursor-pointer p-1">
             <MenuIcon class="w-6 h-6" />
           </div>
         </div>
@@ -49,29 +52,42 @@ const menuitems = [
         <MenuItems class="hidden w-full lg:w-auto mt-4 lg:flex lg:mt-0">
           <ul class="flex flex-col lg:flex-row items-start lg:items-center gap-1 lg:gap-2 w-full">
             {
-              menuitems.map((item, index) => (
-                <>
-                  {item.children && (
-                    <Dropdown
-                      title={item.title}
-                      children={item.children}
-                      lastItem={index === menuitems.length - 1}
-                    />
-                  )}
+              menuitems.map((item, index) => {
+                // Normalize link path settings for fault-tolerant comparison matching
+                const itemNormalizedPath = item.path.toLowerCase().replace(/\/$/, "") || "/";
+                
+                // Evaluates exact page layout matches or parent branch subdirectory hooks
+                const isActive = itemNormalizedPath === "/" 
+                  ? currentPath === "/" 
+                  : currentPath.startsWith(itemNormalizedPath);
 
-                  {!item.children && (
-                    <li class="w-full lg:w-auto">
-                      <a
-                        href={item.path}
-                        data-nav-link
-                        class="nav-item flex lg:px-3 py-2 items-center text-sm font-bold tracking-wide text-slate-700 hover:text-amber-600 transition-all uppercase relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-amber-600 after:transform after:scale-x-0 after:transition-transform duration-300"
-                      >
-                        <span> {item.title}</span>
-                      </a>
-                    </li>
-                  )}
-                </>
-              ))
+                return (
+                  <>
+                    {item.children && (
+                      <Dropdown
+                        title={item.title}
+                        children={item.children}
+                        lastItem={index === menuitems.length - 1}
+                      />
+                    )}
+
+                    {!item.children && (
+                      <li class="w-full lg:w-auto">
+                        <a
+                          href={item.path}
+                          class={`nav-item flex lg:px-3 py-2 items-center text-sm font-bold tracking-wide transition-all uppercase relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:bg-amber-600 after:transition-transform after:duration-300 ${
+                            isActive 
+                              ? "text-amber-600 after:scale-x-100" 
+                              : "text-slate-700 hover:text-amber-600 after:scale-x-0 hover:after:scale-x-100"
+                          }`}
+                        >
+                          <span>{item.title}</span>
+                        </a>
+                      </li>
+                    )}
+                  </>
+                );
+              })
             }
           </ul>
           
@@ -103,21 +119,3 @@ const menuitems = [
     </div>
   </Container>
 </header>
-
-<script is:inline>
-  function initScrollTracking() {
-    const links = document.querySelectorAll('[data-nav-link]');
-    const currentPath = window.location.pathname;
-
-    const pathTriggers = ['/rooms', '/attractions', '/gallery', '/meetings-events'];
-    const hasMatch = pathTriggers.some(trigger => currentPath.includes(trigger));
-
-    if (hasMatch) {
-      links.forEach((link) => {
-        const href = link.getAttribute('href');
-        let shouldHighlight = false;
-
-        if (currentPath.includes('/rooms') && (href === '/rooms' || href.includes('rooms'))) shouldHighlight = true;
-        if (currentPath.includes('/attractions') && (href === '/attractions' || href.includes('attractions'))) shouldHighlight = true;
-        if (currentPath.includes('/gallery') && (href === '/gallery' || href.includes('gallery'))) shouldHighlight = true;
-        if (currentPath.includes('/meetings-events') && (href === '/meetings-events' || href.includes('meetings-
