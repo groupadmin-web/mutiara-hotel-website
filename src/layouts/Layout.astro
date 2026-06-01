@@ -220,12 +220,18 @@ const makeTitle = title
       function detectStringSourceLanguage(text) {
         const clean = text.trim().toLowerCase();
         if (/[\u4e00-\u9fa5]/.test(clean)) return 'zh';
-        if (
-          /\b(dan|yang|kamar|dengan|di|ke|untuk|kami|bisa|bagus|sekali|mantap|nyaman|tempatnya|sangat|sayang|wangi|kolam|kolamnya|liburannya|hari)\b/i.test(clean) ||
-          /(d{2,}|s{2,}|g{2,}|a{2,})\b/.test(clean)
-        ) {
+        
+        // Checks common Indonesian connecting words first
+        if (/\b(dan|yang|kamar|dengan|di|ke|untuk|kami|bisa|bagus|sekali|mantap|nyaman|tempatnya|sangat|sayang|wangi|kolam|kolamnya|liburannya|hari)\b/i.test(clean)) {
           return 'id';
         }
+        
+        // Custom check for Indonesian text message elongation slang (e.g., bagusss, bisaaa)
+        // Ensures it doesn't accidentally flag common English words ending in "ss" like "stillness"
+        if (/(d{2,}|g{2,}|a{2,})\b/.test(clean) || (/[b-r-t-z]s{2,}\b/.test(clean))) {
+          return 'id';
+        }
+        
         return 'en';
       }
 
