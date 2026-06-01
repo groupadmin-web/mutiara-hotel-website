@@ -28,6 +28,10 @@ content:
         label: "Display Partners & Awards Row on Website?"
         type: boolean
         default: true
+      - name: show_promotion
+        label: "Display Live Promotional Banner on Website?"
+        type: boolean
+        default: false
 
   - name: reviews
     label: "2. Guest Reviews Marquee"
