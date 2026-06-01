@@ -1,0 +1,14 @@
+{
+  "section_title": "Frequently Asked Questions",
+  "section_subtitle": "Find quick answers about our luxury accommodations, boutique booking terms, and heritage convention spaces.",
+  "faqs": [
+    {
+      "question": "What are the standard check-in and check-out times?",
+      "answer": "Our standard check-in time is 2:00 PM and check-out is at 12:00 PM. Early check-in or late check-out is subject to room availability."
+    },
+    {
+      "question": "Is parking available for hotel guests and convention attendees?",
+      "answer": "Yes, we provide secure, complimentary on-site parking spaces for all registered overnight staying guests and venue convention delegates."
+    }
+  ]
+}
