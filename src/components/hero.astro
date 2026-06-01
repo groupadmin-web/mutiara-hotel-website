@@ -7,7 +7,7 @@ const { welcome_title, tagline, booking_button_text, slideshow } = homepageData;
 // Safely map the object list to pull out the raw image paths for the template
 const slides = slideshow && slideshow.length > 0 
   ? slideshow.map(item => item.slide_image).filter(Boolean)
-  : ["/images/slide-1.jpg", "/images/slide-2.jpg", "/images/slide-3.jpg"];
+  : ["/images/slide-1.jpg", "/images/slide-2.jpg", "/images/slide-3.jpg", "/images/slide-4.jpg"];
 ---
 
 <main class="relative bg-gray-950 text-white min-h-[80vh] w-full flex items-center justify-center overflow-hidden shadow-2xl">
