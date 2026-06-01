@@ -1,79 +1,113 @@
 ---
-import promoData from "@/content/promotion.json";
+// src/components/cta.astro
+import promotionData from "@/content/promotion.json";
 
-// Safe database configuration data parsing hooks
-const title = promoData.cta_title || "Exclusive Seasonal Promotion";
-const description = promoData.cta_desc || "Book directly through our website to unlock premium perks, complimentary amenities, and exclusive discounts.";
-const buttonText = promoData.cta_btn_text || "Claim Offer Now";
-
-const bgType = promoData.banner_bg_type || "Photo Background";
-const bgImage = promoData.banner_bg_image || "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80";
-
-let solidBgClass = "bg-slate-950"; 
-if (bgType === "Luxury Solid Charcoal") solidBgClass = "bg-gradient-to-br from-slate-900 to-slate-950";
-if (bgType === "Deep Premium Blue") solidBgClass = "bg-gradient-to-br from-slate-950 via-[#00224f] to-slate-950";
+// Safely pull variables from your real PagesCMS Promotion Schema
+const promo = promotionData || {};
+const bgMode = promo.banner_bg_type || "Photo Background";
+const uploadedBgImage = promo.banner_bg_image || "/images/pool-night-bg.jpg";
 ---
 
-<div class="my-24 max-w-6xl mx-auto px-4 sm:px-6">
-  <div class={`relative rounded-2xl overflow-hidden px-8 py-20 shadow-xl sm:px-16 md:py-28 text-center border border-white/10 ${bgType !== "Photo Background" ? solidBgClass : ""}`}>
-    
-    {/* PHOTO RENDERING MODE ENGINE */}
-    {bgType === "Photo Background" && bgImage && (
-      <div class="absolute inset-0 z-0 select-none pointer-events-none">
+<div class="relative max-w-4xl mx-auto my-12 px-4 sm:px-6">
+  
+  {/* OUTER CONTAINER: Alternates backgrounds based on choices selected in your dashboard schema */}
+  <div class={`relative p-8 md:p-12 rounded-[2rem] shadow-2xl overflow-hidden text-center group border transition-all duration-500
+    ${bgMode === 'Exciting Sunset Gold' ? 'bg-gradient-to-br from-amber-950 via-yellow-900 to-amber-950 border-amber-500/50' : ''}
+    ${bgMode === 'Deep Premium Blue' ? 'bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-blue-500/30' : ''}
+    ${bgMode === 'Photo Background' ? 'bg-slate-900 border-slate-700/50' : ''}
+  `}>
+
+    {/* PHOTO BACKGROUND ENGINE OVERLAY LAYER (Pulls your actual custom user upload image) */}
+    {bgMode === 'Photo Background' && (
+      <div class="absolute inset-0 z-0">
         <img 
-          src={bgImage} 
-          alt="Mutiara Promo Backdrop" 
-          class="w-full h-full object-cover"
-          loading="lazy"
+          src={uploadedBgImage} 
+          alt="Promotion Background" 
+          class="w-full h-full object-cover opacity-25 mix-blend-luminosity"
         />
-        <div class="absolute inset-0 bg-gradient-to-b from-slate-950/90 via-slate-950/75 to-slate-950/90 mix-blend-multiply"></div>
-        <div class="absolute inset-0 bg-slate-950/20 backdrop-blur-[1px]"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/90 to-slate-950"></div>
       </div>
     )}
 
-    {/* GRADIENT SOLID ELEMENT FILL DECAL */}
-    {bgType !== "Photo Background" && (
-      <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+    {/* ORNATE GOLD LINE SVG CORNER FRAMES (Hides on standard generic photo view mode) */}
+    {bgMode !== 'Photo Background' && (
+      <>
+        <div class={`absolute top-0 left-0 w-24 h-24 pointer-events-none transition-transform duration-500 group-hover:scale-110 
+          ${bgMode === 'Exciting Sunset Gold' ? 'text-amber-400/50' : 'text-blue-400/40'}`}>
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+            <path d="M4 30V4H30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path d="M12 20V12H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="6" cy="6" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class={`absolute bottom-0 right-0 w-24 h-24 pointer-events-none transition-transform duration-500 group-hover:scale-110 rotate-180
+          ${bgMode === 'Exciting Sunset Gold' ? 'text-amber-400/50' : 'text-blue-400/40'}`}>
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+            <path d="M4 30V4H30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path d="M12 20V12H20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="6" cy="6" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+      </>
     )}
 
-    {/* CONTAINER MATRIX HUB CONTENT LAYERS */}
-    <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
+    {/* GRADIENT AMBIENT LIGHT LAYER EFFECTS */}
+    <div class={`absolute -top-24 -left-24 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-40
+      ${bgMode === 'Exciting Sunset Gold' ? 'bg-amber-400/20' : 'bg-blue-500/20'}`}></div>
+    <div class={`absolute -bottom-24 -right-24 w-48 h-48 rounded-full blur-3xl pointer-events-none opacity-40
+      ${bgMode === 'Exciting Sunset Gold' ? 'bg-amber-400/20' : 'bg-blue-500/20'}`}></div>
+    
+    {/* TEXT & ACTION CONTENT BLOCK CONTROLLERS */}
+    <div class="relative z-10 max-w-2xl mx-auto space-y-6">
       
-      <div class="flex items-center gap-2 mb-6 bg-white/10 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md shadow-sm select-none">
-        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-400 drop-shadow-sm">Special Promotion</span>
+      {/* Dynamic Small Upper Tagline Badge */}
+      <div class={`inline-flex items-center gap-2 border text-[10px] font-sans font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full backdrop-blur-sm
+        ${bgMode === 'Exciting Sunset Gold' ? 'bg-amber-500/10 border-amber-400/30 text-amber-400' : ''}
+        ${bgMode === 'Deep Premium Blue' ? 'bg-blue-500/10 border-blue-400/30 text-blue-400' : ''}
+        ${bgMode === 'Photo Background' ? 'bg-slate-800/60 border-slate-700/80 text-slate-300' : ''}
+      `}>
+        <span class={`w-1.5 h-1.5 rounded-full animate-pulse
+          ${bgMode === 'Exciting Sunset Gold' ? 'bg-amber-400' : ''}
+          ${bgMode === 'Deep Premium Blue' ? 'bg-blue-400' : 'bg-slate-400'}`}></span>
+        SPECIAL PROMOTION
       </div>
 
-      <h2 class="text-3xl font-bold font-serif tracking-tight text-white sm:text-5xl leading-tight drop-shadow-sm">
-        {title}
+      {/* Editable Header Heading string input mapping */}
+      <h2 class="font-serif text-3xl md:text-4xl text-white tracking-wide leading-tight">
+        {promo.cta_title || "Exclusive Seasonal Promotion"}
       </h2>
-      
-      <p class="mt-4 text-sm sm:text-base leading-relaxed text-slate-200 font-sans max-w-xl drop-shadow-sm font-medium">
-        {description}
+
+      {/* Decorative Divider Accent */}
+      <div class={`flex items-center justify-center gap-4 
+        ${bgMode === 'Exciting Sunset Gold' ? 'text-amber-500/40' : 'text-slate-500/40'}`}>
+        <div class="w-12 h-px bg-current"></div>
+        <span class="text-xs">✦</span>
+        <div class="w-12 h-px bg-current"></div>
+      </div>
+
+      {/* Core Paragraph description text context box mapping */}
+      <p class="text-slate-300 text-sm md:text-base leading-relaxed font-light tracking-wide max-w-xl mx-auto">
+        {promo.cta_desc || "Book directly through our website to unlock premium perks..."}
       </p>
-      
-      <div class="mt-8">
+
+      {/* Booking Redirect Action Link Button Path */}
+      <div class="pt-2">
         <a
-          href="https://m.mutiarahotel.com"
+          href="https://direct-reservation.mutiarahotel.com"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center justify-center gap-2.5 rounded-lg bg-amber-500 hover:bg-amber-400 px-7 py-3.5 text-sm font-bold text-slate-950 shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-amber-500/30 font-sans tracking-wide uppercase group/btn select-none"
-        >
-          <span>{buttonText}</span>
-          <svg 
-            class="w-4 h-4 text-slate-950 transition-transform duration-300 group-hover/btn:translate-x-1 group-hover/btn:scale-110" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            stroke-width="2.5" 
-            stroke-linecap="round" 
-            stroke-linejoin="round"
-          >
-            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+          class={`inline-flex items-center justify-center gap-2 text-slate-950 font-sans font-bold text-xs tracking-wider uppercase px-8 py-3.5 rounded-xl shadow-lg transition-all duration-200 transform hover:-translate-y-0.5
+            ${bgMode === 'Exciting Sunset Gold' ? 'bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 shadow-amber-950/20' : ''}
+            ${bgMode === 'Deep Premium Blue' ? 'bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-300 hover:to-indigo-400 shadow-indigo-950/20 text-white' : ''}
+            ${bgMode === 'Photo Background' ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-slate-950/40' : ''}
+          `}>
+          {promo.cta_btn_text || "Claim Offer Now"}
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
           </svg>
         </a>
       </div>
-      
+
     </div>
   </div>
 </div>
