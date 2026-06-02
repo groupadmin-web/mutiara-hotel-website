@@ -322,3 +322,7 @@ content:
         label: "Official Facebook Page URL Link"
         type: string
         required: false
+      - name: youtube_url
+        label: "Official YouTube Channel URL Link"
+        type: string
+        required: false
