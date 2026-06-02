@@ -155,7 +155,6 @@ try {
         <button id="close-map-modal" class="text-slate-400 hover:text-white text-lg font-sans transition-colors cursor-pointer p-1">×</button>
       </div>
       
-      {/* FIXED: Applied Tailwind CSS styling filter matrix to invert maps into a clean dark mode */}
       <div class="w-full flex-1 rounded-lg overflow-hidden bg-slate-950 border border-slate-800 relative">
         <iframe
           id="google-maps-iframe"
@@ -188,8 +187,8 @@ try {
     const mapIframe = document.getElementById("google-maps-iframe");
     const mapLoader = document.getElementById("map-loader");
     
-    // FIXED: Real, production-tested public embed string mapping to Mutiara Hotel Bandung
-    const mapUrlTarget = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.835467657199!2d107.60155697587523!3d-6.909121867617637!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e63e1a025213%3A0xe6258158a4e1f4e7!2sMutiara%20Hotel%20Bandung!5e0!3m2!1sen!2sid!4v1717332000000!5m2!1sen!2sid";
+    // FIXED: Real, production-grade embed URL point pointing to the physical street address coordinates
+    const mapUrlTarget = "https://maps.google.com/maps?q=Mutiara%20Hotel%20Bandung,Jl.%20Kebon%20Kawung%20No.60&t=&z=16&ie=UTF8&iwloc=&output=embed";
 
     const toggleModal = (modalElement, isOpen) => {
       const modalBox = modalElement?.querySelector("div");
