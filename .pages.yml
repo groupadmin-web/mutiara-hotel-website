@@ -286,7 +286,7 @@ content:
             label: "Detailed Answer Response text block"
             type: text
   - name: footer_section
-      label: "8. Global Site Footer"
+      label: "12. Global Site Footer"
       type: file
       path: src/content/footer.json
       format: json
