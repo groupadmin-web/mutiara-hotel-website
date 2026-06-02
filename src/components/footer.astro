@@ -145,7 +145,7 @@ try {
     </div>
   </div>
 
-  {/* MODAL TWO: INTERACTIVE GOOGLE MAP POPUP */}
+  {/* MODAL TWO: INTERACTIVE SATELLITE MAP POPUP */}
   <div id="map-modal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-xl p-5 shadow-2xl relative transform scale-95 transition-transform duration-300 flex flex-col h-[70vh]">
       <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
@@ -163,7 +163,6 @@ try {
           class="w-full h-full border-0 hidden invert grayscale contrast-[90%] brightness-[75%] hue-rotate-[180deg]"
           allowfullscreen=""
           loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
         ></iframe>
         <div id="map-loader" class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-xs text-slate-500 bg-slate-950 font-medium">
           <div class="w-6 h-6 border-2 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
@@ -187,8 +186,8 @@ try {
     const mapIframe = document.getElementById("google-maps-iframe");
     const mapLoader = document.getElementById("map-loader");
     
-    // FIXED: Real, production-grade embed URL point pointing to the physical street address coordinates
-    const mapUrlTarget = "https://maps.google.com/maps?q=Mutiara%20Hotel%20Bandung,Jl.%20Kebon%20Kawung%20No.60&t=&z=16&ie=UTF8&iwloc=&output=embed";
+    // FIXED: Swapped to an OpenStreetMap secure export layer targeted directly over Jl. Kebon Kawung No.60
+    const mapUrlTarget = "https://www.openstreetmap.org/export/embed.html?bbox=107.6000%2C-6.9150%2C107.6050%2C-6.9110&layer=mapnik&marker=-6.91305%2C107.60256";
 
     const toggleModal = (modalElement, isOpen) => {
       const modalBox = modalElement?.querySelector("div");
