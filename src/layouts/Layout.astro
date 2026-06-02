@@ -26,12 +26,14 @@ const makeTitle = title
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="notranslate" translate="no">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+
+    <meta name="google" content="notranslate" />
 
     <SEO
       title={makeTitle}
@@ -206,7 +208,6 @@ const makeTitle = title
         return 'en';
       }
 
-      // AUTOMATIC RE-DETECTION TRANSLATION INTERFACE (Zero Hardcode Slang Errors)
       async function fetchSingleNodeTranslation(textString, targetLangCode) {
         if (!textString || textString.trim() === "" || !isNaN(textString)) return textString;
         try {
@@ -265,7 +266,7 @@ const makeTitle = title
               return NodeFilter.FILTER_REJECT;
             }
 
-            // FIXED: Look up the DOM tree hierarchy to see if this text node is inside any element flagged to bypass translation!
+            // STAGE 1 TRANSLATION BLOCK: Instantly abort parsing if the node's container matches standard skip selectors
             if (
               node.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]')
             ) {
@@ -311,7 +312,6 @@ const makeTitle = title
         const reviewElements = rootContainer.querySelectorAll('.review-content-text');
         reviewElements.forEach(el => {
           if (el.firstChild && el.firstChild.nodeType === Node.TEXT_NODE) {
-            // FIXED: Make sure review elements also honor our parent exclusion rules before processing
             if (!elementsToProcess.includes(el.firstChild) && !el.closest('.notranslate, .skiptranslate, [translate="no"]')) {
               elementsToProcess.push(el.firstChild);
             }
@@ -320,6 +320,12 @@ const makeTitle = title
 
         // CONTINUOUS STREAM ACTION LAYER
         for (const textNode of elementsToProcess) {
+          // STAGE 2 RUNTIME CHECKS (SYNCHRONOUS GATEWAY):
+          // Double checks the DOM position at the exact millisecond the text loop processes
+          if (!textNode.parentElement || textNode.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]')) {
+            continue;
+          }
+
           const isReviewBox = textNode.parentElement.classList.contains('review-content-text');
           
           if (!baselineTextCache.has(textNode)) {
@@ -331,6 +337,12 @@ const makeTitle = title
           // Stream through Google API with native Auto Detection active
           let convertedText = await fetchSingleNodeTranslation(originalValue, activeLanguage);
           
+          // STAGE 3 FALLBACK PROTECTION: Checks parent nodes post-fetch to prevent async injection leaks
+          if (!textNode.parentElement || textNode.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]')) {
+            textNode.textContent = originalValue; // Rollback instantly to original English string payload
+            continue;
+          }
+
           // Brand protection layout override filters
           convertedText = convertedText.replace(/Hotel Mutiara & Konvensi/gi, 'Mutiara Hotel & Convention');
           convertedText = convertedText.replace(/Hotel Mutiara/gi, 'Mutiara Hotel');
