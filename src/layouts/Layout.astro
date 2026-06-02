@@ -1,6 +1,7 @@
 ---
 // src/layouts/Layout.astro
 import { SEO } from "astro-seo";
+import { getCollection } from "astro:content"; // FIXED: Added collection fetcher
 import Footer from "@/components/footer.astro";
 import Navbar from "@/components/navbar/navbar.astro";
 import "@fontsource-variable/inter/index.css";
@@ -23,6 +24,10 @@ const { title } = Astro.props;
 const makeTitle = title
   ? title + " | " + "Mutiara Hotel"
   : "Mutiara Hotel - Premium Accommodations";
+
+// FIXED: Dynamically load all room titles from your CMS Markdown files at compile time
+const cmsRoomFiles = await getCollection("rooms");
+const dynamicRoomTitles = cmsRoomFiles.map(room => room.data.title.trim().toLowerCase());
 ---
 
 <!doctype html>
@@ -130,7 +135,8 @@ const makeTitle = title
 
     <Navbar />
 
-    <main id="universal-translation-root">
+    {/* Pass down the CMS room names safely as a JSON dataset string attribute bridge */}
+    <main id="universal-translation-root" data-cms-rooms={JSON.stringify(dynamicRoomTitles)}>
       <slot />
     </main>
 
@@ -182,16 +188,6 @@ const makeTitle = title
     <script is:inline>
       const baselineTextCache = new Map();
 
-      // FIXED: Added absolute branding string exclusion targets array
-      const PROTECTED_ROOM_TITLES = [
-        "budget room",
-        "standard room",
-        "superior room",
-        "deluxe room",
-        "executive suite",
-        "family suite"
-      ];
-
       function getLanguageSetting() {
         const urlParams = new URLSearchParams(window.location.search);
         const urlLang = urlParams.get('lang');
@@ -236,6 +232,18 @@ const makeTitle = title
         const rootContainer = document.getElementById('universal-translation-root');
         if (!rootContainer) return;
 
+        // FIXED: Parse the dynamic room title array passed down directly from the Astro content collection frontmatter
+        let protectedRoomTitles = [];
+        try {
+          const rawCmsData = rootContainer.getAttribute('data-cms-rooms');
+          if (rawCmsData) {
+            protectedRoomTitles = JSON.parse(rawCmsData);
+          }
+        } catch(e) {
+          // Fallbacks if server data stream fails to translate safely
+          protectedRoomTitles = ["budget room", "standard room", "superior room"];
+        }
+
         const flagEN = document.getElementById('global-nav-en');
         const flagID = document.getElementById('global-nav-id');
         const flagZH = document.getElementById('global-nav-zh');
@@ -276,8 +284,8 @@ const makeTitle = title
 
             const textClean = node.textContent.trim().toLowerCase();
 
-            // FIXED: Instantly filters out payload if string exact-matches any branding room title definitions
-            if (PROTECTED_ROOM_TITLES.includes(textClean)) {
+            // FIXED: Dynamically matches content collection arrays built on compile parameters
+            if (protectedRoomTitles.includes(textClean)) {
               return NodeFilter.FILTER_REJECT;
             }
 
@@ -325,7 +333,7 @@ const makeTitle = title
         reviewElements.forEach(el => {
           if (el.firstChild && el.firstChild.nodeType === Node.TEXT_NODE) {
             const innerClean = el.firstChild.textContent.trim().toLowerCase();
-            if (!elementsToProcess.includes(el.firstChild) && !el.closest('.notranslate, .skiptranslate, [translate="no"]') && !PROTECTED_ROOM_TITLES.includes(innerClean)) {
+            if (!elementsToProcess.includes(el.firstChild) && !el.closest('.notranslate, .skiptranslate, [translate="no"]') && !protectedRoomTitles.includes(innerClean)) {
               elementsToProcess.push(el.firstChild);
             }
           }
@@ -335,7 +343,7 @@ const makeTitle = title
         for (const textNode of elementsToProcess) {
           const currentClean = textNode.textContent.trim().toLowerCase();
           
-          if (!textNode.parentElement || textNode.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]') || PROTECTED_ROOM_TITLES.includes(currentClean)) {
+          if (!textNode.parentElement || textNode.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]') || protectedRoomTitles.includes(currentClean)) {
             continue;
           }
 
@@ -355,7 +363,7 @@ const makeTitle = title
           let convertedText = await fetchSingleNodeTranslation(originalValue, activeLanguage);
           
           const postClean = textNode.textContent.trim().toLowerCase();
-          if (!textNode.parentElement || textNode.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]') || PROTECTED_ROOM_TITLES.includes(postClean)) {
+          if (!textNode.parentElement || textNode.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]') || protectedRoomTitles.includes(postClean)) {
             textNode.textContent = originalValue; 
             continue;
           }
