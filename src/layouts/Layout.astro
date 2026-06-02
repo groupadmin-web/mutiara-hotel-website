@@ -27,7 +27,7 @@ const makeTitle = title
   ? title + " | " + "Mutiara Hotel"
   : "Mutiara Hotel - Premium Accommodations";
 
-// Pull BOTH the "title" and the "view" fields dynamically from your CMS JSON payload
+// CODESYNC: Pull BOTH the "title" and the "view" fields dynamically from your CMS JSON payload
 const showcaseItems = Array.isArray(roomsData) ? roomsData : [];
 
 const protectedCmsStrings = showcaseItems.reduce((acc, item) => {
@@ -142,20 +142,31 @@ const protectedCmsStrings = showcaseItems.reduce((acc, item) => {
 
     <Navbar />
 
+    {/* Dynamic Data Bridge for Translation Layer */}
     <main id="universal-translation-root" data-cms-rooms={JSON.stringify(protectedCmsStrings)}>
       <slot />
     </main>
 
     <Footer />
 
-    {/* Floating Contact Assistance Widget Layer */}
-    <a href="https://wa.me/6287722469110" class="whatsapp-icon-float notranslate" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+    {/* OBFUSCATED WHATSAPP WIDGET: Rebuilt dynamically by runtime JS to completely mask number from scrapers */}
+    <a 
+      id="secure-whatsapp-widget"
+      href="#"
+      class="whatsapp-icon-float notranslate" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      aria-label="Chat on WhatsApp"
+      data-prefix="wa.me"
+      data-country="62"
+      data-dial="87722469110"
+    >
       <svg viewBox="0 0 24 24" class="whatsapp-svg">
         <path fill="#FFF" d="M12.012 2c-5.508 0-9.988 4.479-9.988 9.987 0 1.763.459 3.49 1.33 5.009l-1.353 4.937 5.055-1.326c1.47.8 3.125 1.222 4.814 1.223h.004c5.507 0 9.989-4.479 9.989-9.988 0-2.67-1.039-5.18-2.93-7.071C17.186 3.04 14.684 2 12.012 2zm5.727 14.043c-.235.662-1.36 1.205-1.879 1.282-.46.069-1.06.126-3.155-.701-2.678-1.057-4.407-3.786-4.542-3.963-.133-.177-1.082-1.437-1.082-2.742 0-1.306.683-1.948.924-2.214.241-.265.529-.332.706-.332.176 0 .353.003.507.01.16.007.375-.062.587.447.218.524.743 1.812.808 1.945.066.133.11.287.022.463-.088.177-.133.287-.265.442-.132.155-.278.347-.396.465-.133.133-.272.278-.118.543.155.265.687 1.134 1.474 1.833.1.089.197.177.291.26.702.615 1.295.82 1.57.954.276.133.438.11.603-.078.166-.188.706-.818.894-1.094.188-.276.376-.232.631-.138.254.094 1.61.76 1.886.898.276.138.459.208.526.32.066.111.066.645-.169 1.307z"/>
       </svg>
     </a>
 
-    {/* GLOBAL CSS PROTECTION BLOCKS */}
+    {/* GLOBAL CSS ANTI-THEFT AND LAYOUT RULES */}
     <style is:global>
       img { 
         content-visibility: auto; 
@@ -171,18 +182,73 @@ const protectedCmsStrings = showcaseItems.reduce((acc, item) => {
         /* 3. Disables the long-press download context popup sheets on mobile iOS/Android systems */
         -webkit-touch-callout: none !important;
       }
+      
+      .whatsapp-icon-float {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background-color: #25d366;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 2px 4px 12px rgba(0,0,0,0.3);
+        z-index: 99999;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+      }
+      .whatsapp-svg { width: 36px; height: 36px; }
+      .whatsapp-icon-float:hover { transform: scale(1.1); background-color: #128c7e; }
+      @media (max-width: 768px) {
+        .whatsapp-icon-float { bottom: 16px; right: 16px; width: 50px; height: 50px; }
+        .whatsapp-svg { width: 30px; height: 30px; }
+      }
+      
+      .ai-translated-notice {
+        display: block;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 10px;
+        color: #94a3b8;
+        margin-top: 4px;
+        font-style: normal !important;
+        font-weight: 500;
+        letter-spacing: 0.025em;
+      }
     </style>
 
     <script is:inline>
       const baselineTextCache = new Map();
 
-      // GLOBAL JS ACCESS CONTROL LAYER
-      // Completely intercepts right-clicks across the document tree if the click targets an image element
+      // INTERCEPT RIGHT-CLICKS: Globally kills right-clicks pointing to images
       document.addEventListener('contextmenu', (event) => {
         if (event.target.tagName === 'IMG') {
           event.preventDefault();
         }
       }, { capture: true });
+
+      // RUNTIME SECURITY ASSEMBLER: Safely handles dynamic interactions and obfuscations on runtime boot
+      document.addEventListener("DOMContentLoaded", () => {
+        // 1. WhatsApp Mask Rebuilder
+        const waWidget = document.getElementById("secure-whatsapp-widget");
+        if (waWidget) {
+          const pfx = waWidget.getAttribute("data-prefix");
+          const cc = waWidget.getAttribute("data-country");
+          const num = waWidget.getAttribute("data-dial");
+          waWidget.href = `https://${pfx}/${cc}${num}`;
+        }
+
+        // 2. Click-Activated Email Obfuscation Linker
+        const mailBtn = document.getElementById("secure-desktop-mailer");
+        if (mailBtn) {
+          mailBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const domainParts = ["com", "mutiarahotel", "info"];
+            const compiledAddress = domainParts[2] + "@" + domainParts[1] + "." + domainParts[0];
+            window.location.href = "mailto:" + compiledAddress;
+          });
+        }
+      });
 
       function getLanguageSetting() {
         const urlParams = new URLSearchParams(window.location.search);
