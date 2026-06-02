@@ -2,49 +2,37 @@
 // src/components/footer.astro
 import homepageData from "../content/homepage.json";
 
-// Safely pull the logo image from the existing homepage data
+// Safely pull the brand logo asset
 const logoImage = homepageData?.logo_image;
 
-// FAIL-SAFE DATA LAYER: Attempt to safely import the new JSON data file
+// FAIL-SAFE DATA FALLBACKS
 let footer = {
   footer_slogan: "Providing an impeccable blend of luxury hospitality and high-performance corporate event execution in the heart of Bandung City.",
-  accommodations_list: [
-    { label: "Executive Deluxe Rooms", url: "#rooms" },
-    { label: "Business Premier Suites", url: "#rooms" },
-    { label: "Grand Family Sanctuaries", url: "#rooms" }
-  ],
-  events_list: [
-    { label: "Grand Ballroom", url: "#events" },
-    { label: "Corporate Boardrooms", url: "#events" },
-    { label: "MICE Infrastructure", url: "#events" }
-  ],
   concierge_address: "Jalan Kebon Kawung No. 60,\nBandung, West Java, Indonesia",
   concierge_phone: "+62 (022) 420 0888",
-  concierge_phone_raw: "+62224200888"
+  concierge_phone_raw: "+62224200888",
+  concierge_email: "info@mutiarahotel.com",
+  instagram_url: "#",
+  facebook_url: "#"
 };
 
 try {
-  // If the file hasn't been written or has a syntax error, this try/catch swallows the error completely
   const cmsData = await import("../content/footer.json");
   if (cmsData && cmsData.default) {
     footer = cmsData.default;
   }
-} catch (e) {
-  // Silent fallback: Absolutely zero build crashes or downtime allowed
-}
-
-const accommodations = footer.accommodations_list || [];
-const events = footer.events_list || [];
+} catch (e) {}
 ---
 
 <footer id="footer" class="w-full bg-slate-950 text-slate-400 font-sans border-t border-slate-900 pt-16 pb-8 relative overflow-hidden left-0 right-0">
   
   <div class="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none select-none"></div>
 
-  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-12 border-b border-slate-900">
+  {/* CLEANED OVERARCHING COMPACT GRID */}
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-slate-900 text-left">
     
-    {/* COLUMN 1: BRAND LOGO & SLOGAN */}
-    <div class="flex flex-col gap-4">
+    {/* COLUMN 1: BRAND LOGO BLOCKS & SLOGAN */}
+    <div class="flex flex-col gap-4 md:col-span-1">
       <div class="flex flex-row items-center gap-4">
         {logoImage && (
           <img 
@@ -66,49 +54,12 @@ const events = footer.events_list || [];
           </span>
         </div>
       </div>
-      <p class="text-xs leading-relaxed text-slate-500 max-w-xs mt-2">
+      <p class="text-xs leading-relaxed text-slate-500 max-w-sm mt-2">
         {footer.footer_slogan}
       </p>
     </div>
 
-    {/* COLUMN 2: ACCOMMODATIONS */}
-    <div>
-      <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
-        Accommodations
-      </h4>
-      <ul class="flex flex-col gap-3 text-xs">
-        {accommodations.map((item) => (
-          <li>
-            <a href={item.url} class="hover:text-amber-500 transition-colors duration-300">
-              {item.label}
-            </a>
-          </li>
-        ))}
-        <li>
-          <a href="https://m.mutiarahotel.com" target="_blank" rel="noopener noreferrer" class="text-amber-400 font-medium hover:underline">
-            Direct Reservation Portal →
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    {/* COLUMN 3: EVENTS & CONVENTIONS */}
-    <div>
-      <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
-        Events & Conventions
-      </h4>
-      <ul class="flex flex-col gap-3 text-xs">
-        {events.map((item) => (
-          <li>
-            <a href={item.url} class="hover:text-amber-500 transition-colors duration-300">
-              {item.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    {/* COLUMN 4: CONCIERGE ACCESS */}
+    {/* COLUMN 2: GEOGRAPHIC COORDINATES */}
     <div>
       <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
         The Concierge Desk
@@ -124,11 +75,42 @@ const events = footer.events_list || [];
             {footer.concierge_phone}
           </a>
         </p>
+        {footer.concierge_email && (
+          <p class="flex gap-2 mt-0.5">
+            <span class="text-amber-500">✉️</span>
+            <a href={`mailto:${footer.concierge_email}`} class="hover:text-white transition-colors">
+              {footer.concierge_email}
+            </a>
+          </p>
+        )}
+      </div>
+    </div>
+
+    {/* COLUMN 3: CONNECTIVITY & ACCREDITATIONS */}
+    <div>
+      <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
+        Follow Our Journey
+      </h4>
+      <p class="text-xs text-slate-500 mb-4 max-w-xs leading-relaxed">
+        Stay updated with our seasonal luxury stay packages, corporate venue offerings, and cultural heritage narratives.
+      </p>
+      <div class="flex items-center gap-4">
+        {footer.instagram_url && (
+          <a href={footer.instagram_url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-xs font-bold font-sans uppercase tracking-wider">
+            Instagram
+          </a>
+        )}
+        {footer.facebook_url && (
+          <a href={footer.facebook_url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-xs font-bold font-sans uppercase tracking-wider">
+            Facebook
+          </a>
+        )}
       </div>
     </div>
 
   </div>
 
+  {/* BOTTOM BASELINE FRAME */}
   <div class="max-w-7xl mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-600 font-medium">
     <p>
       &copy; {new Date().getFullYear()} Mutiara Hotel & Convention Bandung. All Rights Reserved.
@@ -136,7 +118,7 @@ const events = footer.events_list || [];
     <div class="flex gap-6">
       <a href="#privacy" class="hover:text-slate-400 transition-colors">Privacy Charter</a>
       <span class="text-slate-800">|</span>
-      <p>Designed with Luxury Standards</p>
+      <p>Direct Booking Guarantee Enabled</p>
     </div>
   </div>
 
