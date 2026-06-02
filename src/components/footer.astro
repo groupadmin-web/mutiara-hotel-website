@@ -67,11 +67,14 @@ try {
         The Concierge Desk
       </h4>
       <div class="flex flex-col gap-1.5 text-[11px] leading-relaxed text-slate-400">
-        <p class="flex gap-2">
-          <span class="text-amber-500 shrink-0">📍</span>
-          <span>{footer.concierge_address}</span>
-        </p>
-        <p class="flex gap-2">
+        
+        {/* MODAL INTERACTION TRIGGER: Clickable address layout link with layout hover cues */}
+        <button id="open-map" class="flex gap-2 text-left group cursor-pointer hover:text-white transition-colors w-full focus:outline-none">
+          <span class="text-amber-500 shrink-0 group-hover:scale-110 transition-transform">📍</span>
+          <span class="underline decoration-slate-800 underline-offset-4 group-hover:decoration-amber-500 transition-colors">{footer.concierge_address}</span>
+        </button>
+
+        <p class="flex gap-2 mt-0.5">
           <span class="text-amber-500 shrink-0">📞</span>
           <a href={`tel:${footer.concierge_phone_raw}`} class="hover:text-white transition-colors">
             {footer.concierge_phone}
@@ -130,20 +133,46 @@ try {
     </div>
   </div>
 
-  {/* DYNAMIC OVERLAY MODAL */}
+  {/* MODAL ONE: PRIVACY POLICY CHARTER */}
   <div id="privacy-modal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4">
     <div class="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-xl p-6 shadow-2xl relative transform scale-95 transition-transform duration-300 max-h-[80vh] flex flex-col">
-      
       <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
         <h3 class="text-white text-sm font-bold uppercase tracking-wider">Privacy Charter & Terms</h3>
         <button id="close-privacy" class="text-slate-400 hover:text-white text-lg font-sans transition-colors cursor-pointer p-1">&times;</button>
       </div>
-
-      {/* FIXED: Output is mapped dynamically using footer.privacy_content with line breaks active */}
       <div class="overflow-y-auto text-xs text-slate-400 pr-1 leading-relaxed text-left whitespace-pre-line select-text">
         {footer.privacy_content || "Terms and conditions are currently being processed by administration."}
       </div>
+    </div>
+  </div>
 
+  {/* MODAL TWO: INTERACTIVE GOOGLE MAP POPUP */}
+  <div id="map-modal" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 px-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-2xl rounded-xl p-5 shadow-2xl relative transform scale-95 transition-transform duration-300 flex flex-col h-[70vh]">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+        <h3 class="text-white text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+          <span class="text-amber-500">📍</span> Location Coordinates
+        </h3>
+        <button id="close-map-modal" class="text-slate-400 hover:text-white text-lg font-sans transition-colors cursor-pointer p-1">&times;</button>
+      </div>
+      
+      {/* Map Frame Sandbox Target Wrapper */}
+      <div class="w-full flex-1 rounded-lg overflow-hidden bg-slate-950 border border-slate-800 relative">
+        <iframe
+          id="google-maps-iframe"
+          title="Mutiara Hotel and Convention Bandung location map"
+          src=""
+          class="w-full h-full border-0 hidden"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+        {/* Skeleton loading block indicator while iframe mounts */}
+        <div id="map-loader" class="absolute inset-0 flex flex-col items-center justify-center gap-3 text-xs text-slate-500 bg-slate-950 font-medium">
+          <div class="w-6 h-6 border-2 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
+          <span>Mounting satellite coordinates...</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -151,30 +180,59 @@ try {
 
 <script is:inline>
   document.addEventListener("DOMContentLoaded", () => {
-    const openBtn = document.getElementById("open-privacy");
-    const closeBtn = document.getElementById("close-privacy");
-    const modal = document.getElementById("privacy-modal");
-    const modalBox = modal?.querySelector("div");
+    // Privacy variables
+    const openPrivacy = document.getElementById("open-privacy");
+    const closePrivacy = document.getElementById("close-privacy");
+    const privacyModal = document.getElementById("privacy-modal");
+    
+    // Map variables
+    const openMap = document.getElementById("open-map");
+    const closeMap = document.getElementById("close-map-modal");
+    const mapModal = document.getElementById("map-modal");
+    const mapIframe = document.getElementById("google-maps-iframe");
+    const mapLoader = document.getElementById("map-loader");
+    
+    // Exact official maps coordinates string for Mutiara Hotel and Convention Bandung
+    const mapUrlTarget = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m13!1m4!1m3!1m1!1s0x2e68e63e1a0052b3%3A0x96258158a5e1f4e7!2sMutiara+Hotel+and+Convention+Bandung!5m2!1sen!2sid";
 
-    if (openBtn && closeBtn && modal) {
-      const openModal = () => {
-        modal.classList.remove("opacity-0", "pointer-events-none");
+    // Standard control operators
+    const toggleModal = (modalElement, isOpen) => {
+      const modalBox = modalElement?.querySelector("div");
+      if (isOpen) {
+        modalElement.classList.remove("opacity-0", "pointer-events-none");
         modalBox?.classList.remove("scale-95");
         document.body.style.overflow = "hidden";
-      };
-
-      const closeModal = () => {
-        modal.classList.add("opacity-0", "pointer-events-none");
+      } else {
+        modalElement.classList.add("opacity-0", "pointer-events-none");
         modalBox?.classList.add("scale-95");
         document.body.style.overflow = "";
-      };
+      }
+    };
 
-      openBtn.addEventListener("click", openModal);
-      closeBtn.addEventListener("click", closeModal);
-      
-      modal.addEventListener("click", (e) => {
-        if (e.target === modal) closeModal();
+    // PRIVACY POLICY INTERACTION
+    if (openPrivacy && closePrivacy && privacyModal) {
+      openPrivacy.addEventListener("click", () => toggleModal(privacyModal, true));
+      closePrivacy.addEventListener("click", () => toggleModal(privacyModal, false));
+      privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) toggleModal(privacyModal, false); });
+    }
+
+    // INTERACTIVE MAP INTERACTION
+    if (openMap && closeMap && mapModal && mapIframe) {
+      openMap.addEventListener("click", () => {
+        toggleModal(mapModal, true);
+        
+        // Lazy-load iframe source only on-click to prioritize primary site paint speeds
+        if (!mapIframe.src) {
+          mapIframe.src = mapUrlTarget;
+          mapIframe.onload = () => {
+            if (mapLoader) mapLoader.style.display = "none";
+            mapIframe.classList.remove("hidden");
+          };
+        }
       });
+
+      closeMap.addEventListener("click", () => toggleModal(mapModal, false));
+      mapModal.addEventListener("click", (e) => { if (e.target === mapModal) toggleModal(mapModal, false); });
     }
   });
 </script>
