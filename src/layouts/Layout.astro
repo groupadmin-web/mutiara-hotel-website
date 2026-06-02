@@ -217,98 +217,79 @@ const protectedCmsStrings = showcaseItems.reduce((acc, item) => {
     <script is:inline>
       const baselineTextCache = new Map();
 
-      // INTERCEPT RIGHT-CLICKS: Globally kills right-clicks pointing to images
+      // INTERCEPT RIGHT-CLICKS ON IMAGE ASSETS
       document.addEventListener('contextmenu', (event) => {
         if (event.target.tagName === 'IMG') {
           event.preventDefault();
         }
       }, { capture: true });
 
-      // UNIFIED REGEX SHIELD ENGINE: Total global document text filter coverage
+      // OBFUSCATION ENGINE
       function executeGlobalEmailObfuscation() {
         const emailRegex = /([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})/gi;
         
-        // Target the absolute root document body container to guarantee footer inclusion
-        const root = document.body;
-        if (!root) return;
-        
-        // 1. Process all operational hyperlink href tracks
-        const links = document.querySelectorAll('a[href^="mailto:"]');
-        links.forEach(link => {
-          if (link.closest('.notranslate')) return;
-          const rawEmail = link.href.replace(/mailto:/i, '').trim();
-          
-          if (rawEmail.toLowerCase().includes('mutiarahotel.com')) {
-            const parts = rawEmail.split('@');
-            link.setAttribute('data-sec-u', parts[0]);
-            link.setAttribute('data-sec-d', parts[1]);
-            link.removeAttribute('href');
-            link.style.cursor = 'pointer';
-            
-            link.onclick = (e) => {
-              e.preventDefault();
-              const u = link.getAttribute('data-sec-u');
-              const d = link.getAttribute('data-sec-d');
-              if (u && d) window.location.href = `mailto:${u}@${d}`;
-            };
-          }
-        });
+        // TARGET THE FULL DOCUMENT: This guarantees we reach into the footer block
+        const targetNodes = document.querySelectorAll('a, p, span, div, li, td');
 
-        // 2. Comprehensive Deep-Node Text Scrambler
-        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-          acceptNode: function(node) {
-            // Bypass processing core configuration nodes to preserve background routines
-            if (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE' || node.parentElement.closest('.notranslate')) {
-              return NodeFilter.FILTER_REJECT;
+        targetNodes.forEach((element) => {
+          if (element.tagName === 'SCRIPT' || element.tagName === 'STYLE' || element.closest('.notranslate')) return;
+
+          // 1. Process active hyperlink targets
+          if (element.tagName === 'A' && element.href && element.href.toLowerCase().includes('mailto:')) {
+            const rawHrefAddress = element.href.replace(/mailto:/i, '').trim();
+            
+            if (rawHrefAddress.toLowerCase().includes('mutiarahotel.com')) {
+              const parts = rawHrefAddress.split('@');
+              element.setAttribute('data-sec-u', parts[0]);
+              element.setAttribute('data-sec-d', parts[1]);
+              element.removeAttribute('href');
+              element.style.cursor = 'pointer';
+
+              element.onclick = (e) => {
+                e.preventDefault();
+                const u = element.getAttribute('data-sec-u');
+                const d = element.getAttribute('data-sec-d');
+                if (u && d) window.location.href = `mailto:${u}@${d}`;
+              };
             }
-            return emailRegex.test(node.textContent) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
           }
-        });
 
-        const nodesToTransform = [];
-        while (walker.nextNode()) {
-          nodesToTransform.push(walker.currentNode);
-        }
-
-        nodesToTransform.forEach(textNode => {
-          const parent = textNode.parentElement;
-          if (!parent) return;
-
-          const rawText = textNode.textContent;
-          
-          const safeHTML = rawText.replace(emailRegex, (match) => {
-            const parts = match.split('@');
-            // Complete character entity array encryption transformation map
-            const hexMask = match.split('').map(c => `&#x${c.charCodeAt(0).toString(16)};`).join('');
+          // 2. Process text strings inside structural elements
+          if (element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE) {
+            const cleanTextContent = element.textContent.trim();
             
-            return `<span class="secure-trigger-link text-amber-500 hover:text-amber-400 underline inline-block" style="cursor:pointer;" data-u="${parts[0]}" data-d="${parts[1]}">${hexMask}</span>`;
-          });
-
-          const wrapper = document.createElement('span');
-          wrapper.className = 'notranslate inline-block';
-          wrapper.innerHTML = safeHTML;
-          
-          wrapper.querySelectorAll('.secure-trigger-link').forEach(btn => {
-            btn.onclick = (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const u = btn.getAttribute('data-u');
-              const d = btn.getAttribute('data-d');
-              if (u && d) window.location.href = `mailto:${u}@${d}`;
-            };
-          });
-
-          parent.replaceChild(wrapper, textNode);
+            if (emailRegex.test(cleanTextContent)) {
+              const matches = cleanTextContent.match(emailRegex);
+              const targetEmail = matches[0];
+              const parts = targetEmail.split('@');
+              
+              element.classList.add('notranslate');
+              element.setAttribute('data-sec-u', parts[0]);
+              element.setAttribute('data-sec-d', parts[1]);
+              element.style.cursor = 'pointer';
+              
+              // Rewrite to unreadable hexadecimal code
+              element.innerHTML = '&#x69;&#x6e;&#x66;&#x6f;&#x40;&#x6d;&#x75;&#x74;&#x69;&#x61;&#x72;&#x61;&#x68;&#x6f;&#x74;&#x65;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;';
+              
+              element.onclick = (e) => {
+                e.preventDefault();
+                const u = element.getAttribute('data-sec-u');
+                const d = element.getAttribute('data-sec-d');
+                if (u && d) window.location.href = `mailto:${u}@${d}`;
+              };
+            }
+          }
         });
       }
 
-      // IMMEDIATE IMMUNIZATION EXECUTION POINT
-      // We run this immediately as the script parses, then again when DOM content stabilizes
-      executeGlobalEmailObfuscation();
+      // Run immediately on resource initialization
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', executeGlobalEmailObfuscation);
+      } else {
+        executeGlobalEmailObfuscation();
+      }
 
       document.addEventListener("DOMContentLoaded", () => {
-        executeGlobalEmailObfuscation();
-
         // WhatsApp Mask Rebuilder
         const waWidget = document.getElementById("secure-whatsapp-widget");
         if (waWidget) {
@@ -513,7 +494,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc, item) => {
             }
             textNode.parentElement.appendChild(noticeLabel);
           } else {
-            textNode.textContent = convertedText.replace(/\*\*/g, '').replace(/__/g, '');
+            textNode.textContent = convertedText.replace(/\*\/g, '').replace(/__/g, '');
           }
         }
       }
