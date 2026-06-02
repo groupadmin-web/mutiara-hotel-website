@@ -96,7 +96,7 @@ try {
       <p class="text-xs text-slate-500 mb-4 max-w-xs leading-relaxed">
         Stay updated with our seasonal luxury stay packages, corporate venue offerings, and cultural heritage narratives.
       </p>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4 flex-wrap">
         {footer.instagram_url && (
           <a href={footer.instagram_url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-xs font-bold font-sans uppercase tracking-wider">
             Instagram
@@ -105,6 +105,12 @@ try {
         {footer.facebook_url && (
           <a href={footer.facebook_url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-xs font-bold font-sans uppercase tracking-wider">
             Facebook
+          </a>
+        )}
+        {/* ADDED: Seamlessly pulls your YouTube tracking value dynamically */}
+        {footer.youtube_url && (
+          <a href={footer.youtube_url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-xs font-bold font-sans uppercase tracking-wider">
+            YouTube
           </a>
         )}
       </div>
