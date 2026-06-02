@@ -26,14 +26,12 @@ const makeTitle = title
 ---
 
 <!doctype html>
-<html lang="en" class="notranslate" translate="no">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-
-    <meta name="google" content="notranslate" />
 
     <SEO
       title={makeTitle}
@@ -259,14 +257,14 @@ const makeTitle = title
 
         const elementsToProcess = [];
         
-        // SECURE PROPERTY LEVEL DOM SCRAPER
+        // SCANS DOM NODES DYNAMICALLY
         const walker = document.createTreeWalker(rootContainer, NodeFilter.SHOW_TEXT, {
           acceptNode: function(node) {
             if (node.parentElement.tagName === 'SCRIPT' || node.parentElement.tagName === 'STYLE') {
               return NodeFilter.FILTER_REJECT;
             }
 
-            // STAGE 1 TRANSLATION BLOCK: Instantly abort parsing if the node's container matches standard skip selectors
+            // FIXED: Loops safely unless it hits an element labeled with your skip translation classes/attributes
             if (
               node.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]')
             ) {
@@ -318,10 +316,9 @@ const makeTitle = title
           }
         });
 
-        // CONTINUOUS STREAM ACTION LAYER
+        // ASYNC LOOP INJECTOR ENGINE
         for (const textNode of elementsToProcess) {
-          // STAGE 2 RUNTIME CHECKS (SYNCHRONOUS GATEWAY):
-          // Double checks the DOM position at the exact millisecond the text loop processes
+          // Double check target node states synchronously right before hitting Google's servers
           if (!textNode.parentElement || textNode.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]')) {
             continue;
           }
@@ -334,16 +331,21 @@ const makeTitle = title
           
           const originalValue = baselineTextCache.get(textNode);
 
-          // Stream through Google API with native Auto Detection active
-          let convertedText = await fetchSingleNodeTranslation(originalValue, activeLanguage);
-          
-          // STAGE 3 FALLBACK PROTECTION: Checks parent nodes post-fetch to prevent async injection leaks
-          if (!textNode.parentElement || textNode.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]')) {
-            textNode.textContent = originalValue; // Rollback instantly to original English string payload
+          // If the language is set back to English, restore baseline strings immediately without network lookups
+          if (activeLanguage === 'en') {
+            textNode.textContent = originalValue;
             continue;
           }
 
-          // Brand protection layout override filters
+          let convertedText = await fetchSingleNodeTranslation(originalValue, activeLanguage);
+          
+          // Verify element context post-fetch execution block to prevent race conditions
+          if (!textNode.parentElement || textNode.parentElement.closest('.notranslate, .skiptranslate, [translate="no"]')) {
+            textNode.textContent = originalValue; 
+            continue;
+          }
+
+          // Brand protection override hooks
           convertedText = convertedText.replace(/Hotel Mutiara & Konvensi/gi, 'Mutiara Hotel & Convention');
           convertedText = convertedText.replace(/Hotel Mutiara/gi, 'Mutiara Hotel');
           convertedText = convertedText.replace(/珍珠酒店及会议中心/g, 'Mutiara Hotel & Convention');
