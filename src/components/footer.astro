@@ -6,7 +6,6 @@ import homepageData from "../content/homepage.json";
 const logoImage = homepageData?.logo_image;
 
 // FAIL-SAFE DATA FALLBACKS
-// Update the fallback object in src/components/footer.astro to look like this:
 let footer = {
   footer_slogan: "Providing an impeccable blend of luxury hospitality and high-performance corporate event execution in the heart of Bandung City.",
   concierge_address: "Jalan Kebon Kawung No. 60,\nBandung, West Java, Indonesia",
@@ -15,7 +14,7 @@ let footer = {
   concierge_email: "info@mutiarahotel.com",
   instagram_url: "#",
   facebook_url: "#",
-  youtube_url: "https://www.youtube.com/@mutiarahotel" // Injected as default
+  youtube_url: "https://www.youtube.com/@mutiarahotel"
 };
 
 try {
@@ -26,90 +25,92 @@ try {
 } catch (e) {}
 ---
 
-<footer id="footer" class="w-full bg-slate-950 text-slate-400 font-sans border-t border-slate-900 pt-16 pb-8 relative overflow-hidden left-0 right-0">
+{/* COMPRESSED SPACING: Reduced vertical padding to py-10 for a much shorter visual footprint */}
+<footer id="footer" class="w-full bg-slate-950 text-slate-400 font-sans border-t border-slate-900 py-10 relative overflow-hidden left-0 right-0">
   
   <div class="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none select-none"></div>
 
-  {/* CLEANED OVERARCHING COMPACT GRID */}
-  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-slate-900 text-left">
+  {/* INTERNAL INNER GRID INNER SHIELD - Tightened row/column gaps */}
+  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-900 text-left">
     
     {/* COLUMN 1: BRAND LOGO BLOCKS & SLOGAN */}
-    <div class="flex flex-col gap-4 md:col-span-1">
-      <div class="flex flex-row items-center gap-4">
+    <div class="flex flex-col gap-3 md:col-span-1">
+      <div class="flex flex-row items-center gap-3">
         {logoImage && (
           <img 
             src={logoImage} 
             alt="Mutiara Brand Logo" 
-            class="h-14 w-auto object-contain brightness-110 flex-shrink-0"
+            class="h-11 w-auto object-contain brightness-110 flex-shrink-0"
             onerror="this.style.display='none';"
           />
         )}
         <div class="flex flex-col justify-center">
           <span 
-            class="text-white text-2xl font-medium uppercase leading-none select-none" 
-            style="font-family: 'EB Garamond', Georgia, serif !important; letter-spacing: 4px !important; margin-right: -4px !important;"
+            class="text-white text-xl font-medium uppercase leading-none select-none" 
+            style="font-family: 'EB Garamond', Georgia, serif !important; letter-spacing: 3px !important; margin-right: -3px !important;"
           >
             Mutiara
           </span>
-          <span class="text-[10px] text-amber-500 tracking-[0.15em] font-bold uppercase mt-2.5 whitespace-nowrap select-none">
+          <span class="text-[9px] text-amber-500 tracking-[0.12em] font-bold uppercase mt-1.5 whitespace-nowrap select-none">
             Hotel & Convention
           </span>
         </div>
       </div>
-      <p class="text-xs leading-relaxed text-slate-500 max-w-sm mt-2">
+      <p class="text-[11px] leading-relaxed text-slate-500 max-w-sm mt-1">
         {footer.footer_slogan}
       </p>
     </div>
 
     {/* COLUMN 2: GEOGRAPHIC COORDINATES */}
     <div>
-      <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
+      <h4 class="text-white text-[11px] font-bold uppercase tracking-widest mb-3.5 border-l-2 border-amber-500 pl-2">
         The Concierge Desk
       </h4>
-      <div class="flex flex-col gap-3 text-xs leading-relaxed text-slate-400">
+      <div class="flex flex-col gap-2 text-[11px] leading-relaxed text-slate-400">
         <p class="flex gap-2">
           <span class="text-amber-500">📍</span>
           <span class="whitespace-pre-line">{footer.concierge_address}</span>
         </p>
-        <p class="flex gap-2 mt-1">
-          <span class="text-amber-500">📞</span>
-          <a href={`tel:${footer.concierge_phone_raw}`} class="hover:text-white transition-colors">
-            {footer.concierge_phone}
-          </a>
-        </p>
-        {footer.concierge_email && (
-          <p class="flex gap-2 mt-0.5">
-            <span class="text-amber-500">✉️</span>
-            <a href={`mailto:${footer.concierge_email}`} class="hover:text-white transition-colors">
-              {footer.concierge_email}
+        <div class="flex flex-wrap gap-x-4 gap-y-1">
+          <p class="flex gap-2">
+            <span class="text-amber-500">📞</span>
+            <a href={`tel:${footer.concierge_phone_raw}`} class="hover:text-white transition-colors">
+              {footer.concierge_phone}
             </a>
           </p>
-        )}
+          {footer.concierge_email && (
+            <p class="flex gap-2">
+              <span class="text-amber-500">✉️</span>
+              <a href={`mailto:${footer.concierge_email}`} class="hover:text-white transition-colors">
+                {footer.concierge_email}
+              </a>
+            </p>
+          )}
+        </div>
       </div>
     </div>
 
-    {/* COLUMN 3: CONNECTIVITY & ACCREDITATIONS */}
+    {/* COLUMN 3: CONNECTIVITY */}
     <div>
-      <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
+      <h4 class="text-white text-[11px] font-bold uppercase tracking-widest mb-3.5 border-l-2 border-amber-500 pl-2">
         Follow Our Journey
       </h4>
-      <p class="text-xs text-slate-500 mb-4 max-w-xs leading-relaxed">
-        Stay updated with our seasonal luxury stay packages, corporate venue offerings, and cultural heritage narratives.
+      <p class="text-[11px] text-slate-500 mb-3 max-w-xs leading-relaxed">
+        Stay updated with our latest stay packages and venue offerings.
       </p>
-      <div class="flex items-center gap-4 flex-wrap">
+      <div class="flex items-center gap-2.5 flex-wrap">
         {footer.instagram_url && (
-          <a href={footer.instagram_url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-xs font-bold font-sans uppercase tracking-wider">
+          <a href={footer.instagram_url} target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-[10px] font-bold font-sans uppercase tracking-wider">
             Instagram
           </a>
         )}
         {footer.facebook_url && (
-          <a href={footer.facebook_url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-xs font-bold font-sans uppercase tracking-wider">
+          <a href={footer.facebook_url} target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-[10px] font-bold font-sans uppercase tracking-wider">
             Facebook
           </a>
         )}
-        {/* ADDED: Seamlessly pulls your YouTube tracking value dynamically */}
         {footer.youtube_url && (
-          <a href={footer.youtube_url} target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-xs font-bold font-sans uppercase tracking-wider">
+          <a href={footer.youtube_url} target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-amber-500 hover:border-amber-500/30 transition-all duration-200 text-[10px] font-bold font-sans uppercase tracking-wider">
             YouTube
           </a>
         )}
@@ -118,12 +119,12 @@ try {
 
   </div>
 
-  {/* BOTTOM BASELINE FRAME */}
-  <div class="max-w-7xl mx-auto px-6 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-600 font-medium">
+  {/* BOTTOM BASELINE FRAME - Tightened spacing */}
+  <div class="max-w-7xl mx-auto px-6 pt-5 flex flex-col md:flex-row justify-between items-center gap-3 text-[10px] text-slate-600 font-medium">
     <p>
       &copy; {new Date().getFullYear()} Mutiara Hotel & Convention Bandung. All Rights Reserved.
     </p>
-    <div class="flex gap-6">
+    <div class="flex gap-4">
       <a href="#privacy" class="hover:text-slate-400 transition-colors">Privacy Charter</a>
       <span class="text-slate-800">|</span>
       <p>Direct Booking Guarantee Enabled</p>
