@@ -1,23 +1,51 @@
 ---
-import homepageData from "@/content/homepage.json";
+// src/components/footer.astro
+import homepageData from "../content/homepage.json";
 
-// Safely pulling the live logo image path value
-const logoImage = homepageData.logo_image;
+// Safely pull the logo image from the existing homepage data
+const logoImage = homepageData?.logo_image;
+
+// FAIL-SAFE DATA LAYER: Attempt to safely import the new JSON data file
+let footer = {
+  footer_slogan: "Providing an impeccable blend of luxury hospitality and high-performance corporate event execution in the heart of Bandung City.",
+  accommodations_list: [
+    { label: "Executive Deluxe Rooms", url: "#rooms" },
+    { label: "Business Premier Suites", url: "#rooms" },
+    { label: "Grand Family Sanctuaries", url: "#rooms" }
+  ],
+  events_list: [
+    { label: "Grand Ballroom", url: "#events" },
+    { label: "Corporate Boardrooms", url: "#events" },
+    { label: "MICE Infrastructure", url: "#events" }
+  ],
+  concierge_address: "Jalan Kebon Kawung No. 60,\nBandung, West Java, Indonesia",
+  concierge_phone: "+62 (022) 420 0888",
+  concierge_phone_raw: "+62224200888"
+};
+
+try {
+  // If the file hasn't been written or has a syntax error, this try/catch swallows the error completely
+  const cmsData = await import("../content/footer.json");
+  if (cmsData && cmsData.default) {
+    footer = cmsData.default;
+  }
+} catch (e) {
+  // Silent fallback: Absolutely zero build crashes or downtime allowed
+}
+
+const accommodations = footer.accommodations_list || [];
+const events = footer.events_list || [];
 ---
 
-{/* FIXED: id="footer" is now attached, matching your navbar click-handler perfectly */}
 <footer id="footer" class="w-full bg-slate-950 text-slate-400 font-sans border-t border-slate-900 pt-16 pb-8 relative overflow-hidden left-0 right-0">
   
   <div class="absolute bottom-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none select-none"></div>
 
-  {/* INTERNAL INNER GRID INNER SHIELD */}
   <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-12 border-b border-slate-900">
     
-    {/* COLUMN 1: SIDE-BY-SIDE PRECISION BRAND MATRIX */}
+    {/* COLUMN 1: BRAND LOGO & SLOGAN */}
     <div class="flex flex-col gap-4">
       <div class="flex flex-row items-center gap-4">
-        
-        {/* THE REAL SEA-SHELL LOGO GRAPHIC MARK */}
         {logoImage && (
           <img 
             src={logoImage} 
@@ -26,55 +54,61 @@ const logoImage = homepageData.logo_image;
             onerror="this.style.display='none';"
           />
         )}
-        
-        {/* THE TYPOGRAPHY BLOCK */}
         <div class="flex flex-col justify-center">
-          {/* Custom inline style applied to widen character gaps by exactly 2% more to reach perfect flush margins */}
           <span 
             class="text-white text-2xl font-medium uppercase leading-none select-none" 
             style="font-family: 'EB Garamond', Georgia, serif !important; letter-spacing: 4px !important; margin-right: -4px !important;"
           >
             Mutiara
           </span>
-          {/* Subtitle baseline text perfectly balanced in orange */}
           <span class="text-[10px] text-amber-500 tracking-[0.15em] font-bold uppercase mt-2.5 whitespace-nowrap select-none">
             Hotel & Convention
           </span>
         </div>
-        
       </div>
-      
       <p class="text-xs leading-relaxed text-slate-500 max-w-xs mt-2">
-        Providing an impeccable blend of luxury hospitality and high-performance corporate event execution in the heart of Bandung City.
+        {footer.footer_slogan}
       </p>
     </div>
 
-    {/* COLUMN 2: ACCOMMODATION ANCHORS */}
+    {/* COLUMN 2: ACCOMMODATIONS */}
     <div>
       <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
         Accommodations
       </h4>
       <ul class="flex flex-col gap-3 text-xs">
-        <li><a href="#rooms" class="hover:text-amber-500 transition-colors duration-300">Executive Deluxe Rooms</a></li>
-        <li><a href="#rooms" class="hover:text-amber-500 transition-colors duration-300">Business Premier Suites</a></li>
-        <li><a href="#rooms" class="hover:text-amber-500 transition-colors duration-300">Grand Family Sanctuaries</a></li>
-        <li><a href="https://m.mutiarahotel.com" target="_blank" rel="noopener noreferrer" class="text-amber-400 font-medium hover:underline">Direct Reservation Portal →</a></li>
+        {accommodations.map((item) => (
+          <li>
+            <a href={item.url} class="hover:text-amber-500 transition-colors duration-300">
+              {item.label}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href="https://m.mutiarahotel.com" target="_blank" rel="noopener noreferrer" class="text-amber-400 font-medium hover:underline">
+            Direct Reservation Portal →
+          </a>
+        </li>
       </ul>
     </div>
 
-    {/* COLUMN 3: MICE / CONVENTION ASSETS */}
+    {/* COLUMN 3: EVENTS & CONVENTIONS */}
     <div>
       <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
         Events & Conventions
       </h4>
       <ul class="flex flex-col gap-3 text-xs">
-        <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">Grand Ballroom</a></li>
-        <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">Corporate Boardrooms</a></li>
-        <li><a href="#events" class="hover:text-amber-500 transition-colors duration-300">MICE Infrastructure</a></li>
+        {events.map((item) => (
+          <li>
+            <a href={item.url} class="hover:text-amber-500 transition-colors duration-300">
+              {item.label}
+            </a>
+          </li>
+        ))}
       </ul>
     </div>
 
-    {/* COLUMN 4: LOCAL CONCIERGE ACCESS COORD */}
+    {/* COLUMN 4: CONCIERGE ACCESS */}
     <div>
       <h4 class="text-white text-xs font-bold uppercase tracking-widest mb-5 border-l-2 border-amber-500 pl-2.5">
         The Concierge Desk
@@ -82,11 +116,13 @@ const logoImage = homepageData.logo_image;
       <div class="flex flex-col gap-3 text-xs leading-relaxed text-slate-400">
         <p class="flex gap-2">
           <span class="text-amber-500">📍</span>
-          <span>Jalan Kebon Kawung No. 60,<br />Bandung, West Java, Indonesia</span>
+          <span class="whitespace-pre-line">{footer.concierge_address}</span>
         </p>
         <p class="flex gap-2 mt-1">
           <span class="text-amber-500">📞</span>
-          <a href="tel:+62224200888" class="hover:text-white transition-colors">+62 (022) 420 0888</a>
+          <a href={`tel:${footer.concierge_phone_raw}`} class="hover:text-white transition-colors">
+            {footer.concierge_phone}
+          </a>
         </p>
       </div>
     </div>
