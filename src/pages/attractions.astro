@@ -1,4 +1,3 @@
----
 // src/pages/attractions.astro
 import Layout from "../layouts/Layout.astro";
 import attractionsData from "../content/attractions.json";
@@ -90,6 +89,13 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
   <div 
     class="bg-gray-50 min-h-screen py-16 px-4 sm:px-6 lg:px-8"
     x-data="{ modalOpen: false, modalTitle: '', modalDescription: '', modalImage: '', modalTagline: '' }"
+    @open-modal.window="
+      modalTitle = $event.detail.title;
+      modalTagline = $event.detail.tagline;
+      modalDescription = $event.detail.description;
+      modalImage = $event.detail.image;
+      modalOpen = true;
+    "
     :class="modalOpen ? 'overflow-hidden' : ''"
   >
 
@@ -104,9 +110,6 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
       {attractions.map((item, index) => {
         const encodedLocation = encodeURIComponent(`${item.title}, Bandung, West Java, Indonesia`);
         const exactMapUrl = `http://googleusercontent.com/maps.google.com/?q=${encodedLocation}`;
-
-        // Clean javascript string formatting to prevent inline breaking injection errors
-        const safeDescription = item.description.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
         return (
           <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-full">
@@ -147,17 +150,19 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
                 </h2>
                 <div class="w-8 h-0.5 bg-gray-200 mb-4"></div>
                 
-                {/* PRE-TRUNCATED STATIONARY PARAGRAPH:
-                  No runtime shifts here. The layout uses normal Tailwind classes 
-                  to cleanly show just the first line or two as a preview.
-                */}
+                {/* PRE-TRUNCATED STATIONARY PARAGRAPH */}
                 <p class="text-gray-500 text-sm font-sans font-light leading-relaxed line-clamp-2">
                   {item.description}
                 </p>
 
                 {/* MODAL POPUP LAUNCH TRIGGER BUTTON */}
                 <button 
-                  @click={`modalTitle = "${item.title}"; modalTagline = "${item.tagline}"; modalDescription = "${safeDescription}"; modalImage = "${item.image}"; modalOpen = true;`}
+                  @click={`$dispatch('open-modal', { 
+                    title: ${JSON.stringify(item.title)}, 
+                    tagline: ${JSON.stringify(item.tagline)}, 
+                    description: ${JSON.stringify(item.description)}, 
+                    image: ${JSON.stringify(item.image)} 
+                  })`}
                   class="text-amber-600 font-sans font-bold text-[11px] uppercase tracking-wider mt-3 hover:text-amber-700 transition-colors focus:outline-none cursor-pointer block"
                   type="button"
                 >
@@ -184,6 +189,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
       })}
     </div>
 
+    {/* THE POPUP MODAL */}
     <div 
       class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
       x-show="modalOpen"
@@ -251,6 +257,5 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
 </Layout>
 
 <style>
-  /* Stops Alpine templates from flashing broken structures on slow connections */
   [x-cloak] { display: none !important; }
 </style>
