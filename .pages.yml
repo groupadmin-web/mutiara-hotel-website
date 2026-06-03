@@ -1,4 +1,4 @@
-# ROOT LEVEL MEDIA ENGINE MANAGERS
+# pages.yml # ROOT LEVEL MEDIA ENGINE MANAGERS
 media:
   input: public/images
   output: /images
@@ -237,6 +237,10 @@ content:
       - name: image
         label: "Showcase Feature Photo"
         type: image
+      - name: photo_credit
+        label: "Photo Credit (Optional)"
+        type: string
+        required: false
       - name: description
         label: "Historical / Travel Description"
         type: text
