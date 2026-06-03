@@ -89,6 +89,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
 <Layout title="Local Attractions | Mutiara Hotel & Convention">
   <div class="bg-gray-50 min-h-screen py-16 px-4 sm:px-6 lg:px-8">
 
+    {/* Section Header */}
     <div class="max-w-4xl mx-auto text-center mb-16 mt-8">
       <span class="text-amber-600 font-sans text-xs tracking-widest uppercase font-bold block mb-1">Explore Bandung</span>
       <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 tracking-wide uppercase mb-4">Destinations & Attractions</h1>
@@ -96,6 +97,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
       <p class="text-lg text-gray-600 font-light max-w-2xl mx-auto italic">"From the heritage steps of the historic city center to the dramatic volcanic craters of West Java, experience the best of Bandung right from our doorstep."</p>
     </div>
 
+    {/* Grid Container */}
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
       {attractions.map((item, index) => {
         const encodedLocation = encodeURIComponent(`${item.title}, Bandung, West Java, Indonesia`);
@@ -103,11 +105,11 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
 
         return (
           <div 
-            class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-full"
+            class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300 h-full"
             x-data="{ isExpanded: false }"
           >
             
-            {/* IMAGE CONTAINER */}
+            {/* Image Block Wrapper */}
             <div class="block shrink-0 bg-gray-200">
               <div class="relative h-60 overflow-hidden">
                 <img 
@@ -124,7 +126,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
                 </div>
               </div>
             
-              {/* PHOTO CREDIT */}
+              {/* Photo Credit Strip */}
               {item.photo_credit && item.photo_credit.trim() !== "" && (
                 <div class="w-full bg-white border-t border-b border-slate-100 px-4 py-2 text-[9px] font-sans font-light text-slate-400 text-right tracking-wide truncate select-none notranslate">
                   📷 {item.photo_credit}
@@ -132,28 +134,28 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
               )}
             </div>
 
-            {/* CONTENT ENGINE SPACE */}
-            <div class="p-6 flex-grow flex flex-col justify-between">
-              <div>
-                <span class="text-amber-600 text-[10px] tracking-widest uppercase font-sans font-bold block mb-1">
-                  <span>{item.tagline}</span>
-                </span>
-                <h2 class="text-xl font-serif font-bold text-gray-800 mb-3 uppercase tracking-wide min-h-[56px] flex items-center">
-                  <span>{item.title}</span>
-                </h2>
-                <div class="w-8 h-0.5 bg-gray-200 mb-4"></div>
-                
-                {/* NATIVE WEBKIT-CLAMP INLINE CONTROL ELEMENT */}
-                <div 
-                  class="text-gray-500 text-sm font-sans font-light leading-relaxed whitespace-pre-line overflow-hidden transition-all duration-300"
-                  :style="isExpanded ? 'display: block;' : 'display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; max-height: 4.5rem;'"
+            {/* Content Space Wrapper (justify-between removed to prevent forced text-stretching) */}
+            <div class="p-6 flex-grow flex flex-col">
+              <span class="text-amber-600 text-[10px] tracking-widest uppercase font-sans font-bold block mb-1">
+                <span>{item.tagline}</span>
+              </span>
+              <h2 class="text-xl font-serif font-bold text-gray-800 mb-3 uppercase tracking-wide min-h-[56px] flex items-center">
+                <span>{item.title}</span>
+              </h2>
+              <div class="w-8 h-0.5 bg-gray-200 mb-4"></div>
+              
+              {/* Native Tailwind Line Clamp Wrapper */}
+              <div class="relative overflow-hidden">
+                <p 
+                  class="text-gray-500 text-sm font-sans font-light leading-relaxed whitespace-pre-line transition-all duration-300"
+                  :class="isExpanded ? '' : 'line-clamp-3'"
                 >
-                  <p class="m-0 p-0">
-                    {item.description}
-                  </p>
-                </div>
+                  {item.description}
+                </p>
+              </div>
 
-                {/* ACTION CLICK CONTROLLER */}
+              {/* Alpine Read More Trigger */}
+              <div class="block">
                 <button 
                   @click="isExpanded = !isExpanded"
                   class="text-amber-600 font-sans font-bold text-[11px] uppercase tracking-wider mt-3 hover:text-amber-700 transition-colors focus:outline-none cursor-pointer block"
@@ -163,8 +165,8 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
                 </button>
               </div>
               
-              {/* STRUCTURAL FOOTER BLOCK */}
-              <div class="border-t border-gray-100 pt-4 flex items-center justify-between text-[11px] font-sans font-medium tracking-wider text-slate-400 uppercase mt-6">
+              {/* Card Footer (mt-auto pushes the footer down uniformly without distorting elements above it) */}
+              <div class="border-t border-gray-100 pt-4 flex items-center justify-between text-[11px] font-sans font-medium tracking-wider text-slate-400 uppercase mt-auto pt-6 w-full">
                 <span class="notranslate">Bandung, IDN</span>
                 <a 
                   href={exactMapUrl} 
