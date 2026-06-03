@@ -55,7 +55,7 @@ const defaultAttractions = [
   {
     title: "Mount Tangruban Perahu",
     distance: "18 Miles (55 Min Drive)",
-    image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb;?auto=format&fit=crop&w=800&q=80",
     tagline: "Active Volcano & Panoramic Craters",
     category: "Nature Excursions",
     description: "An iconic active volcano north of the city in Lembang. Visitors can hike or drive right up to the edge of the massive main crater to witness steam vents amidst beautiful mountain backdrops."
@@ -107,7 +107,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
             x-data="{ isExpanded: false }"
           >
             
-            {/* IMAGE CONTAINER BLOCK */}
+            {/* IMAGE CONTAINER */}
             <div class="block shrink-0 bg-gray-200">
               <div class="relative h-60 overflow-hidden">
                 <img 
@@ -124,7 +124,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
                 </div>
               </div>
             
-              {/* PHOTO CREDIT STRIP */}
+              {/* PHOTO CREDIT */}
               {item.photo_credit && item.photo_credit.trim() !== "" && (
                 <div class="w-full bg-white border-t border-b border-slate-100 px-4 py-2 text-[9px] font-sans font-light text-slate-400 text-right tracking-wide truncate select-none notranslate">
                   📷 {item.photo_credit}
@@ -132,9 +132,9 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
               )}
             </div>
 
-            {/* CONTENT SPACE */}
+            {/* CONTENT wrapper */}
             <div class="p-6 flex-grow flex flex-col justify-between">
-              <div class="mb-4">
+              <div>
                 <span class="text-amber-600 text-[10px] tracking-widest uppercase font-sans font-bold block mb-1">
                   <span>{item.tagline}</span>
                 </span>
@@ -143,29 +143,30 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
                 </h2>
                 <div class="w-8 h-0.5 bg-gray-200 mb-4"></div>
                 
-                {/* CRITICAL CHANGE: We use a raw data attribute `data-collapsed` bound to Alpine.
-                  This completely bypasses Tailwind's dynamic compilation engine entirely.
+                {/* OFFICIAL ISOLATION MECHANISM:
+                  We house the paragraph inside a strict, isolated display block. 
+                  We then map Alpine's binding syntax safely using modern core classes.
                 */}
-                <div class="relative">
+                <div class="block w-full overflow-hidden">
                   <p 
-                    class="attraction-description text-gray-500 text-sm font-sans font-light leading-relaxed whitespace-pre-line"
-                    :data-collapsed="!isExpanded"
+                    class="text-gray-500 text-sm font-sans font-light leading-relaxed whitespace-pre-line"
+                    :class="isExpanded ? 'line-clamp-none' : 'line-clamp-3'"
                   >
                     {item.description}
                   </p>
-                  
-                  <button 
-                    @click="isExpanded = !isExpanded"
-                    class="text-amber-600 font-sans font-bold text-[11px] uppercase tracking-wider mt-2 hover:text-amber-700 transition-colors focus:outline-none cursor-pointer block"
-                    type="button"
-                  >
-                    <span x-text="isExpanded ? 'Show Less ↑' : 'Read More ↓'">Read More ↓</span>
-                  </button>
                 </div>
+
+                <button 
+                  @click="isExpanded = !isExpanded"
+                  class="text-amber-600 font-sans font-bold text-[11px] uppercase tracking-wider mt-3 hover:text-amber-700 transition-colors focus:outline-none cursor-pointer block"
+                  type="button"
+                >
+                  <span x-text="isExpanded ? 'Show Less ↑' : 'Read More ↓'">Read More ↓</span>
+                </button>
               </div>
               
               {/* CARD FOOTER */}
-              <div class="border-t border-gray-100 pt-4 flex items-center justify-between text-[11px] font-sans font-medium tracking-wider text-slate-400 uppercase mt-2">
+              <div class="border-t border-gray-100 pt-4 flex items-center justify-between text-[11px] font-sans font-medium tracking-wider text-slate-400 uppercase mt-6">
                 <span class="notranslate">Bandung, IDN</span>
                 <a 
                   href={exactMapUrl} 
@@ -185,19 +186,3 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
 
   </div>
 </Layout>
-
-<style>
-  .attraction-description[data-collapsed="true"] {
-    display: -webkit-box !important;
-    -webkit-line-clamp: 3 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    max-height: 4.5rem !important;
-  }
-  
-  .attraction-description[data-collapsed="false"] {
-    display: block !important;
-    max-height: none !important;
-    overflow: visible !important;
-  }
-</style>
