@@ -96,14 +96,12 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
       <p class="text-lg text-gray-600 font-light max-w-2xl mx-auto italic">"From the heritage steps of the historic city center to the dramatic volcanic craters of West Java, experience the best of Bandung right from our doorstep."</p>
     </div>
 
-    {/* The grid tracks items but allows them to grow naturally if they expand */}
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
       {attractions.map((item) => {
         const encodedLocation = encodeURIComponent(`${item.title}, Bandung, West Java, Indonesia`);
         const exactMapUrl = `http://googleusercontent.com/maps.google.com/?q=${encodedLocation}`;
 
         return (
-          /* Each card handles its own isolated toggling state when clicked */
           <div 
             x-data="{ expanded: false }"
             @click="expanded = !expanded"
@@ -146,24 +144,16 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
                 </h2>
                 <div class="w-8 h-0.5 bg-gray-200 mb-4"></div>
                 
-                {/* Dynamically adjusts line constraints based on local click state */}
+                {/* Pre-truncated line clamp toggles dynamically without lingering markup */}
                 <p 
                   class="text-gray-500 text-sm font-sans font-light leading-relaxed transition-all duration-300"
                   :class="expanded ? '' : 'line-clamp-2'"
                 >
                   {item.description}
                 </p>
-                
-                {/* Visual indicator showing it's toggleable */}
-                <span 
-                  class="inline-block text-[10px] text-amber-600 uppercase tracking-widest font-bold mt-3 transition-transform duration-200"
-                  :class="expanded ? 'rotate-180' : ''"
-                >
-                  ↓
-                </span>
               </div>
               
-              {/* CARD FOOTER - Click wrapper stopped here to allow standard link navigation */}
+              {/* CARD FOOTER */}
               <div 
                 class="border-t border-gray-100 pt-4 flex items-center justify-between text-[11px] font-sans font-medium tracking-wider text-slate-400 uppercase mt-2"
                 @click.stop
