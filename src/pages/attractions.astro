@@ -56,7 +56,7 @@ const defaultAttractions = [
     title: "Mount Tangruban Perahu",
     distance: "18 Miles (55 Min Drive)",
     image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80",
-    tagline: "Active Volcano & Panoramic Craters",
+    tagline: "Active Volcano & Panoramic Crates",
     category: "Nature Excursions",
     description: "An iconic active volcano north of the city in Lembang. Visitors can hike or drive right up to the edge of the massive main crater to witness steam vents amidst beautiful mountain backdrops."
   },
@@ -98,9 +98,8 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
 
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
       {attractions.map((item, index) => {
-        // FIXED GOOGLE MAP TARGET LINK ENGINE: Safely formats search hooks to open explicit coordinates via global queries URL patterns
         const encodedLocation = encodeURIComponent(`${item.title}, Bandung, West Java, Indonesia`);
-        const exactMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
+        const exactMapUrl = `https://maps.google.com/?q=${encodedLocation}`;
 
         return (
           <div 
@@ -125,7 +124,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
                 </div>
               </div>
             
-              {/* CLEAN WHITE BACKGROUND PHOTO CREDIT STRIP */}
+              {/* PHOTO CREDIT STRIP */}
               {item.photo_credit && item.photo_credit.trim() !== "" && (
                 <div class="w-full bg-white border-t border-b border-slate-100 px-4 py-2 text-[9px] font-sans font-light text-slate-400 text-right tracking-wide truncate select-none notranslate">
                   📷 {item.photo_credit}
@@ -144,29 +143,33 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
                 </h2>
                 <div class="w-8 h-0.5 bg-gray-200 mb-4"></div>
                 
-                {/* COLLAPSIBLE SMART CONTAINER */}
-                <div class="relative">
+                {/* REFACTORED SMART HEIGHT CONTAINER */}
+                <div class="relative overflow-hidden transition-all duration-300 ease-in-out">
                   <p 
-                    class="text-gray-500 text-sm font-sans font-light leading-relaxed whitespace-pre-line transition-all duration-300"
-                    ::class="isExpanded ? '' : 'line-clamp-3'"
+                    class="text-gray-500 text-sm font-sans font-light leading-relaxed whitespace-pre-line"
+                    :style="isExpanded ? 'max-height: 1000px; margin-bottom: 0px;' : 'max-height: 4.5rem; margin-bottom: 0px;'"
                   >
                     {item.description}
                   </p>
                   
-                  {/* EXPANSION TRIGGER TRIGGER */}
-                  <button 
-                    @click="isExpanded = !isExpanded"
-                    class="text-amber-600 font-sans font-bold text-[11px] uppercase tracking-wider mt-2 hover:text-amber-700 transition-colors focus:outline-none cursor-pointer block"
-                    x-text="isExpanded ? 'Show Less ↑' : 'Read More ↓'"
-                  >
-                    Read More ↓
-                  </button>
+                  {/* CSS FADE OVERLAY (Visible only when description is collapsed) */}
+                  <div 
+                    class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent pointer-events-none transition-opacity duration-300"
+                    x-show="!isExpanded"
+                  ></div>
                 </div>
+
+                {/* EXPANSION TRIGGER */}
+                <button 
+                  @click="isExpanded = !isExpanded"
+                  class="text-amber-600 font-sans font-bold text-[11px] uppercase tracking-wider mt-3 hover:text-amber-700 transition-colors focus:outline-none cursor-pointer block"
+                >
+                  <span x-text="isExpanded ? 'Show Less ↑' : 'Read More ↓'">Read More ↓</span>
+                </button>
               </div>
               
               {/* CARD FOOTER */}
               <div class="border-t border-gray-100 pt-4 flex items-center justify-between text-[11px] font-sans font-medium tracking-wider text-slate-400 uppercase mt-2">
-                {/* Visual Location Label */}
                 <span class="notranslate">Bandung, IDN</span>
                 <a 
                   href={exactMapUrl} 
