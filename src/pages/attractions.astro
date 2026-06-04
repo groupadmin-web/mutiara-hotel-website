@@ -2,6 +2,7 @@
 // src/pages/attractions.astro
 import Layout from "../layouts/Layout.astro";
 import attractionsData from "../content/attractions.json";
+import BookingToast from "@/components/BookingToast.astro";
 
 const defaultAttractions = [
   {
@@ -194,6 +195,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
     </div>
 
   </div>
+  <BookingToast />
 </Layout>
 
 <style is:global>
