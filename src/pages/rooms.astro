@@ -2,6 +2,7 @@
 // src/pages/rooms.astro
 import Layout from "../layouts/Layout.astro";
 import roomsData from "../content/rooms.json";
+import BookingToast from "@/components/BookingToast.astro";
 
 const rooms = Array.isArray(roomsData) ? roomsData : [];
 ---
