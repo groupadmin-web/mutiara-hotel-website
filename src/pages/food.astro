@@ -3,13 +3,13 @@
 import Layout from "../layouts/Layout.astro";
 import BookingToast from "@/components/BookingToast.astro";
 
-// 1. DEFAULT DATA BACKENDS FAIL-SAFES
+// 1. DEFAULT DATA BACKENDS FALL-SAFES
 const defaultRestaurants = [
   {
     title: "The Grand Mutiara Pavilion",
     distance: "0.1 km (Inside Hotel)",
     image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
-    tagline: "Authentic West Java Cuisine",
+    tagline: "Premium Authentic Dining",
     cuisine: "Sundanese Fusion",
     website_url: "https://m.mutiarahotel.com/dining"
   },
@@ -17,7 +17,7 @@ const defaultRestaurants = [
     title: "Kebon Kawung Culinary Street",
     distance: "0.2 Miles (4 Min Walk)",
     image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80",
-    tagline: "Local Delicacies & Street Food",
+    tagline: "Traditional Local Snacks",
     cuisine: "Local Snacks",
     website_url: ""
   },
@@ -32,16 +32,22 @@ const defaultRestaurants = [
 ];
 
 // 2. DYNAMIC CONTENT INGESTION ENGINE 
-let cmsData = [];
+let rawCmsData = null;
 try {
   const restaurantsData = await import("../content/restaurants.json");
-  if (restaurantsData && Array.isArray(restaurantsData.default)) {
-    cmsData = restaurantsData.default;
+  if (restaurantsData && restaurantsData.default) {
+    rawCmsData = restaurantsData.default;
   }
 } catch (e) {}
 
+// Extract top-level text variables safely with clean default fallbacks
+const dynamicPageDescription = rawCmsData?.page_description || "From traditional Sundanese family recipes right inside our venue complex to the legendary culinary street paths of Bandung.";
+const dynamicBreakfastNotice = rawCmsData?.breakfast_notice || "Please note that Mutiara Hotel does not offer an in-house breakfast service; however, our prime location is surrounded by an abundance of legendary Bandung local street food and culinary spots waiting to be explored right at our doorstep.";
+
+// Extract and array-filter individual list rows
+const cmsItems = Array.isArray(rawCmsData) ? rawCmsData : (rawCmsData?.restaurants || []);
 const restaurants = defaultRestaurants.map((defaultItem, idx) => {
-  const cmsItem = cmsData.find(item => item && (item.title === defaultItem.title)) || cmsData[idx] || {};
+  const cmsItem = cmsItems.find(item => item && (item.title === defaultItem.title)) || cmsItems[idx] || {};
   return {
     title: cmsItem.title || defaultItem.title,
     distance: cmsItem.distance || defaultItem.distance,
@@ -56,16 +62,28 @@ const restaurants = defaultRestaurants.map((defaultItem, idx) => {
 <Layout title="Local Dining Guide | Mutiara Hotel & Convention">
   <div class="bg-gray-50 min-h-screen py-16 px-4 sm:px-6 lg:px-8">
 
-    <div class="max-w-4xl mx-auto text-center mb-16 mt-8">
+    <div class="max-w-4xl mx-auto text-center mb-12 mt-8">
       <span class="text-amber-600 font-sans text-xs tracking-widest uppercase font-bold block mb-1">Culinary Experience</span>
       <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 tracking-wide uppercase mb-4">Bandung Dining & Food</h1>
       <div class="w-24 h-1 bg-amber-600 mx-auto mb-6"></div>
-      <p class="text-lg text-gray-600 font-light max-w-2xl mx-auto italic">"From traditional Sundanese family recipes right inside our venue complex to the legendary culinary street paths of Bandung."</p>
+      
+      <p class="text-lg text-gray-600 font-light max-w-2xl mx-auto italic leading-relaxed">
+        "{dynamicPageDescription}"
+      </p>
+    </div>
+
+    <div class="max-w-3xl mx-auto mb-16 bg-amber-500/5 border border-amber-500/20 rounded-xl p-5 flex items-start gap-3.5 shadow-sm">
+      <span class="text-xl select-none leading-none mt-0.5 shrink-0">🍳</span>
+      <div class="flex-1 text-left">
+        <h4 class="text-slate-900 font-sans text-xs font-bold uppercase tracking-wider mb-1">Local Breakfast Advisory</h4>
+        <p class="text-xs text-gray-500 font-sans leading-relaxed">
+          {dynamicBreakfastNotice}
+        </p>
+      </div>
     </div>
 
     <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
       {restaurants.map((item) => {
-        // 🟢 AUTOMATIC SEARCH QUERY METHOD: Targets a direct marker pin point query string natively!
         const encodedLocationName = encodeURIComponent(`${item.title}, Bandung, West Java, Indonesia`);
         const exactMapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedLocationName}`;
 
