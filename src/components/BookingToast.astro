@@ -59,12 +59,12 @@ const cooldownMs = (toastSettings.cooldown_loop_minutes || 3) * 60 * 1000;
 </div>
 
 <script>
-  // Runs purely in the browser—100% immune to Astro/Alpine attribute crashes
+  // Runs purely in the browser—100% immune to Astro attribute parsing issues
   const container = document.getElementById('booking-toast-container');
   const closeBtn = document.getElementById('toast-close-btn');
   const emailBtn = document.getElementById('toast-email-btn');
 
-  if (container &&静态) {
+  if (container) {
     const initialThreshold = parseInt(container.getAttribute('data-initial-threshold') || '30000', 10);
     const cooldownLength = parseInt(container.getAttribute('data-cooldown-length') || '180000', 10);
 
@@ -98,20 +98,20 @@ const cooldownMs = (toastSettings.cooldown_loop_minutes || 3) * 60 * 1000;
         }
       }
 
-      // If everything passes, make it slide up!
+      // Slide up when threshold parameters are cleared
       showToast();
     };
 
-    // Keep ticking in the background every 1 second
+    // Background tracking pulse running every 1 second
     let timerInterval = setInterval(checkTimer, 1000);
 
-    // Manual Close Handling
+    // Close Button Action
     closeBtn?.addEventListener('click', () => {
       hideToast();
       localStorage.setItem('toast_cooldown_expiry', (Date.now() + cooldownLength).toString());
     });
 
-    // Email Relay Action
+    // Email Mask Trigger Integration
     emailBtn?.addEventListener('click', () => {
       document.getElementById('direct-concierge-action')?.click();
     });
