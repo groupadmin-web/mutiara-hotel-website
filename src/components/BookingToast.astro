@@ -10,10 +10,11 @@ const cooldownMs = (toastSettings.cooldown_loop_minutes || 3) * 60 * 1000;
   id="booking-toast-container"
   data-initial-threshold={initialThresholdMs}
   data-cooldown-length={cooldownMs}
-  class="fixed bottom-6 right-6 z-[999] max-w-sm w-full bg-slate-900 border border-slate-800 text-slate-300 rounded-xl p-4 shadow-2xl transition-all duration-500 transform translate-y-10 opacity-0 pointer-events-none animate-[none]"
+  class="fixed bottom-6 right-6 z-[999] max-w-sm w-full bg-slate-900 border border-slate-800 text-slate-300 rounded-xl p-4 shadow-2xl"
+  style="opacity: 0; pointer-events: none; transform: translateY(40px); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;"
 >
   <div class="flex items-start gap-3 relative">
-    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 text-sm font-sans animate-pulse select-none">
+    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 text-sm font-sans select-none animate-pulse">
       {toastSettings.badge_icon}
     </div>
 
@@ -54,7 +55,6 @@ const cooldownMs = (toastSettings.cooldown_loop_minutes || 3) * 60 * 1000;
 </div>
 
 <script is:inline>
-  // is:inline bypasses Astro optimization entirely so this triggers raw on every page mount
   (function() {
     const container = document.getElementById('booking-toast-container');
     const closeBtn = document.getElementById('toast-close-btn');
@@ -66,18 +66,12 @@ const cooldownMs = (toastSettings.cooldown_loop_minutes || 3) * 60 * 1000;
     const cooldownLength = parseInt(container.getAttribute('data-cooldown-length') || '180000', 10);
 
     const showToast = () => {
-      container.style.transform = 'translate-y(0)';
-      container.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
-      container.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
-      // Inline style override to guarantee visibility against strict CSS build states
       container.style.opacity = '1';
       container.style.pointerEvents = 'auto';
       container.style.transform = 'translateY(0)';
     };
 
     const hideToast = () => {
-      container.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
-      container.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
       container.style.opacity = '0';
       container.style.pointerEvents = 'none';
       container.style.transform = 'translateY(40px)';
@@ -86,12 +80,14 @@ const cooldownMs = (toastSettings.cooldown_loop_minutes || 3) * 60 * 1000;
     const checkTimer = () => {
       const now = Date.now();
       
+      // Trace cumulative time spent across layout changes
       let elapsed = parseInt(localStorage.getItem('site_dwell_time') || '0', 10);
       if (elapsed < initialThreshold) {
         localStorage.setItem('site_dwell_time', (elapsed + 1000).toString());
         return; 
       }
 
+      // Check loop cooldown expiry metrics
       const cooldownExpiry = parseInt(localStorage.getItem('toast_cooldown_expiry') || '0', 10);
       if (cooldownExpiry > 0) {
         if (now < cooldownExpiry) {
@@ -104,7 +100,7 @@ const cooldownMs = (toastSettings.cooldown_loop_minutes || 3) * 60 * 1000;
       showToast();
     };
 
-    // Kill any existing duplicate intervals from previous page components
+    // Prevent duplicate loop instances on multi-page view swaps
     if (window.toastTimerInterval) {
       clearInterval(window.toastTimerInterval);
     }
@@ -117,7 +113,6 @@ const cooldownMs = (toastSettings.cooldown_loop_minutes || 3) * 60 * 1000;
     });
 
     emailBtn?.addEventListener('click', () => {
-      // Safe dynamic lookup for your footer action handler link
       const emailTarget = document.getElementById('direct-concierge-action') || document.querySelector('[href^="mailto:"]');
       if (emailTarget) {
         emailTarget.click();
