@@ -333,6 +333,7 @@ content:
       - name: privacy_content
         label: "Privacy Charter & T&C Document (Supports line breaks)"
         type: text
+
   - name: booking_toast
     label: "13. Smart Engagement Prompt"
     type: file
@@ -371,7 +372,9 @@ content:
         label: "Email Masking Button Action Text"
         type: string
         default: "✉️ Email Us"
- - name: restaurants
+
+  # 🟢 FIXED AND INTEGRATED: Pure array list file configuration (Matches your working Reviews layout exactly)
+  - name: restaurants
     label: "14. Culinary & Restaurant Guide"
     type: file
     path: src/content/restaurants.json
