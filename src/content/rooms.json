@@ -1,5 +1,41 @@
 [
   {
+    "title": "Executive Room",
+    "description": "Redefines modern boutique luxury. Featuring premium king-size bedding with sumptuous linens and refined decor, with high-quality furnishings and meticulous attention to detail.",
+    "image": "/images/fyl1ywfyl1ywfyl1.png",
+    "room_gallery1": "/images/jxaouojxaouojxao-1.png",
+    "room_gallery2": "/images/wy0xaowy0xaowy0x.png",
+    "room_gallery3": "/images/KAMAR A 5.jpg",
+    "bed_type": "King-Size Bed or Executive Quad (4 Beds)",
+    "capacity": "2 - 4 People",
+    "view": "Premium Panoramic View",
+    "features": [
+      "Air Conditioning",
+      "Sumptuous Bedding",
+      "Refined Modern Decor",
+      "Spacious Layout",
+      "Impeccable Clean Bathroom"
+    ]
+  },
+  {
+    "title": "Family Room",
+    "description": "The perfect sanctuary for family travelers, providing a warm, inviting atmosphere and an exceptionally spacious living area designed to relax, socialize, and spend quality time together.",
+    "image": "/images/2ldrff2ldrff2ldr.png",
+    "room_gallery1": "/images/KAMAR M 3.jpg",
+    "room_gallery2": "/images/KAMAR M 6.jpg",
+    "room_gallery3": "/images/KAMAR M 2.jpg",
+    "bed_type": "Multiple King & Queen Bed Configurations",
+    "capacity": "4 People",
+    "view": "Scenic View",
+    "features": [
+      "Air Conditioning",
+      "Spacious Living Area",
+      "Relaxing Bathtub",
+      "Flat-screen TV",
+      "Rejuvenating Bathroom Layout"
+    ]
+  },
+  {
     "title": "Budget Room",
     "description": "Designed with comfort and practicality in mind. Featuring cozy beds and classic furnishings, these rooms provide a welcoming retreat for travelers looking for an affordable stay.",
     "image": "/images/4dc3aace-18a9-48ec-8355-a3253f3fe2f3-1.jpeg",
@@ -51,42 +87,6 @@
       "Flexible Bed Setups",
       "Free Wi-Fi",
       "Comfortable Bathroom"
-    ]
-  },
-  {
-    "title": "Executive Room",
-    "description": "Redefines modern boutique luxury. Featuring premium king-size bedding with sumptuous linens and refined decor, with high-quality furnishings and meticulous attention to detail.",
-    "image": "/images/fyl1ywfyl1ywfyl1.png",
-    "room_gallery1": "/images/jxaouojxaouojxao-1.png",
-    "room_gallery2": "/images/wy0xaowy0xaowy0x.png",
-    "room_gallery3": "/images/KAMAR A 5.jpg",
-    "bed_type": "King-Size Bed or Executive Quad (4 Beds)",
-    "capacity": "2 - 4 People",
-    "view": "Premium Panoramic View",
-    "features": [
-      "Air Conditioning",
-      "Sumptuous Bedding",
-      "Refined Modern Decor",
-      "Spacious Layout",
-      "Impeccable Clean Bathroom"
-    ]
-  },
-  {
-    "title": "Family Room",
-    "description": "The perfect sanctuary for family travelers, providing a warm, inviting atmosphere and an exceptionally spacious living area designed to relax, socialize, and spend quality time together.",
-    "image": "/images/2ldrff2ldrff2ldr.png",
-    "room_gallery1": "/images/KAMAR M 3.jpg",
-    "room_gallery2": "/images/KAMAR M 6.jpg",
-    "room_gallery3": "/images/KAMAR M 2.jpg",
-    "bed_type": "Multiple King & Queen Bed Configurations",
-    "capacity": "4 People",
-    "view": "Scenic View",
-    "features": [
-      "Air Conditioning",
-      "Spacious Living Area",
-      "Relaxing Bathtub",
-      "Flat-screen TV",
-      "Rejuvenating Bathroom Layout"
     ]
   }
 ]
