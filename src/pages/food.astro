@@ -3,7 +3,24 @@
 import Layout from "../layouts/Layout.astro";
 import BookingToast from "@/components/BookingToast.astro";
 
-// DYNAMIC CONTENT INGESTION ENGINE (Reads your data as a pure array list)
+// 1. INGEST STATIC TEXT LAYERS (Matching your exact JSON keys)
+let settings = {
+  page_description: "From traditional Sundanese family recipes right inside our venue complex to the legendary culinary street paths of Bandung.",
+  breakfast_title: "Local Breakfast Advisory",
+  breakfast_description: "Please note that Mutiara Hotel does not offer an in-house breakfast service; however, our prime location is surrounded by an abundance of legendary Bandung local street food and culinary spots waiting to be explored right at our doorstep."
+};
+
+try {
+  // Pulling from the data folder where your food_settings.json lives
+  const settingsData = await import("../data/food_settings.json");
+  if (settingsData && settingsData.default) {
+    settings = { ...settings, ...settingsData.default };
+  }
+} catch (e) {
+  // Silent fallback keeps layout alive if settings json is missing or being edited
+}
+
+// 2. DYNAMIC CONTENT INGESTION ENGINE (Reads your data as a pure array list)
 let restaurants = [];
 try {
   const restaurantsData = await import("../content/restaurants.json");
@@ -24,16 +41,18 @@ try {
       <div class="w-24 h-1 bg-amber-600 mx-auto mb-6"></div>
       
       <p class="text-lg text-gray-600 font-light max-w-2xl mx-auto italic leading-relaxed">
-        "From traditional Sundanese family recipes right inside our venue complex to the legendary culinary street paths of Bandung."
+        "{settings.page_description}"
       </p>
     </div>
 
     <div class="max-w-3xl mx-auto mb-16 bg-amber-500/5 border border-amber-500/20 rounded-xl p-5 flex items-start gap-3.5 shadow-sm">
       <span class="text-xl select-none leading-none mt-0.5 shrink-0">🍳</span>
       <div class="flex-1 text-left">
-        <h4 class="text-slate-900 font-sans text-xs font-bold uppercase tracking-wider mb-1">Local Breakfast Advisory</h4>
+        <h4 class="text-slate-900 font-sans text-xs font-bold uppercase tracking-wider mb-1">
+          {settings.breakfast_title}
+        </h4>
         <p class="text-xs text-gray-500 font-sans leading-relaxed">
-          Please note that Mutiara Hotel does not offer an in-house breakfast service; however, our prime location is surrounded by an abundance of legendary Bandung local street food and culinary spots waiting to be explored right at our doorstep.
+          {settings.breakfast_description}
         </p>
       </div>
     </div>
