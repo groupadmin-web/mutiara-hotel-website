@@ -103,13 +103,13 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
         const encodedOrigin = encodeURIComponent(hotelAddress);
         const encodedDestination = encodeURIComponent(`${item.title}, Bandung, West Java, Indonesia`);
         
-        // FIXED syntax template placeholder from 3{encodedOrigin} to proper ${encodedOrigin}
+        // Formatted with proper string interpolation syntax
         const exactMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodedOrigin}&destination=${encodedDestination}`;
 
         return (
           <details class="attraction-accordion group bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300 list-none outline-none summary-clean">
             
-            {/* ACCORDION TRIGGER BANNER PANEL (Behaves as card core shell) */}
+            {/* ACCORDION TRIGGER BANNER PANEL */}
             <summary class="cursor-pointer select-none outline-none list-none block">
               
               {/* CARD IMAGE CONTAINER */}
@@ -161,7 +161,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
             </summary>
 
             {/* COLLAPSED ISOLATED CONTENT OVERFLOW BAY CONTAINER */}
-            <div class="px-6 pb-4 pt-1 transition-all duration-300捷 animate-fadeIn">
+            <div class="px-6 pb-4 pt-1 transition-all duration-300 animate-fadeIn">
               <p class="text-gray-500 text-sm font-sans font-light leading-relaxed whitespace-pre-line border-t border-dashed border-slate-100 pt-3">
                 {item.description}
               </p>
@@ -190,7 +190,7 @@ const attractions = defaultAttractions.map((defaultItem, idx) => {
 
           </details>
         );
-      }}
+      })}
     </div>
 
   </div>
