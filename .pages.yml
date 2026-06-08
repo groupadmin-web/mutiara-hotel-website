@@ -1,4 +1,10 @@
 # pages.yml # ROOT LEVEL MEDIA ENGINE MANAGERS
+
+backend:
+  name: github
+  repo: groupadmin-web/mutiara-hotel-website
+  branch: {{CF_PAGES_BRANCH}} # 🟢 Dynamically switches branches based on the domain!
+  
 media:
   input: public/images
   output: /images
