@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "hall_name": "Contoh",
+    "capacity_theater": "250",
+    "main_feature": "Projector",
+    "features": [
+      "Air Conditioning",
+      "Projector"
+    ]
+  }
+]
