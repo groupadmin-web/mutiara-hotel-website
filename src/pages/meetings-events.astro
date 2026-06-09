@@ -50,12 +50,12 @@ const events = Array.isArray(eventData) ? eventData : [];
               <div class="group bg-white rounded-2xl border border-gray-200/60 shadow-sm overflow-hidden flex flex-col justify-between transition-all duration-300 hover:shadow-xl w-full transform hover:-translate-y-1">
                 <div>
                   {/* Visual Cover Media Frame */}
-                  <div class="relative h-56 bg-gray-100 overflow-hidden aspect-[4/3]">
+                  <div class="relative h-56 bg-gray-100 overflow-hidden w-full">
                     {event.image ? (
                       <img
                         src={event.image}
                         alt={event.hall_name}
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 absolute inset-0"
                       />
                     ) : (
                       <div class="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-slate-400 p-6 text-center">
