@@ -1,4 +1,27 @@
+# ====================================================================
+# GLOBAL SEARCH ENGINE OPTIMIZATION
+# ====================================================================
 User-agent: *
 Allow: /
 
-Sitemap: http://astroship.web3templates.com/sitemap-index.xml
+# Point to your actual live hotel sitemap
+Sitemap: https://www.mutiarahotel.com/sitemap.xml
+
+# ====================================================================
+# AI ENGINE DISCOVERY & RETRIEVAL
+# ALLOWING THE REFERRAL-DRIVERS (CHATGPT SEARCH, COGNITIVE AGENTS)
+# ====================================================================
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# AI Information Blueprint
+Info: https://www.mutiarahotel.com/llms.txt
