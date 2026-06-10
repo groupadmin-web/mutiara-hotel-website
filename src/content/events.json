@@ -2,7 +2,8 @@
   {
     "hall_name": "Contoh",
     "image": "/images/depositphotos_247108702-stock-photo-bandung-indonesia-february-2019-aerial.jpg",
-    "label": "Class room",
+    "hall_type": "Class Room",
+    "label": "Muat Banyak",
     "capacity_theater": "250",
     "main_feature": "Projector",
     "features": [
