@@ -127,12 +127,31 @@ content:
       - name: hall_name
         label: "Meeting Room / Ballroom Name"
         type: string
+      - name: image
+        label: "Main Feature Photo (Cover)"
+        type: image
+      - name: gallery1
+        label: "Additional Gallery Photo 1"
+        type: image
+        required: false
+      - name: gallery2
+        label: "Additional Gallery Photo 2"
+        type: image
+        required: false
+      - name: gallery3
+        label: "Additional Gallery Photo 3"
+        type: image
+        required: false
       - name: capacity_theater
         label: "Max Seating Capacity"
         type: string
       - name: main_feature
         label: "Primary Facility Feature Highlight"
         type: string
+      - name: features
+        label: "Features & Amenities"
+        type: string
+        list: true
 
   - name: features
     label: "5. Core Experience Highlights"
@@ -288,9 +307,8 @@ content:
         default: "Find quick answers about our luxury accommodations, boutique booking terms, and heritage convention spaces."
       - name: faqs
         label: "Manage Question & Answer List Entries"
-        type: list
-        allow_add: true
-        summary: '{{fields.question}}'
+        type: object  # 🟢 Changed from 'list' to 'object'
+        list: true    # 🟢 Forces PagesCMS to treat this block as a repeatable layout list
         fields:
           - name: question
             label: "Guest Question Text String"
