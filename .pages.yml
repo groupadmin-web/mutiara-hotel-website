@@ -289,7 +289,8 @@ content:
       - name: faqs
         label: "Manage Question & Answer List Entries"
         type: list
-        minimize: true
+        allow_add: true
+        summary: '{{fields.question}}'
         fields:
           - name: question
             label: "Guest Question Text String"
