@@ -37,6 +37,7 @@ const events = Array.isArray(eventData) ? eventData : [];
             main_feature,
             features,
             label,
+            hall_type
           } = event;
 
           return (
@@ -70,9 +71,11 @@ const events = Array.isArray(eventData) ? eventData : [];
                       </span>
                     </div>
                   )}
-                  <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-md font-sans">
-                    Theater Seating Setup
-                  </div>
+                  {hall_type && (
+                    <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-md font-sans">
+                      {hall_type}
+                    </div>
+                  )}
                 </div>
 
                 {/* Space Summary Metrics Row */}

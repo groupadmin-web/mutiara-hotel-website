@@ -130,6 +130,10 @@ content:
       - name: image
         label: "Main Feature Photo (Cover)"
         type: image
+      - name: hall_type
+        label: "Hall Type Label (e.g., Theater Seating)"
+        type: string
+        required: false
       - name: label
         label: "Small Label (e.g., Premium Space Assets)"
         type: string
