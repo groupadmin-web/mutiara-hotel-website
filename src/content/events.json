@@ -1,14 +1,12 @@
 [
   {
-    "hall_name": "Contoh",
-    "image": "/images/depositphotos_247108702-stock-photo-bandung-indonesia-february-2019-aerial.jpg",
-    "hall_type": "Class Room",
-    "label": "Muat Banyak",
-    "capacity_theater": "250",
-    "main_feature": "Projector",
-    "features": [
-      "Air Conditioning",
-      "Projector"
-    ]
+    "hall_name": "Magnolia Room",
+    "capacity_theater": "230",
+    "main_feature": "Projector & Screen, Sound System and Microphone, Flipchart(5pcs paper), Candies, White Board, 2pcs Board Maker, Paper & Pencil, Mineral Water"
+  },
+  {
+    "hall_name": "Rosella Room",
+    "capacity_theater": "230",
+    "main_feature": "Ergonomic Executive Seating & Independent Climate Controls"
   }
 ]
