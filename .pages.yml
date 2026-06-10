@@ -307,7 +307,8 @@ content:
         default: "Find quick answers about our luxury accommodations, boutique booking terms, and heritage convention spaces."
       - name: faqs
         label: "Manage Question & Answer List Entries"
-        type: list
+        type: object  # 🟢 Changed from 'list' to 'object'
+        list: true    # 🟢 Forces PagesCMS to treat this block as a repeatable layout list
         fields:
           - name: question
             label: "Guest Question Text String"
