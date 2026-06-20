@@ -5,12 +5,17 @@
     "hall_type": "Class Room ",
     "gallery1": "/images/MEETING ROOM 3.jpg",
     "gallery2": "/images/Ruang duduk 3.jpg",
-    "gallery3": "/images/Ruang duduk 4.jpg",
+    "gallery3": "/images/MEETING ROOM meja 1.jpg",
     "capacity_theater": "Class Room : 230",
     "main_feature": "Projector & Screen, Sound System and Microphone, Flipchart(5pcs paper), Candies, White Board, 2pcs Board Maker, Paper & Pencil, Mineral Water"
   },
   {
     "hall_name": "Rosella Room",
+    "image": "/images/MEETING ROOM B 3.jpg",
+    "hall_type": "U-Shape",
+    "gallery1": "/images/MEETING ROOM B 2.jpg",
+    "gallery2": "/images/Ruang duduk B 1.jpg",
+    "gallery3": "/images/MEETING ROOM pensil.jpg",
     "capacity_theater": "230",
     "main_feature": "Ergonomic Executive Seating & Independent Climate Controls"
   }
