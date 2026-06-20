@@ -1,8 +1,12 @@
 [
   {
     "hall_name": "Magnolia Room",
-    "hall_type": "Class",
-    "capacity_theater": "230",
+    "image": "/images/MEETING ROOM 1.jpg",
+    "hall_type": "Class Room ",
+    "gallery1": "/images/MEETING ROOM 3.jpg",
+    "gallery2": "/images/Ruang duduk 3.jpg",
+    "gallery3": "/images/Ruang duduk 4.jpg",
+    "capacity_theater": "Class Room : 230",
     "main_feature": "Projector & Screen, Sound System and Microphone, Flipchart(5pcs paper), Candies, White Board, 2pcs Board Maker, Paper & Pencil, Mineral Water"
   },
   {
