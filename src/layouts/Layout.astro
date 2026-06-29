@@ -5,7 +5,7 @@ import { SEO } from "astro-seo";
 import Footer from "@/components/footer.astro";
 import Navbar from "@/components/navbar/navbar.astro";
 import "@fontsource-variable/inter/index.css";
-import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource-variable/bricolage-grotesque/index.css";
 import "../styles/global.css";
 
 // Load the strict JSON list configuration managed under your pages.yml
@@ -31,7 +31,8 @@ const makeTitle = title
 // CODESYNC: Pull BOTH the "title" and the "view" fields dynamically from your CMS JSON payload
 const showcaseItems = Array.isArray(roomsData) ? roomsData : [];
 
-const protectedCmsStrings = showcaseItems.reduce((acc, item) => {
+// Explicitly typed 'acc' as string[] inside the reducer
+const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
   if (item?.title) acc.push(item.title.trim().toLowerCase());
   if (item?.view) acc.push(item.view.trim().toLowerCase());
   return acc;
@@ -49,28 +50,40 @@ const protectedCmsStrings = showcaseItems.reduce((acc, item) => {
 
     <meta name="generator" content={Astro.generator} />
 
-      <SEO
-        title={makeTitle}
-        description="Welcome to Mutiara Hotel. Book your stay with us directly for premium service and accommodation."
-        canonical={canonicalURL}
-        openGraph={{
-          basic: {
-            url: canonicalURL,
-            type: "website",
-            title: makeTitle, // 🌟 Uses your dynamic page title formatting
-            image: "https://www.mutiarahotel.com/opengraph.jpg",
-          },
-          optional: {
-            siteName: "Mutiara Hotel", // ⚡ THE FIX: Forces WhatsApp to overwrite the "Astro" framework name fallback!
-          },
-        }}
-      />
+    <SEO
+      title={makeTitle}
+      description="Welcome to Mutiara Hotel. Book your stay with us directly for premium service and accommodation."
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          url: canonicalURL,
+          type: "website",
+          title: makeTitle, // 🌟 Uses your dynamic page title formatting
+          image: "https://www.mutiarahotel.com/opengraph.jpg",
+        },
+        optional: {
+          siteName: "Mutiara Hotel", // ⚡ THE FIX: Forces WhatsApp to overwrite the "Astro" framework name fallback!
+        },
+      }}
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap"
       rel="stylesheet"
     />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCJ9J3849"
+    ></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-ZPCJ9J3849"); // TODO: Replace both G-ZPCJ9J3849 occurrences with your real GA4 ID!
+    </script>
   </head>
   <body>
     {
