@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Point to your actual live hotel sitemap
-Sitemap: https://www.mutiarahotel.com/sitemap.xml
+Sitemap: https://www.mutiarahotel.com/sitemap-index.xml
 
 # ====================================================================
 # AI ENGINE DISCOVERY & RETRIEVAL
@@ -24,4 +24,4 @@ User-agent: anthropic-ai
 Allow: /
 
 # AI Information Blueprint
-Info: https://www.mutiarahotel.com/llms.txt
+# Info: https://www.mutiarahotel.com/llms.txt
