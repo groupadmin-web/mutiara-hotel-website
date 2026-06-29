@@ -1,7 +1,10 @@
 {
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
-    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": "./",
+    "target": "ESNext",
+    "module": "ESNext",
     "strictNullChecks": true,
     "types": ["astro/client"],
     "paths": {
