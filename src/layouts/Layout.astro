@@ -73,7 +73,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
       rel="stylesheet"
     />
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZPCJ9J3849"
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-NGDWFBNMPK"
     ></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
@@ -82,7 +82,12 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
       }
       gtag("js", new Date());
 
-      gtag("config", "G-ZPCJ9J3849"); // TODO: Replace both G-ZPCJ9J3849 occurrences with your real GA4 ID!
+      // Support both initial load AND Astro client-side View Transitions
+      document.addEventListener("astro:page-load", () => {
+        gtag("config", "G-NGDWFBNMPK", {
+          page_path: window.location.pathname,
+        });
+      });
     </script>
   </head>
   <body>
