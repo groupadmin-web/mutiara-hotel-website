@@ -29,7 +29,7 @@ const menuitems: MenuItem[] = [
 ];
 ---
 
-<!-- EXTERNAL ALARIC WIDGET STYLES (MATCHES SUKAJADI WIDGET2) -->
+<!-- EXTERNAL ALARIC WIDGET STYLES -->
 <link
   rel="stylesheet"
   href="https://static.alaric.id/widget2/daterangepicker.min.css"
@@ -82,6 +82,23 @@ const menuitems: MenuItem[] = [
 
   .date-picker-wrapper .month-wrapper table .day.checked {
     background-color: #d97706 !important;
+  }
+
+  /* RENDER PRICE TAG BELOW DAY NUMBERS IN CALENDAR */
+  .date-picker-wrapper .month-wrapper table .day[data-custom]:after {
+    content: attr(data-custom);
+    display: block;
+    font-size: 9px;
+    line-height: 10px;
+    font-weight: 600;
+    margin-top: 2px;
+    opacity: 0.95;
+  }
+
+  .date-picker-wrapper .day.checked[data-custom]:after,
+  .date-picker-wrapper .day.first-date-selected[data-custom]:after,
+  .date-picker-wrapper .day.last-date-selected[data-custom]:after {
+    color: #ffffff !important;
   }
 
   /* STRICT ICON BOUNDING RULES TO PREVENT OVERSIZED VECTOR OVERFLOWS */
@@ -175,7 +192,7 @@ const menuitems: MenuItem[] = [
           <!-- ALARIC BOOKING WIDGET (MUTIARA HOTEL - MHBH) -->
           <div
             class="w-full bg-white border-t border-slate-200 pt-3 pb-1 mt-2 notranslate flex justify-center">
-            <!-- DESKTOP WIDGET VIEW (CENTERED UNDER NAV MENU) -->
+            <!-- DESKTOP WIDGET VIEW -->
             <div
               class="containerrr calcal hidden md:flex justify-center items-center">
               <form
@@ -196,7 +213,7 @@ const menuitems: MenuItem[] = [
                 <input type="hidden" name="BookingForm[uid]" value="" />
 
                 <div class="bx1 flex items-center justify-center gap-6">
-                  <!-- EDITABLE DATE RANGE SELECTOR -->
+                  <!-- DATE RANGE SELECTOR -->
                   <div
                     class="box alrc_checkin_checkout cursor-pointer select-none group/box flex items-center gap-2 py-1 px-2 rounded hover:bg-slate-50 transition-colors">
                     <img
@@ -206,7 +223,7 @@ const menuitems: MenuItem[] = [
                     />
 
                     <div class="flex items-center gap-3 pointer-events-none">
-                      <!-- CHECK-IN COLUMN -->
+                      <!-- CHECK-IN -->
                       <div
                         class="flex flex-col items-center justify-center text-center">
                         <p
@@ -222,7 +239,7 @@ const menuitems: MenuItem[] = [
                         >-</span
                       >
 
-                      <!-- CHECK-OUT COLUMN -->
+                      <!-- CHECK-OUT -->
                       <div
                         class="flex flex-col items-center justify-center text-center">
                         <p
@@ -236,7 +253,7 @@ const menuitems: MenuItem[] = [
                     </div>
                   </div>
 
-                  <!-- EDITABLE GUEST COUNT SELECTOR -->
+                  <!-- GUEST COUNT SELECTOR -->
                   <div
                     class="box relative select-none group/box flex flex-col items-center">
                     <p
@@ -301,7 +318,7 @@ const menuitems: MenuItem[] = [
                     </div>
                   </div>
 
-                  <!-- EDITABLE PROMO CODE INPUT -->
+                  <!-- PROMO CODE INPUT -->
                   <div class="box flex flex-col items-center">
                     <p
                       class="mb-1 text-[10px] font-bold text-slate-600 uppercase tracking-wider text-center">
@@ -547,6 +564,16 @@ const menuitems: MenuItem[] = [
       );
     }
 
+    function applyPricesToCalendar($wrapper) {
+      if (!$wrapper || !$wrapper.length) return;
+      $wrapper.find("td > div.day").each(function () {
+        var time = $(this).attr("time");
+        if (time) {
+          $(this).attr("data-custom", getValueRoomPrice(time));
+        }
+      });
+    }
+
     var qty_adult = 2;
     var today = new Date();
     var tommorrow = new Date(today.getTime() + 86400000);
@@ -615,6 +642,8 @@ const menuitems: MenuItem[] = [
       $(".alrc_checkin_checkout")
         .dateRangePicker({
           separator: " to ",
+          container: ".calcal",
+          showCustomValues: true,
           autoClose: true,
           stickyMonths: true,
           selectForward: true,
@@ -638,32 +667,50 @@ const menuitems: MenuItem[] = [
         })
         .bind("datepicker-opened", function () {
           var $this = $(this).closest(".calcal").find(".date-picker-wrapper");
-          $this.find("td > div.day").each(function () {
-            var time = $(this).attr("time");
-            if (time) {
-              $(this).attr("data-custom", getValueRoomPrice(time));
-            }
-          });
+          applyPricesToCalendar($this);
         });
 
-      $(".alrc_checkin_checkout_mobile").dateRangePicker({
-        inline: true,
-        container: ".m-calcal-mobile",
-        autoClose: true,
-        customArrowPrevSymbol: '<span class="alrc-arrow-prev"></span>',
-        customArrowNextSymbol: '<span class="alrc-arrow-next"></span>',
-        setValue: function (s, s1, s2) {
-          $(".alrc_checkin_txt").html(getDateFormat(new Date(s1)));
-          $(".alrc_checkout_txt").html(getDateFormat(new Date(s2)));
+      $(".alrc_checkin_checkout_mobile")
+        .dateRangePicker({
+          inline: true,
+          container: ".m-calcal-mobile",
+          showCustomValues: true,
+          autoClose: true,
+          customArrowPrevSymbol: '<span class="alrc-arrow-prev"></span>',
+          customArrowNextSymbol: '<span class="alrc-arrow-next"></span>',
+          setValue: function (s, s1, s2) {
+            $(".alrc_checkin_txt").html(getDateFormat(new Date(s1)));
+            $(".alrc_checkout_txt").html(getDateFormat(new Date(s2)));
 
-          $("input[name='BookingForm[checkin]']").val(
-            formatDateDmy(new Date(s1)),
-          );
-          $("input[name='BookingForm[checkout]']").val(
-            formatDateDmy(new Date(s2)),
-          );
-        },
-      });
+            $("input[name='BookingForm[checkin]']").val(
+              formatDateDmy(new Date(s1)),
+            );
+            $("input[name='BookingForm[checkout]']").val(
+              formatDateDmy(new Date(s2)),
+            );
+          },
+        })
+        .bind("datepicker-opened", function () {
+          var $this = $(this).closest(".m-calcal").find(".date-picker-wrapper");
+          applyPricesToCalendar($this);
+        });
+
+      $(document)
+        .off("click.alaricNav")
+        .on(
+          "click.alaricNav",
+          ".date-picker-wrapper .next, .date-picker-wrapper .prev",
+          function () {
+            var $calcal = $(this)
+              .closest(".calcal")
+              .find(".date-picker-wrapper");
+            var $mcalcal = $(this)
+              .closest(".m-calcal")
+              .find(".date-picker-wrapper");
+            applyPricesToCalendar($calcal);
+            applyPricesToCalendar($mcalcal);
+          },
+        );
     }
 
     $(".alrc-book-mobile")
