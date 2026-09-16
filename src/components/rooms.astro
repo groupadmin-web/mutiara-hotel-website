@@ -1,6 +1,9 @@
 ---
 // src/components/rooms.astro
-import roomsData from "../content/rooms.json";
+import { getCollection } from "astro:content";
+
+// Fetch all room markdown files dynamically from the CMS content collection folder
+const cmsRooms = await getCollection("rooms");
 ---
 
 <link
@@ -32,10 +35,10 @@ import roomsData from "../content/rooms.json";
       </p>
     </div>
 
-    {/* Dynamic Grid from rooms.json */}
+    {/* Dynamic CMS Grid */}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {
-        roomsData.map((room) => {
+        cmsRooms.map((room) => {
           const {
             title,
             description,
@@ -44,26 +47,12 @@ import roomsData from "../content/rooms.json";
             bed_type,
             view,
             features,
-            booking_url,
-            room_gallery1,
-            room_gallery2,
-            room_gallery3,
-          } = room;
-
-          const gallery = [
-            image,
-            room_gallery1,
-            room_gallery2,
-            room_gallery3,
-          ].filter(Boolean);
-
-          const bookingLink =
-            booking_url || "https://booking.mutiarahotel.com/";
+          } = room.data;
 
           return (
             <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1">
               <div>
-                {/* ROOM IMAGE PREVIEW */}
+                {/* DYNAMIC CMS IMAGE INTERFACE */}
                 <div class="relative overflow-hidden aspect-[4/3] bg-slate-200">
                   {image ? (
                     <img
@@ -72,6 +61,7 @@ import roomsData from "../content/rooms.json";
                       class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
+                    /* Fallback placeholder if staff hasn't uploaded an image yet */
                     <div class="w-full h-full flex flex-col items-center justify-center bg-slate-900 text-slate-400 p-6 text-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -93,36 +83,12 @@ import roomsData from "../content/rooms.json";
                       </span>
                     </div>
                   )}
-
-                  {view && (
-                    <span class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">
-                      {view}
-                    </span>
-                  )}
                 </div>
 
-                {/* Metadata Row */}
-                <div class="flex items-center justify-between border-b border-slate-50 bg-slate-50/50 px-6 py-3 text-xs text-slate-500 font-medium uppercase tracking-wider">
-                  {bed_type && (
-                    <span class="flex items-center gap-1.5">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="2"
-                        stroke="currentColor"
-                        class="w-4 h-4 text-slate-400">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-                        />
-                      </svg>
-                      {bed_type}
-                    </span>
-                  )}
+                {/* Room Metadata Details Row */}
+                <div class="flex items-center justify-between border-b border-slate-50 bg-slate-50/50 px-6 py-3 text-xs text-slate-500 font-medium">
                   {capacity && (
-                    <span class="flex items-center gap-1.5 text-right">
+                    <span class="flex items-center gap-1.5">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -139,24 +105,48 @@ import roomsData from "../content/rooms.json";
                       {capacity}
                     </span>
                   )}
+                  {bed_type && (
+                    <span class="flex items-center gap-1.5 text-right">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                        class="w-4 h-4 text-slate-400">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                        />
+                      </svg>
+                      {bed_type}
+                    </span>
+                  )}
                 </div>
 
-                {/* Content */}
+                {/* Room Summary Content */}
                 <div class="p-6">
+                  {/* FIXED: Added translate="no" to protect CMS room title fields */}
                   <h3
-                    class="font-serif font-bold text-xl text-slate-900 mb-3 uppercase tracking-wide"
+                    class="font-serif font-bold text-xl text-slate-900 mb-2 group-hover:text-amber-600 transition-colors"
                     translate="no">
                     {title}
                   </h3>
+                  {view && (
+                    <p class="text-[11px] text-amber-600 font-bold tracking-wider uppercase mb-3 flex items-center gap-1">
+                      <span>•</span> {view}
+                    </p>
+                  )}
                   <p class="text-slate-600 text-xs md:text-sm leading-relaxed mb-6">
                     {description}
                   </p>
 
-                  {/* Feature Tags */}
+                  {/* Features Pill Matrix */}
                   {features && (
                     <div class="flex flex-wrap gap-2">
                       {features.map((feature: string) => (
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-200/60 px-2.5 py-1 rounded-md">
+                        <span class="text-[11px] font-semibold text-slate-700 bg-slate-100 border border-slate-200/60 px-2.5 py-1 rounded-md">
                           {feature}
                         </span>
                       ))}
@@ -165,20 +155,28 @@ import roomsData from "../content/rooms.json";
                 </div>
               </div>
 
-              {/* VIEW GALLERY BUTTON */}
+              {/* Direct Reservation Link */}
               <div class="p-6 pt-0 mt-auto">
-                <button
-                  type="button"
-                  class="room-gallery-btn w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs tracking-widest uppercase py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
-                  data-room={JSON.stringify({
-                    title,
-                    description,
-                    gallery,
-                    features,
-                    booking_url: bookingLink,
-                  })}>
-                  VIEW GALLERY
-                </button>
+                <a
+                  href="https://m.mutiarahotel.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full bg-slate-900 hover:bg-amber-600 text-white font-bold text-xs tracking-wider uppercase py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-sm group-hover:shadow-md">
+                  <span>Reserve This Suite</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2.5"
+                    stroke="currentColor"
+                    class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                    />
+                  </svg>
+                </a>
               </div>
             </div>
           );
@@ -186,155 +184,4 @@ import roomsData from "../content/rooms.json";
       }
     </div>
   </div>
-
-  {/* GALLERY MODAL WINDOW WITH BOOK NOW BUTTON */}
-  <div
-    id="room-gallery-modal"
-    class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-8">
-    <div
-      class="bg-white rounded-2xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col md:flex-row shadow-2xl relative">
-      {/* Close Modal Button */}
-      <button
-        id="close-modal-btn"
-        type="button"
-        class="absolute top-4 right-4 z-20 bg-slate-100 hover:bg-slate-200 text-slate-700 p-2 rounded-full transition-colors">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="w-5 h-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-
-      {/* Gallery Section */}
-      <div
-        class="w-full md:w-3/5 bg-slate-900 p-4 flex flex-col justify-between">
-        <div class="relative aspect-[4/3] rounded-xl overflow-hidden bg-black">
-          <img
-            id="modal-main-image"
-            src=""
-            alt="Room Gallery"
-            class="w-full h-full object-cover transition-all duration-300"
-          />
-        </div>
-        <div id="modal-thumbnails" class="grid grid-cols-4 gap-2 mt-4">
-          {/* Gallery Thumbnails injected dynamically */}
-        </div>
-      </div>
-
-      {/* Info & Book Now Section */}
-      <div
-        class="w-full md:w-2/5 p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-white">
-        <div>
-          <h3
-            id="modal-title"
-            class="text-2xl font-serif font-bold text-slate-900 uppercase tracking-wide">
-          </h3>
-          <p
-            id="modal-description"
-            class="mt-4 text-xs md:text-sm text-slate-600 leading-relaxed">
-          </p>
-
-          <div id="modal-features" class="mt-6 flex flex-wrap gap-2">
-            {/* Dynamic Feature Tags */}
-          </div>
-        </div>
-
-        {/* DYNAMIC BOOK NOW BUTTON IN MODAL */}
-        <div class="mt-8 pt-4 border-t border-slate-100">
-          <a
-            id="modal-booking-btn"
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs tracking-widest uppercase py-3.5 px-6 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 text-center">
-            <span>BOOK NOW</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2.5"
-              stroke="currentColor"
-              class="w-4 h-4">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"></path>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
-
-<script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
-    const modal = document.getElementById("room-gallery-modal");
-    const closeModalBtn = document.getElementById("close-modal-btn");
-    const mainImg = document.getElementById("modal-main-image");
-    const thumbnailsContainer = document.getElementById("modal-thumbnails");
-    const modalTitle = document.getElementById("modal-title");
-    const modalDesc = document.getElementById("modal-description");
-    const modalFeatures = document.getElementById("modal-features");
-    const modalBookingBtn = document.getElementById("modal-booking-btn");
-
-    document.querySelectorAll(".room-gallery-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const data = JSON.parse(btn.getAttribute("data-room"));
-
-        modalTitle.textContent = data.title;
-        modalDesc.textContent = data.description;
-        modalBookingBtn.href =
-          data.booking_url || "https://booking.mutiarahotel.com/";
-
-        // Render Thumbnails
-        if (data.gallery && data.gallery.length > 0) {
-          mainImg.src = data.gallery[0];
-          thumbnailsContainer.innerHTML = "";
-
-          data.gallery.forEach((imgUrl, index) => {
-            const thumb = document.createElement("img");
-            thumb.src = imgUrl;
-            thumb.className = `w-full aspect-video object-cover rounded-lg cursor-pointer border-2 transition-all ${index === 0 ? "border-amber-500" : "border-transparent opacity-70 hover:opacity-100"}`;
-            thumb.addEventListener("click", () => {
-              mainImg.src = imgUrl;
-              Array.from(thumbnailsContainer.children).forEach((c) =>
-                c.classList.replace("border-amber-500", "border-transparent"),
-              );
-              thumb.classList.replace("border-transparent", "border-amber-500");
-            });
-            thumbnailsContainer.appendChild(thumb);
-          });
-        }
-
-        // Render Features
-        modalFeatures.innerHTML = "";
-        if (data.features) {
-          data.features.forEach((feat) => {
-            const tag = document.createElement("span");
-            tag.className =
-              "text-[10px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2 py-1 rounded-md";
-            tag.textContent = feat;
-            modalFeatures.appendChild(tag);
-          });
-        }
-
-        modal.classList.remove("hidden");
-      });
-    });
-
-    closeModalBtn?.addEventListener("click", () =>
-      modal.classList.add("hidden"),
-    );
-    modal?.addEventListener("click", (e) => {
-      if (e.target === modal) modal.classList.add("hidden");
-    });
-  });
-</script>
