@@ -84,21 +84,6 @@ const menuitems: MenuItem[] = [
     background-color: #d97706 !important;
   }
 
-  /* RATE TAG STYLING INSIDE CALENDAR CELLS */
-  .date-picker-wrapper table .day .rate-tag {
-    display: block;
-    font-size: 9px;
-    font-weight: 700;
-    color: #d97706;
-    line-height: 1;
-    margin-top: 2px;
-  }
-  .date-picker-wrapper table .day.checked .rate-tag,
-  .date-picker-wrapper table .day.first-date-selected .rate-tag,
-  .date-picker-wrapper table .day.last-date-selected .rate-tag {
-    color: #ffffff !important;
-  }
-
   /* STRICT ICON BOUNDING RULES TO PREVENT OVERSIZED VECTOR OVERFLOWS */
   .alrc-fixed-icon {
     width: 18px !important;
@@ -211,7 +196,7 @@ const menuitems: MenuItem[] = [
                 <input type="hidden" name="BookingForm[uid]" value="" />
 
                 <div class="bx1 flex items-center justify-center gap-6">
-                  <!-- EDITABLE DATE RANGE SELECTOR (SPLIT COLUMNS WITH CENTER-ALIGNED LABELS) -->
+                  <!-- EDITABLE DATE RANGE SELECTOR -->
                   <div
                     class="box alrc_checkin_checkout cursor-pointer select-none group/box flex items-center gap-2 py-1 px-2 rounded hover:bg-slate-50 transition-colors">
                     <img
@@ -338,7 +323,7 @@ const menuitems: MenuItem[] = [
                     </p>
                   </div>
 
-                  <!-- SUBMIT BUTTON -->
+                  <!-- SUBMIT BUTTON (BRAND AMBER MATCH) -->
                   <div class="box flex items-center">
                     <input
                       class="fs-15x cursor-pointer px-5 py-2 text-xs font-bold text-white bg-amber-600 hover:bg-amber-700 rounded uppercase shadow-sm transition-colors"
@@ -482,12 +467,15 @@ const menuitems: MenuItem[] = [
 <script
   is:inline
   src="https://static.alaric.id/widget2/jquery.daterangepicker.js"></script>
+<script
+  is:inline
+  src="https://static.alaric.id/widget2/app.alaric.booking.js?v=1.2"></script>
 
 <script is:inline>
   function setupAlaricWidget() {
     if (typeof jQuery === "undefined" || typeof moment === "undefined") return;
 
-    var ratesMap = {};
+    var dataPrice = null;
 
     function formatDate(date) {
       var d = new Date(date),
@@ -511,6 +499,19 @@ const menuitems: MenuItem[] = [
       if (day.length < 2) day = "0" + day;
 
       return [day, month, year].join("-");
+    }
+
+    function getValueRoomPrice(timestamp) {
+      var date_ob = new Date(parseInt(timestamp));
+      var ymd = formatDate(date_ob);
+
+      if (dataPrice && dataPrice[ymd]) {
+        if (dataPrice[ymd].allotment) {
+          return dataPrice[ymd].formatted_price;
+        }
+        return "sold";
+      }
+      return "";
     }
 
     function getDateFormat(date) {
@@ -543,24 +544,6 @@ const menuitems: MenuItem[] = [
       );
     }
 
-    function injectRatesIntoCalendar($wrapper) {
-      if (!$wrapper || !$wrapper.length) return;
-      $wrapper.find("table .day").each(function () {
-        var $td = $(this);
-        var timeAttr = $td.attr("time");
-        if (!timeAttr) return;
-
-        var d = new Date(parseInt(timeAttr, 10));
-        if (isNaN(d.getTime())) return;
-
-        var dateKey = formatDate(d);
-        if (ratesMap && ratesMap[dateKey]) {
-          $td.find(".rate-tag").remove();
-          $td.append('<span class="rate-tag">' + ratesMap[dateKey] + "</span>");
-        }
-      });
-    }
-
     var qty_adult = 2;
     var today = new Date();
     var tommorrow = new Date(today.getTime() + 86400000);
@@ -572,19 +555,19 @@ const menuitems: MenuItem[] = [
     $("input[name='BookingForm[checkout]']").val(formatDateDmy(tommorrow));
     $("input[name='BookingForm[adults]']").val(qty_adult);
 
-    // FETCH ALARIC RATES FOR MHBH (MUTIARA)
+    // FETCH ALARIC RATES FOR MHBH (MUTIARA HOTEL)
     $.ajax({
       url: "https://webapi-sg.alaric.id/mhb/x/calendar/MHBH",
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader(
+          "Authorization",
+          "Basic " + btoa("calendar:g486dJ2wmW"),
+        );
+      },
+      crossDomain: true,
       type: "GET",
-      dataType: "json",
-      success: function (response) {
-        if (response && typeof response === "object") {
-          ratesMap = response.data || response;
-          var $picker = $(".date-picker-wrapper");
-          if ($picker.is(":visible")) {
-            injectRatesIntoCalendar($picker);
-          }
-        }
+      success: function (data) {
+        dataPrice = data;
       },
     });
 
@@ -651,20 +634,13 @@ const menuitems: MenuItem[] = [
           },
         })
         .bind("datepicker-opened", function () {
-          var $wrapper = $(this)
-            .closest(".calcal")
-            .find(".date-picker-wrapper");
-          setTimeout(function () {
-            injectRatesIntoCalendar($wrapper);
-          }, 50);
-        })
-        .bind("datepicker-change", function () {
-          var $wrapper = $(this)
-            .closest(".calcal")
-            .find(".date-picker-wrapper");
-          setTimeout(function () {
-            injectRatesIntoCalendar($wrapper);
-          }, 50);
+          var $this = $(this).closest(".calcal").find(".date-picker-wrapper");
+          $this.find("td > div.day").each(function () {
+            var time = $(this).attr("time");
+            if (time) {
+              $(this).attr("data-custom", getValueRoomPrice(time));
+            }
+          });
         });
 
       $(".alrc_checkin_checkout_mobile").dateRangePicker({
