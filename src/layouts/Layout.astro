@@ -45,7 +45,6 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
 
-    {/* Formatted directly to render your local custom brand PNG icon asset */}
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
@@ -58,11 +57,11 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
         basic: {
           url: canonicalURL,
           type: "website",
-          title: makeTitle, // 🌟 Uses your dynamic page title formatting
+          title: makeTitle,
           image: "https://www.mutiarahotel.com/opengraph.jpg",
         },
         optional: {
-          siteName: "Mutiara Hotel", // ⚡ THE FIX: Forces WhatsApp to overwrite the "Astro" framework name fallback!
+          siteName: "Mutiara Hotel",
         },
       }}
     />
@@ -73,10 +72,11 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
       rel="stylesheet"
     />
 
+    <!-- Google Analytics Tag -->
     <script
       is:inline
       async
-      src="https://www.googletagmanager.com/gtag/js?id=G-NGDWFBNMPK"></script>
+      src="https://www.googletagmanager.com/gtag/js?id=G-HYPDVRJXCS"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -84,18 +84,15 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
       }
       gtag("js", new Date());
 
-      // Support both initial load AND Astro client-side View Transitions
+      // Support both initial load AND Astro client-side routing / View Transitions
       document.addEventListener("astro:page-load", () => {
-        gtag("config", "G-NGDWFBNMPK", {
+        gtag("config", "G-HYPDVRJXCS", {
           page_path: window.location.pathname,
         });
       });
     </script>
   </head>
   <body>
-    {
-      /* FIXED LAYER PROFILE: Lifted to z-[60] so it sits over hero sliders, completely visible */
-    }
     <div
       class="fixed top-3 right-3 z-[60] pointer-events-auto sm:top-4 sm:right-6 notranslate select-none">
       <div
@@ -237,7 +234,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
       </svg>
     </a>
 
-    {/* GLOBAL CSS ANTI-THEFT AND LAYOUT RULES */}
+    <!-- GLOBAL CSS ANTI-THEFT AND LAYOUT RULES -->
     <style is:global>
       img {
         content-visibility: auto;
