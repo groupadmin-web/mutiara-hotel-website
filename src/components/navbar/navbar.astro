@@ -29,7 +29,7 @@ const menuitems: MenuItem[] = [
 ];
 ---
 
-<!-- EXTERNAL ALARIC WIDGET STYLES (MATCHES SUKAJADI WIDGET2) -->
+<!-- EXTERNAL ALARIC WIDGET STYLES -->
 <link
   rel="stylesheet"
   href="https://static.alaric.id/widget2/daterangepicker.min.css"
@@ -393,8 +393,7 @@ const menuitems: MenuItem[] = [
                     <div
                       class="alrc_checkin_checkout_mobile cursor-pointer font-bold text-amber-700">
                       <span class="alrc_checkin_txt"></span> - <span
-                        class="alrc_checkout_txt"></span
-                      >
+                        class="alrc_checkout_txt"></span>
                     </div>
                   </div>
                   <div class="m-calcal-mobile w-full"></div>
@@ -455,7 +454,7 @@ const menuitems: MenuItem[] = [
   </Container>
 </header>
 
-<!-- JQUERY, MOMENT.JS & EXACT ALARIC WIDGET2 SCRIPT ENGINE -->
+<!-- JQUERY, MOMENT.JS & ALARIC WIDGET SCRIPTS -->
 <script
   is:inline
   src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"
@@ -467,9 +466,6 @@ const menuitems: MenuItem[] = [
 <script
   is:inline
   src="https://static.alaric.id/widget2/jquery.daterangepicker.js"></script>
-<script
-  is:inline
-  src="https://static.alaric.id/widget2/app.alaric.booking.js?v=1.2"></script>
 
 <script is:inline>
   function setupAlaricWidget() {
@@ -502,11 +498,15 @@ const menuitems: MenuItem[] = [
     }
 
     function getValueRoomPrice(timestamp) {
+      if (!dataPrice) return "";
       var date_ob = new Date(parseInt(timestamp, 10));
       var ymd = formatDate(date_ob);
 
-      if (dataPrice && dataPrice[ymd]) {
-        if (dataPrice[ymd].allotment) {
+      if (dataPrice[ymd]) {
+        if (typeof dataPrice[ymd] === "string") {
+          return dataPrice[ymd];
+        }
+        if (dataPrice[ymd].formatted_price && dataPrice[ymd].allotment) {
           return dataPrice[ymd].formatted_price;
         }
         return "sold";
@@ -561,13 +561,14 @@ const menuitems: MenuItem[] = [
       beforeSend: function (xhr) {
         xhr.setRequestHeader(
           "Authorization",
-          "Basic " + btoa("calendar:g486dJ2wmW")
+          "Basic " + btoa("calendar:g486dJ2wmW"),
         );
       },
       crossDomain: true,
       type: "GET",
-      success: function (data) {
-        dataPrice = data;
+      success: function (res) {
+        // UNWRAP NESTED OBJECT IF API RETURNS { data: { ... } }
+        dataPrice = res && res.data ? res.data : res;
       },
     });
 
@@ -626,10 +627,10 @@ const menuitems: MenuItem[] = [
             $(".alrc_checkout_txt").html(getDateFormat(new Date(s2)));
 
             $("input[name='BookingForm[checkin]']").val(
-              formatDateDmy(new Date(s1))
+              formatDateDmy(new Date(s1)),
             );
             $("input[name='BookingForm[checkout]']").val(
-              formatDateDmy(new Date(s2))
+              formatDateDmy(new Date(s2)),
             );
           },
         })
@@ -654,10 +655,10 @@ const menuitems: MenuItem[] = [
           $(".alrc_checkout_txt").html(getDateFormat(new Date(s2)));
 
           $("input[name='BookingForm[checkin]']").val(
-            formatDateDmy(new Date(s1))
+            formatDateDmy(new Date(s1)),
           );
           $("input[name='BookingForm[checkout]']").val(
-            formatDateDmy(new Date(s2))
+            formatDateDmy(new Date(s2)),
           );
         },
       });
