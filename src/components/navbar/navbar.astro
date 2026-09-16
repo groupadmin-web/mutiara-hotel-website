@@ -1,7 +1,6 @@
 ---
 // src/components/navbar/navbar.astro
 import Container from "@/components/container.astro";
-import Link from "@/components/ui/link.astro";
 import Dropdown from "./dropdown.astro";
 import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
 
@@ -30,7 +29,7 @@ const menuitems: MenuItem[] = [
 ];
 ---
 
-<!-- EXTERNAL ALARIC WIDGET STYLES -->
+<!-- EXTERNAL ALARIC WIDGET STYLES (MATCHES SUKAJADI WIDGET2) -->
 <link
   rel="stylesheet"
   href="https://static.alaric.id/widget2/daterangepicker.min.css"
@@ -394,7 +393,8 @@ const menuitems: MenuItem[] = [
                     <div
                       class="alrc_checkin_checkout_mobile cursor-pointer font-bold text-amber-700">
                       <span class="alrc_checkin_txt"></span> - <span
-                        class="alrc_checkout_txt"></span>
+                        class="alrc_checkout_txt"></span
+                      >
                     </div>
                   </div>
                   <div class="m-calcal-mobile w-full"></div>
@@ -455,7 +455,7 @@ const menuitems: MenuItem[] = [
   </Container>
 </header>
 
-<!-- JQUERY, MOMENT.JS & ALARIC WIDGET SCRIPTS -->
+<!-- JQUERY, MOMENT.JS & EXACT ALARIC WIDGET2 SCRIPT ENGINE -->
 <script
   is:inline
   src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"
@@ -467,6 +467,9 @@ const menuitems: MenuItem[] = [
 <script
   is:inline
   src="https://static.alaric.id/widget2/jquery.daterangepicker.js"></script>
+<script
+  is:inline
+  src="https://static.alaric.id/widget2/app.alaric.booking.js?v=1.2"></script>
 
 <script is:inline>
   function setupAlaricWidget() {
@@ -499,20 +502,14 @@ const menuitems: MenuItem[] = [
     }
 
     function getValueRoomPrice(timestamp) {
-      if (!timestamp || !dataPrice) return "";
       var date_ob = new Date(parseInt(timestamp, 10));
-      if (isNaN(date_ob.getTime())) return "";
-
       var ymd = formatDate(date_ob);
-      if (dataPrice[ymd]) {
-        if (typeof dataPrice[ymd] === "string") {
-          return dataPrice[ymd];
+
+      if (dataPrice && dataPrice[ymd]) {
+        if (dataPrice[ymd].allotment) {
+          return dataPrice[ymd].formatted_price;
         }
-        if (dataPrice[ymd].formatted_price) {
-          return dataPrice[ymd].allotment
-            ? dataPrice[ymd].formatted_price
-            : "sold";
-        }
+        return "sold";
       }
       return "";
     }
@@ -547,20 +544,6 @@ const menuitems: MenuItem[] = [
       );
     }
 
-    function renderCalendarPrices($picker) {
-      if (!$picker || !$picker.length) return;
-      $picker.find("td > div.day").each(function () {
-        var $div = $(this);
-        var timeAttr = $div.attr("time");
-        if (timeAttr) {
-          var price = getValueRoomPrice(timeAttr);
-          if (price) {
-            $div.attr("data-custom", price);
-          }
-        }
-      });
-    }
-
     var qty_adult = 2;
     var today = new Date();
     var tommorrow = new Date(today.getTime() + 86400000);
@@ -578,19 +561,13 @@ const menuitems: MenuItem[] = [
       beforeSend: function (xhr) {
         xhr.setRequestHeader(
           "Authorization",
-          "Basic " + btoa("calendar:g486dJ2wmW"),
+          "Basic " + btoa("calendar:g486dJ2wmW")
         );
       },
       crossDomain: true,
       type: "GET",
-      success: function (res) {
-        if (res) {
-          dataPrice = res.data || res;
-          var $openPicker = $(".date-picker-wrapper");
-          if ($openPicker.is(":visible")) {
-            renderCalendarPrices($openPicker);
-          }
-        }
+      success: function (data) {
+        dataPrice = data;
       },
     });
 
@@ -649,28 +626,21 @@ const menuitems: MenuItem[] = [
             $(".alrc_checkout_txt").html(getDateFormat(new Date(s2)));
 
             $("input[name='BookingForm[checkin]']").val(
-              formatDateDmy(new Date(s1)),
+              formatDateDmy(new Date(s1))
             );
             $("input[name='BookingForm[checkout]']").val(
-              formatDateDmy(new Date(s2)),
+              formatDateDmy(new Date(s2))
             );
           },
         })
         .bind("datepicker-opened", function () {
-          var $wrapper = $(this)
-            .closest(".calcal")
-            .find(".date-picker-wrapper");
-          setTimeout(function () {
-            renderCalendarPrices($wrapper);
-          }, 50);
-        })
-        .bind("datepicker-change", function () {
-          var $wrapper = $(this)
-            .closest(".calcal")
-            .find(".date-picker-wrapper");
-          setTimeout(function () {
-            renderCalendarPrices($wrapper);
-          }, 50);
+          var $this = $(this).closest(".calcal").find(".date-picker-wrapper");
+          $this.find("td > div.day").each(function () {
+            var time = $(this).attr("time");
+            if (time) {
+              $(this).attr("data-custom", getValueRoomPrice(time));
+            }
+          });
         });
 
       $(".alrc_checkin_checkout_mobile").dateRangePicker({
@@ -684,10 +654,10 @@ const menuitems: MenuItem[] = [
           $(".alrc_checkout_txt").html(getDateFormat(new Date(s2)));
 
           $("input[name='BookingForm[checkin]']").val(
-            formatDateDmy(new Date(s1)),
+            formatDateDmy(new Date(s1))
           );
           $("input[name='BookingForm[checkout]']").val(
-            formatDateDmy(new Date(s2)),
+            formatDateDmy(new Date(s2))
           );
         },
       });
