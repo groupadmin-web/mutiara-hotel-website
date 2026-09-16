@@ -72,7 +72,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
       rel="stylesheet"
     />
 
-    <!-- Google Analytics Tag -->
+    <!-- Mutiara Google Analytics Tag -->
     <script
       is:inline
       async
@@ -84,7 +84,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
       }
       gtag("js", new Date());
 
-      // Support both initial load AND Astro client-side routing / View Transitions
+      // Support both initial load AND Astro client-side View Transitions
       document.addEventListener("astro:page-load", () => {
         gtag("config", "G-HYPDVRJXCS", {
           page_path: window.location.pathname,
@@ -93,6 +93,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
     </script>
   </head>
   <body>
+    <!-- LANGUAGE SELECTOR CAPSULE -->
     <div
       class="fixed top-3 right-3 z-[60] pointer-events-auto sm:top-4 sm:right-6 notranslate select-none">
       <div
@@ -105,7 +106,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
 
         <div class="w-[1px] h-2.5 bg-slate-200 hidden xs:inline-block"></div>
 
-        {/* English Toggle */}
+        <!-- English Toggle -->
         <button
           id="global-nav-en"
           type="button"
@@ -137,7 +138,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
 
         <div class="w-[1px] h-2.5 bg-slate-200"></div>
 
-        {/* Indonesian Toggle */}
+        <!-- Indonesian Toggle -->
         <button
           id="global-nav-id"
           type="button"
@@ -159,7 +160,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
 
         <div class="w-[1px] h-2.5 bg-slate-200"></div>
 
-        {/* Chinese Toggle */}
+        <!-- Chinese Toggle -->
         <button
           id="global-nav-zh"
           type="button"
@@ -206,7 +207,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
 
     <Navbar />
 
-    {/* Dynamic Data Bridge for Translation Layer */}
+    <!-- Dynamic Data Bridge for Translation Layer -->
     <main
       id="universal-translation-root"
       data-cms-rooms={JSON.stringify(protectedCmsStrings)}>
@@ -215,7 +216,7 @@ const protectedCmsStrings = showcaseItems.reduce((acc: string[], item) => {
 
     <Footer />
 
-    {/* OBFUSCATED WHATSAPP WIDGET */}
+    <!-- OBFUSCATED WHATSAPP WIDGET -->
     <a
       id="secure-whatsapp-widget"
       href="#"
