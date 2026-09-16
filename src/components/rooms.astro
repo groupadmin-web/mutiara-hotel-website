@@ -32,7 +32,7 @@ import roomsData from "../content/rooms.json";
       </p>
     </div>
 
-    {/* Dynamic JSON Grid */}
+    {/* Dynamic Grid from rooms.json */}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {
         roomsData.map((room) => {
@@ -56,22 +56,15 @@ import roomsData from "../content/rooms.json";
             room_gallery2,
             room_gallery3,
           ].filter(Boolean);
-          const defaultBooking =
+
+          const bookingLink =
             booking_url || "https://booking.mutiarahotel.com/";
 
           return (
             <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1">
               <div>
-                {/* DYNAMIC CMS IMAGE INTERFACE */}
-                <div
-                  class="relative overflow-hidden aspect-[4/3] bg-slate-200 cursor-pointer room-modal-trigger"
-                  data-room={JSON.stringify({
-                    title,
-                    description,
-                    gallery,
-                    features,
-                    booking_url: defaultBooking,
-                  })}>
+                {/* ROOM IMAGE PREVIEW */}
+                <div class="relative overflow-hidden aspect-[4/3] bg-slate-200">
                   {image ? (
                     <img
                       src={image}
@@ -101,35 +94,17 @@ import roomsData from "../content/rooms.json";
                     </div>
                   )}
 
-                  <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span class="bg-white/90 backdrop-blur-sm text-slate-900 text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
-                      View Gallery
-                    </span>
-                  </div>
-                </div>
-
-                {/* Room Metadata Details Row */}
-                <div class="flex items-center justify-between border-b border-slate-50 bg-slate-50/50 px-6 py-3 text-xs text-slate-500 font-medium">
-                  {capacity && (
-                    <span class="flex items-center gap-1.5">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="2"
-                        stroke="currentColor"
-                        class="w-4 h-4 text-slate-400">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                        />
-                      </svg>
-                      {capacity}
+                  {view && (
+                    <span class="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">
+                      {view}
                     </span>
                   )}
+                </div>
+
+                {/* Metadata Row */}
+                <div class="flex items-center justify-between border-b border-slate-50 bg-slate-50/50 px-6 py-3 text-xs text-slate-500 font-medium uppercase tracking-wider">
                   {bed_type && (
-                    <span class="flex items-center gap-1.5 text-right">
+                    <span class="flex items-center gap-1.5">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -146,29 +121,42 @@ import roomsData from "../content/rooms.json";
                       {bed_type}
                     </span>
                   )}
+                  {capacity && (
+                    <span class="flex items-center gap-1.5 text-right">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                        class="w-4 h-4 text-slate-400">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                        />
+                      </svg>
+                      {capacity}
+                    </span>
+                  )}
                 </div>
 
-                {/* Room Summary Content */}
+                {/* Content */}
                 <div class="p-6">
                   <h3
-                    class="font-serif font-bold text-xl text-slate-900 mb-2 group-hover:text-amber-600 transition-colors"
+                    class="font-serif font-bold text-xl text-slate-900 mb-3 uppercase tracking-wide"
                     translate="no">
                     {title}
                   </h3>
-                  {view && (
-                    <p class="text-[11px] text-amber-600 font-bold tracking-wider uppercase mb-3 flex items-center gap-1">
-                      <span>•</span> {view}
-                    </p>
-                  )}
                   <p class="text-slate-600 text-xs md:text-sm leading-relaxed mb-6">
                     {description}
                   </p>
 
-                  {/* Features Pill Matrix */}
+                  {/* Feature Tags */}
                   {features && (
                     <div class="flex flex-wrap gap-2">
                       {features.map((feature: string) => (
-                        <span class="text-[11px] font-semibold text-slate-700 bg-slate-100 border border-slate-200/60 px-2.5 py-1 rounded-md">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100 border border-slate-200/60 px-2.5 py-1 rounded-md">
                           {feature}
                         </span>
                       ))}
@@ -177,41 +165,20 @@ import roomsData from "../content/rooms.json";
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div class="p-6 pt-0 mt-auto flex gap-3">
+              {/* VIEW GALLERY BUTTON */}
+              <div class="p-6 pt-0 mt-auto">
                 <button
                   type="button"
-                  class="room-modal-trigger w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs uppercase py-3 rounded-xl transition-all duration-300 text-center"
+                  class="room-gallery-btn w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs tracking-widest uppercase py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
                   data-room={JSON.stringify({
                     title,
                     description,
                     gallery,
                     features,
-                    booking_url: defaultBooking,
+                    booking_url: bookingLink,
                   })}>
-                  Gallery
+                  VIEW GALLERY
                 </button>
-
-                <a
-                  href={defaultBooking}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="w-1/2 bg-slate-900 hover:bg-amber-600 text-white font-bold text-xs tracking-wider uppercase py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-sm group-hover:shadow-md">
-                  <span>Book Now</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="2.5"
-                    stroke="currentColor"
-                    class="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-                    />
-                  </svg>
-                </a>
               </div>
             </div>
           );
@@ -220,17 +187,17 @@ import roomsData from "../content/rooms.json";
     </div>
   </div>
 
-  {/* Interactive Gallery Modal */}
+  {/* GALLERY MODAL WINDOW WITH BOOK NOW BUTTON */}
   <div
     id="room-gallery-modal"
     class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-8">
     <div
-      class="bg-slate-900 rounded-2xl overflow-hidden max-w-5xl w-full max-h-[90vh] flex flex-col md:flex-row shadow-2xl border border-slate-800 relative">
-      {/* Close Button */}
+      class="bg-white rounded-2xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col md:flex-row shadow-2xl relative">
+      {/* Close Modal Button */}
       <button
         id="close-modal-btn"
         type="button"
-        class="absolute top-4 right-4 z-20 bg-white/80 hover:bg-white text-slate-900 p-2 rounded-full transition-colors">
+        class="absolute top-4 right-4 z-20 bg-slate-100 hover:bg-slate-200 text-slate-700 p-2 rounded-full transition-colors">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="w-5 h-5"
@@ -245,25 +212,25 @@ import roomsData from "../content/rooms.json";
         </svg>
       </button>
 
-      {/* Gallery Side */}
-      <div class="w-full md:w-3/5 bg-black p-4 flex flex-col justify-between">
-        <div
-          class="relative aspect-[4/3] rounded-xl overflow-hidden bg-slate-950">
+      {/* Gallery Section */}
+      <div
+        class="w-full md:w-3/5 bg-slate-900 p-4 flex flex-col justify-between">
+        <div class="relative aspect-[4/3] rounded-xl overflow-hidden bg-black">
           <img
             id="modal-main-image"
             src=""
-            alt="Room Preview"
+            alt="Room Gallery"
             class="w-full h-full object-cover transition-all duration-300"
           />
         </div>
         <div id="modal-thumbnails" class="grid grid-cols-4 gap-2 mt-4">
-          {/* Thumbnails injected dynamically */}
+          {/* Gallery Thumbnails injected dynamically */}
         </div>
       </div>
 
-      {/* Info & Book Now Side */}
+      {/* Info & Book Now Section */}
       <div
-        class="w-full md:w-2/5 bg-white p-6 md:p-8 flex flex-col justify-between overflow-y-auto">
+        class="w-full md:w-2/5 p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-white">
         <div>
           <h3
             id="modal-title"
@@ -275,17 +242,18 @@ import roomsData from "../content/rooms.json";
           </p>
 
           <div id="modal-features" class="mt-6 flex flex-wrap gap-2">
-            {/* Feature tags injected dynamically */}
+            {/* Dynamic Feature Tags */}
           </div>
         </div>
 
-        <div class="mt-8 pt-4 border-t border-slate-100 flex justify-end">
+        {/* DYNAMIC BOOK NOW BUTTON IN MODAL */}
+        <div class="mt-8 pt-4 border-t border-slate-100">
           <a
             id="modal-booking-btn"
             href="#"
             target="_blank"
             rel="noopener noreferrer"
-            class="w-full text-center py-3.5 px-6 text-xs font-bold tracking-widest text-white uppercase bg-amber-600 hover:bg-amber-700 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2">
+            class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs tracking-widest uppercase py-3.5 px-6 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 text-center">
             <span>BOOK NOW</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -297,8 +265,7 @@ import roomsData from "../content/rooms.json";
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-              />
+                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"></path>
             </svg>
           </a>
         </div>
@@ -318,15 +285,16 @@ import roomsData from "../content/rooms.json";
     const modalFeatures = document.getElementById("modal-features");
     const modalBookingBtn = document.getElementById("modal-booking-btn");
 
-    document.querySelectorAll(".room-modal-trigger").forEach((trigger) => {
-      trigger.addEventListener("click", () => {
-        const data = JSON.parse(trigger.getAttribute("data-room"));
+    document.querySelectorAll(".room-gallery-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const data = JSON.parse(btn.getAttribute("data-room"));
 
         modalTitle.textContent = data.title;
         modalDesc.textContent = data.description;
-        modalBookingBtn.href = data.booking_url || 'https://booking.mutiarahotel.com/';
+        modalBookingBtn.href =
+          data.booking_url || "https://booking.mutiarahotel.com/";
 
-        // Populate Thumbnails
+        // Render Thumbnails
         if (data.gallery && data.gallery.length > 0) {
           mainImg.src = data.gallery[0];
           thumbnailsContainer.innerHTML = "";
@@ -346,13 +314,13 @@ import roomsData from "../content/rooms.json";
           });
         }
 
-        // Populate Feature Tags
+        // Render Features
         modalFeatures.innerHTML = "";
         if (data.features) {
           data.features.forEach((feat) => {
             const tag = document.createElement("span");
             tag.className =
-              "text-[10px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md";
+              "text-[10px] font-bold uppercase tracking-wider text-slate-700 bg-slate-100 px-2 py-1 rounded-md";
             tag.textContent = feat;
             modalFeatures.appendChild(tag);
           });
