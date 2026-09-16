@@ -29,7 +29,7 @@ const menuitems: MenuItem[] = [
 ];
 ---
 
-<!-- EXTERNAL ALARIC WIDGET STYLES -->
+<!-- EXTERNAL ALARIC WIDGET STYLES (MATCHES SUKAJADI WIDGET2) -->
 <link
   rel="stylesheet"
   href="https://static.alaric.id/widget2/daterangepicker.min.css"
@@ -466,6 +466,9 @@ const menuitems: MenuItem[] = [
 <script
   is:inline
   src="https://static.alaric.id/widget2/jquery.daterangepicker.js"></script>
+<script
+  is:inline
+  src="https://static.alaric.id/widget2/app.alaric.booking.js?v=1.2"></script>
 
 <script is:inline>
   function setupAlaricWidget() {
@@ -567,7 +570,6 @@ const menuitems: MenuItem[] = [
       crossDomain: true,
       type: "GET",
       success: function (res) {
-        // UNWRAP NESTED OBJECT IF API RETURNS { data: { ... } }
         dataPrice = res && res.data ? res.data : res;
       },
     });
