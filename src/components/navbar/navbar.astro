@@ -84,6 +84,22 @@ const menuitems: MenuItem[] = [
     background-color: #d97706 !important;
   }
 
+  /* RATE TAG STYLING IN CALENDAR CELLS */
+  .date-picker-wrapper table .day .rate-tag {
+    display: block !important;
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    color: #d97706 !important;
+    line-height: 1 !important;
+    margin-top: 2px !important;
+  }
+
+  .date-picker-wrapper table .day.checked .rate-tag,
+  .date-picker-wrapper table .day.first-date-selected .rate-tag,
+  .date-picker-wrapper table .day.last-date-selected .rate-tag {
+    color: #ffffff !important;
+  }
+
   /* STRICT ICON BOUNDING RULES TO PREVENT OVERSIZED VECTOR OVERFLOWS */
   .alrc-fixed-icon {
     width: 18px !important;
@@ -393,7 +409,8 @@ const menuitems: MenuItem[] = [
                     <div
                       class="alrc_checkin_checkout_mobile cursor-pointer font-bold text-amber-700">
                       <span class="alrc_checkin_txt"></span> - <span
-                        class="alrc_checkout_txt"></span>
+                        class="alrc_checkout_txt"></span
+                      >
                     </div>
                   </div>
                   <div class="m-calcal-mobile w-full"></div>
@@ -466,9 +483,6 @@ const menuitems: MenuItem[] = [
 <script
   is:inline
   src="https://static.alaric.id/widget2/jquery.daterangepicker.js"></script>
-<script
-  is:inline
-  src="https://static.alaric.id/widget2/app.alaric.booking.js?v=1.2"></script>
 
 <script is:inline>
   function setupAlaricWidget() {
@@ -500,34 +514,11 @@ const menuitems: MenuItem[] = [
       return [day, month, year].join("-");
     }
 
-    function getValueRoomPrice(timestamp) {
-      var date_ob = new Date(parseInt(timestamp));
-      var ymd = formatDate(date_ob);
-
-      if (dataPrice && dataPrice[ymd]) {
-        if (dataPrice[ymd].allotment) {
-          return dataPrice[ymd].formatted_price;
-        }
-        return "sold";
-      }
-      return "";
-    }
-
     function getDateFormat(date) {
       var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       var months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
       ];
 
       var dayName = days[date.getDay()];
@@ -541,6 +532,35 @@ const menuitems: MenuItem[] = [
         " " +
         date.getFullYear()
       );
+    }
+
+    function renderRateTags($container) {
+      if (!$container || !$container.length || !dataPrice) return;
+
+      $container.find("table .day").each(function () {
+        var $td = $(this);
+        var timeAttr = $td.attr("time");
+        if (!timeAttr) return;
+
+        var cellDate = new Date(parseInt(timeAttr, 10));
+        if (isNaN(cellDate.getTime())) return;
+
+        var dateKey = formatDate(cellDate);
+        var priceVal = "";
+
+        if (dataPrice[dateKey]) {
+          if (typeof dataPrice[dateKey] === "string") {
+            priceVal = dataPrice[dateKey];
+          } else if (dataPrice[dateKey].formatted_price && dataPrice[dateKey].allotment) {
+            priceVal = dataPrice[dateKey].formatted_price;
+          }
+        }
+
+        if (priceVal) {
+          $td.find(".rate-tag").remove();
+          $td.append('<span class="rate-tag">' + priceVal + "</span>");
+        }
+      });
     }
 
     var qty_adult = 2;
@@ -560,14 +580,20 @@ const menuitems: MenuItem[] = [
       beforeSend: function (xhr) {
         xhr.setRequestHeader(
           "Authorization",
-          "Basic " + btoa("calendar:g486dJ2wmW"),
+          "Basic " + btoa("calendar:g486dJ2wmW")
         );
       },
       crossDomain: true,
       type: "GET",
-      success: function (data) {
-        dataPrice = data;
-      },
+      success: function (res) {
+        if (res) {
+          dataPrice = res.data || res;
+          var $openPicker = $(".date-picker-wrapper");
+          if ($openPicker.is(":visible")) {
+            renderRateTags($openPicker);
+          }
+        }
+      }
     });
 
     $(document)
@@ -625,21 +651,24 @@ const menuitems: MenuItem[] = [
             $(".alrc_checkout_txt").html(getDateFormat(new Date(s2)));
 
             $("input[name='BookingForm[checkin]']").val(
-              formatDateDmy(new Date(s1)),
+              formatDateDmy(new Date(s1))
             );
             $("input[name='BookingForm[checkout]']").val(
-              formatDateDmy(new Date(s2)),
+              formatDateDmy(new Date(s2))
             );
-          },
+          }
         })
         .bind("datepicker-opened", function () {
-          var $this = $(this).closest(".calcal").find(".date-picker-wrapper");
-          $this.find("td > div.day").each(function () {
-            var time = $(this).attr("time");
-            if (time) {
-              $(this).attr("data-custom", getValueRoomPrice(time));
-            }
-          });
+          var $wrapper = $(this).closest(".calcal").find(".date-picker-wrapper");
+          setTimeout(function () {
+            renderRateTags($wrapper);
+          }, 50);
+        })
+        .bind("datepicker-change", function () {
+          var $wrapper = $(this).closest(".calcal").find(".date-picker-wrapper");
+          setTimeout(function () {
+            renderRateTags($wrapper);
+          }, 50);
         });
 
       $(".alrc_checkin_checkout_mobile").dateRangePicker({
@@ -653,12 +682,12 @@ const menuitems: MenuItem[] = [
           $(".alrc_checkout_txt").html(getDateFormat(new Date(s2)));
 
           $("input[name='BookingForm[checkin]']").val(
-            formatDateDmy(new Date(s1)),
+            formatDateDmy(new Date(s1))
           );
           $("input[name='BookingForm[checkout]']").val(
-            formatDateDmy(new Date(s2)),
+            formatDateDmy(new Date(s2))
           );
-        },
+        }
       });
     }
 
