@@ -9,6 +9,7 @@
     "bed_type": "King-Size Bed or Executive Quad (4 Beds)",
     "capacity": "2 - 4 People",
     "view": "Premium Panoramic View",
+    "booking_url": "https://booking.mutiarahotel.com/en/offers?hotel=MHBH&room=EXC",
     "features": [
       "Air Conditioning",
       "Sumptuous Bedding",
@@ -27,6 +28,7 @@
     "bed_type": "Multiple King & Queen Bed Configurations",
     "capacity": "4 People",
     "view": "Scenic View",
+    "booking_url": "https://booking.mutiarahotel.com/en/offers?hotel=MHBH&room=EXQ",
     "features": [
       "Air Conditioning",
       "Spacious Living Area",
@@ -44,6 +46,7 @@
     "bed_type": "Twin Beds",
     "capacity": "2 People",
     "view": "Standard View",
+    "booking_url": "https://booking.mutiarahotel.com/en/offers?hotel=MHBH&room=BDGR",
     "features": [
       "Air Conditioning",
       "Private Bathroom",
@@ -63,6 +66,7 @@
     "bed_type": "Standard Twin/Double or Triple Beds",
     "capacity": "2 - 3 People",
     "view": "Privacy",
+    "booking_url": "https://booking.mutiarahotel.com/en/offers?hotel=MHBH&room=STD",
     "features": [
       "Air Conditioning",
       "Work Desk & Mirror",
@@ -81,6 +85,7 @@
     "bed_type": "Double/Twin Bed, or Quarto (4 Beds)",
     "capacity": "2 - 4 People",
     "view": "Privacy",
+    "booking_url": "https://booking.mutiarahotel.com/en/offers?hotel=MHBH&room=SUP",
     "features": [
       "Air Conditioning",
       "Modern Amenities",
