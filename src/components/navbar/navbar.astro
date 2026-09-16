@@ -51,6 +51,11 @@ const menuitems: MenuItem[] = [
     z-index: 999999 !important;
   }
 
+  /* HIDE THE UNWANTED "CUSTOM VALUES" FOOTER TEXT */
+  .date-picker-wrapper .custom-top {
+    display: none !important;
+  }
+
   /* BRAND AMBER COLOR SETUP (#d97706) */
   .calcal form .box input[type="submit"] {
     background-color: #d97706 !important;
@@ -522,12 +527,16 @@ const menuitems: MenuItem[] = [
       var date_ob = new Date(parseInt(timestamp, 10));
       var ymd = formatDate(date_ob);
 
-      if (dataPrice[ymd]) {
-        if (typeof dataPrice[ymd] === "string") {
-          return dataPrice[ymd];
+      var entry = dataPrice[ymd];
+      if (entry) {
+        if (typeof entry === "string") {
+          return entry;
         }
-        if (dataPrice[ymd].formatted_price && dataPrice[ymd].allotment) {
-          return dataPrice[ymd].formatted_price;
+        if (entry.formatted_price) {
+          return entry.formatted_price;
+        }
+        if (entry.price) {
+          return entry.price;
         }
         return "sold";
       }
@@ -569,7 +578,12 @@ const menuitems: MenuItem[] = [
       $wrapper.find("td > div.day").each(function () {
         var time = $(this).attr("time");
         if (time) {
-          $(this).attr("data-custom", getValueRoomPrice(time));
+          var price = getValueRoomPrice(time);
+          if (price) {
+            $(this).attr("data-custom", price);
+          } else {
+            $(this).removeAttr("data-custom");
+          }
         }
       });
     }
@@ -598,6 +612,9 @@ const menuitems: MenuItem[] = [
       type: "GET",
       success: function (res) {
         dataPrice = res && res.data ? res.data : res;
+        // Re-apply prices immediately once API completes
+        applyPricesToCalendar($(".calcal .date-picker-wrapper"));
+        applyPricesToCalendar($(".m-calcal .date-picker-wrapper"));
       },
     });
 
@@ -643,13 +660,15 @@ const menuitems: MenuItem[] = [
         .dateRangePicker({
           separator: " to ",
           container: ".calcal",
-          showCustomValues: true,
           autoClose: true,
           stickyMonths: true,
           selectForward: true,
           startDate: formatDate(new Date()),
           customArrowPrevSymbol: '<span class="alrc-arrow-prev"></span>',
           customArrowNextSymbol: '<span class="alrc-arrow-next"></span>',
+          customValueTitle: function (time) {
+            return getValueRoomPrice(time);
+          },
           getValue: function () {
             return "";
           },
@@ -674,10 +693,12 @@ const menuitems: MenuItem[] = [
         .dateRangePicker({
           inline: true,
           container: ".m-calcal-mobile",
-          showCustomValues: true,
           autoClose: true,
           customArrowPrevSymbol: '<span class="alrc-arrow-prev"></span>',
           customArrowNextSymbol: '<span class="alrc-arrow-next"></span>',
+          customValueTitle: function (time) {
+            return getValueRoomPrice(time);
+          },
           setValue: function (s, s1, s2) {
             $(".alrc_checkin_txt").html(getDateFormat(new Date(s1)));
             $(".alrc_checkout_txt").html(getDateFormat(new Date(s2)));
@@ -701,14 +722,10 @@ const menuitems: MenuItem[] = [
           "click.alaricNav",
           ".date-picker-wrapper .next, .date-picker-wrapper .prev",
           function () {
-            var $calcal = $(this)
-              .closest(".calcal")
-              .find(".date-picker-wrapper");
-            var $mcalcal = $(this)
-              .closest(".m-calcal")
-              .find(".date-picker-wrapper");
-            applyPricesToCalendar($calcal);
-            applyPricesToCalendar($mcalcal);
+            setTimeout(function () {
+              applyPricesToCalendar($(".calcal .date-picker-wrapper"));
+              applyPricesToCalendar($(".m-calcal .date-picker-wrapper"));
+            }, 50);
           },
         );
     }
